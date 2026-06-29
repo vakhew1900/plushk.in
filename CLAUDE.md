@@ -49,7 +49,71 @@ The extension only **moves** bookmarks via `chrome.bookmarks.move()` — never d
 
 ### Rule system
 
-A rule consists of: conditions (`domain` / `title` / `url` regex) combined with AND/OR operators, a target folder, and a priority (higher number = evaluated first).  
+Rules are evaluated against a **`PageMeta`** object — the data extracted from the bookmarked page:
+
+| Field | Type | Source |
+|---|---|---|
+| `url` | `string` | Browser bookmark |
+| `domain` | `string` | Derived from URL |
+| `title` | `string` | Page `<title>` |
+| `description` | `string?` | `<meta name="description">` |
+| `author` | `string?` | `<meta name="author">` / og |
+| `language` | `string?` | `<html lang>` |
+| `ogType` | `string?` | `og:type` |
+| `tags` | `string[]?` | `<meta name="keywords">` / og |
+| `publishedAt` | `string?` | Article date |
+| `content` | `string?` | Full text via Readability |
+| `extras` | `Record<string, string \| string[]>?` | User-defined custom fields |
+
+#### Rule DSL (Elasticsearch-inspired)
+
+Rules are stored as JSON. The evaluator recursively resolves them against `PageMeta`.
+
+**Compound rules** — combine arrays of sub-rules:
+
+```json
+{ "and": [ <rule>, <rule>, ... ] }
+{ "or":  [ <rule>, <rule>, ... ] }
+{ "not": [ <rule>, <rule>, ... ] }
+```
+
+**Leaf rules** — match a single field:
+
+```json
+{ "term":     { "domain": "youtube.com" } }
+{ "terms":    { "tags": ["tutorial", "lecture"] } }
+{ "regex":    { "url": ".*\\/watch\\?v=.*" } }
+{ "wildcard": { "domain": "*.edu" } }
+```
+
+Any field from `PageMeta` (including `extras.*`) can be used as the key.
+
+**Full example:**
+
+```json
+{
+  "and": [
+    { "term":  { "domain": "youtube.com" } },
+    { "or": [
+        { "terms":    { "tags": ["tutorial", "course"] } },
+        { "wildcard": { "title": "*tutorial*" } }
+    ]}
+  ]
+}
+```
+
+**Bookmark rule** (wraps the DSL condition):
+
+```ts
+interface BookmarkRule {
+  id: string;
+  name: string;
+  condition: RuleNode;   // the JSON DSL tree
+  targetFolder: string;
+  priority: number;      // higher = evaluated first
+}
+```
+
 Fallback: if no rule matches → folder `Uncategorized`.
 
 ## Code rules
