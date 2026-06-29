@@ -122,6 +122,16 @@ Fallback: if no rule matches → folder `Uncategorized`.
 - **Strict component decomposition.** Table rows, cards, any reusable element — each gets its own component. All components are functional.
 - **Prefer shadcn/ui over custom components.** Check `src/components/ui/` before writing new UI.
 - All public service contracts must have an interface in `src/services/interfaces/`.
+- **String constants use `as const` objects, never `enum`.** Derive the union type with `typeof Obj[keyof typeof Obj]`. Use the same name for the object and the type (e.g. `RuleType` object + `type RuleType`).
+
+```ts
+// correct
+export const RuleType = { AND: 'and', OR: 'or' } as const;
+export type RuleType = typeof RuleType[keyof typeof RuleType];
+
+// forbidden
+enum RuleType { AND = 'and' }
+```
 
 ## Testing
 
