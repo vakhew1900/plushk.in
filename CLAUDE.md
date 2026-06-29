@@ -59,6 +59,20 @@ Fallback: if no rule matches → folder `Uncategorized`.
 - **Prefer shadcn/ui over custom components.** Check `src/components/ui/` before writing new UI.
 - All public service contracts must have an interface in `src/services/interfaces/`.
 
+## Testing
+
+**Vitest** is the test runner. Mock `chrome.*` APIs via `vitest-chrome`.
+
+Rules:
+- Service classes and functions in `lib/` must have unit tests.
+- Tests live next to the source file in a `__tests__/` subfolder.
+- React components are not tested.
+
+```bash
+pnpm test        # Run all tests
+pnpm test:watch  # Watch mode
+```
+
 ## Theme (Obsidian-style)
 
 Dark/light toggle via `class="dark"` on `<html>`. Variables defined in `src/assets/globals.css`:

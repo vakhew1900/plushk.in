@@ -20,6 +20,7 @@ Examples:
 
 1. Interface file
 2. Implementation file
-3. A short note on what to wire up in `ServicesContext` to make the service available via hooks.
+3. Test file at `src/services/<subfolder>/__tests__/<ServiceName>.test.ts` — cover every public method with at least one happy-path and one edge-case test. Use `vitest` and `vitest-chrome` for `chrome.*` mocks. No `any`.
+4. A short note on what to wire up in `ServicesContext` to make the service available via hooks.
 
 If the subfolder is not provided, ask which subfolder under `src/services/` before generating.
