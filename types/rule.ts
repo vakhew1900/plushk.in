@@ -85,3 +85,12 @@ export interface BookmarkRule {
   readonly targetFolder: string;
   readonly priority: number;
 }
+
+export const BookmarkRuleField = {
+  ID:            'id',
+  NAME:          'name',
+  CONDITION:     'condition',
+  TARGET_FOLDER: 'targetFolder',
+  PRIORITY:      'priority',
+} as const;
+export type BookmarkRuleField = typeof BookmarkRuleField[keyof typeof BookmarkRuleField];
