@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A Manifest V3 browser extension that automatically sorts bookmarks using user-defined rules, with Markdown export and optional Obsidian integration.
 
 **Stack:** WXT · React · TypeScript · Tailwind CSS · shadcn/ui  
-**Storage:** `chrome.storage.local` (rules) + IndexedDB (bookmark metadata)  
+**Storage:** IndexedDB via Dexie.js (all persistent data)  
 **Parsing:** `@mozilla/readability` + `turndown`  
 **Obsidian:** Local REST API plugin (optional)
 
@@ -35,6 +35,14 @@ No reverse dependencies. Components have no knowledge of concrete service implem
 Each service is a class implementing an interface from `src/services/interfaces/`. Dependency injection via React Context (`src/context/ServicesContext.tsx`). Services never import from React.
 
 Example chain: `useRules()` (hook) → `ServicesContext` → `RuleEngine` (class) → `chrome.storage.local`.
+
+### Storage
+
+| Store | What | Library |
+|---|---|---|
+| IndexedDB | `BookmarkRule`, `DomainAlias`, `PageMatchGroup`, bookmark metadata | **Dexie.js** |
+
+**Never call Dexie directly from components or hooks.** All IndexedDB access goes through service classes implementing interfaces in `src/services/interfaces/`. The service layer is the only place that knows Dexie exists.
 
 ### Service Worker (`src/entrypoints/background.ts`)
 
