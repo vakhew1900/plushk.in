@@ -1,12 +1,8 @@
 import { Button } from '@/components/ui/button';
+import styles from './JsonEditor.module.css';
 
 interface Token { text: string; color: string }
-
-interface Props {
-  json: string;
-  filename: string;
-  condCount: number;
-}
+interface Props { json: string; filename: string; condCount: number }
 
 function tokenize(str: string): Token[] {
   const re = /\s+|"(?:[^"\\]|\\.)*"|[{}[\]:,]|true|false|null|-?\d+(?:\.\d+)?/g;
@@ -29,10 +25,10 @@ function tokenize(str: string): Token[] {
 export function JsonEditor({ json, filename, condCount }: Props) {
   const tokens = tokenize(json);
   return (
-    <div className="border border-border rounded-[9px] overflow-hidden">
-      <div className="flex items-center gap-2 px-[13px] py-[9px] border-b border-border bg-bg">
-        <span className="font-mono text-[11.5px] text-muted">{filename}</span>
-        <Button variant="ghost" size="icon-sm" className="ml-auto text-muted">
+    <div className={styles.wrap}>
+      <div className={styles.toolbar}>
+        <span className={styles.filename}>{filename}</span>
+        <Button variant="ghost" size="icon-sm" style={{ marginLeft: 'auto', color: 'var(--muted)' }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <rect x="9" y="9" width="11" height="11" rx="2" />
             <path d="M5 15V5a2 2 0 0 1 2-2h10" />
@@ -40,14 +36,12 @@ export function JsonEditor({ json, filename, condCount }: Props) {
         </Button>
       </div>
 
-      <pre className="m-0 px-4 py-[14px] bg-bg font-mono text-[12.5px] leading-[1.7] whitespace-pre overflow-auto max-h-[300px]">
-        {tokens.map((t, i) => (
-          <span key={i} style={{ color: t.color }}>{t.text}</span>
-        ))}
+      <pre className={styles.pre}>
+        {tokens.map((t, i) => <span key={i} style={{ color: t.color }}>{t.text}</span>)}
       </pre>
 
-      <div className="flex items-center gap-[7px] px-[13px] py-[9px] border-t border-border bg-bg text-[11.5px] text-green font-semibold">
-        <span className="w-[7px] h-[7px] rounded-full bg-green" />
+      <div className={styles.footer}>
+        <span className={styles.dot} />
         Валидный JSON · {condCount} условия
       </div>
     </div>

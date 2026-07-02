@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
+import * as RadioGroup from '@radix-ui/react-radio-group';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -7,18 +7,12 @@ import { Badge } from '@/components/ui/badge';
 import { ConditionGroup } from './ConditionGroup';
 import type { Condition } from './ConditionGroup';
 import { JsonEditor } from './JsonEditor';
+import styles from './RuleEditor.module.css';
 
 interface Group { conds: Condition[] }
 interface Props { name: string; desc: string; groups: Group[] }
 
 type View = 'cons' | 'json';
-
-function segBtn(active: boolean) {
-  return cn(
-    'flex items-center gap-[6px] px-[11px] py-[5px] border-0 rounded-[6px] cursor-pointer font-semibold text-xs transition-colors',
-    active ? 'bg-bg text-text shadow-sm' : 'bg-transparent text-muted hover:text-text',
-  );
-}
 
 export function RuleEditor({ name, desc, groups }: Props) {
   const [view, setView] = useState<View>('cons');
@@ -32,24 +26,26 @@ export function RuleEditor({ name, desc, groups }: Props) {
   };
 
   return (
-    <div className="min-w-0 border border-border rounded-[13px] bg-bg2 overflow-hidden">
-      {/* Name + desc */}
-      <div className="px-[18px] py-4 border-b border-border space-y-3">
+    <div className={styles.wrap}>
+      <div className={styles.nameSection}>
         <div>
-          <div className="text-[10.5px] font-bold tracking-[0.06em] uppercase text-muted mb-1.5">Название</div>
+          <div className={styles.fieldLabel}>Название</div>
           <Input defaultValue={name} />
         </div>
         <div>
-          <div className="text-[10.5px] font-bold tracking-[0.06em] uppercase text-muted mb-1.5">Описание</div>
+          <div className={styles.fieldLabel}>Описание</div>
           <Textarea defaultValue={desc} rows={2} />
         </div>
       </div>
 
-      {/* Condition toggle */}
-      <div className="flex items-center justify-between px-[18px] py-[13px] border-b border-border">
-        <span className="text-[13px] font-bold text-text">Условие</span>
-        <div className="flex bg-bg border border-border rounded-lg p-[3px] gap-0.5">
-          <button className={segBtn(view === 'cons')} onClick={() => setView('cons')}>
+      <div className={styles.condHeader}>
+        <span className={styles.condTitle}>Условие</span>
+        <RadioGroup.Root
+          value={view}
+          onValueChange={(v) => setView(v as View)}
+          className={styles.viewToggle}
+        >
+          <RadioGroup.Item value="cons" className={styles.viewBtn}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
               <circle cx="6" cy="6" r="1.8" fill="currentColor" />
               <circle cx="6" cy="18" r="1.8" fill="currentColor" />
@@ -57,24 +53,23 @@ export function RuleEditor({ name, desc, groups }: Props) {
               <path d="M8 6.5l7 4.5M8 17.5l7-4.5" stroke="currentColor" strokeWidth="1.4" />
             </svg>
             Конструктор
-          </button>
-          <button className={cn(segBtn(view === 'json'), 'font-mono')} onClick={() => setView('json')}>
+          </RadioGroup.Item>
+          <RadioGroup.Item value="json" className={`${styles.viewBtn} ${styles.viewBtnMono}`}>
             {'{ } JSON'}
-          </button>
-        </div>
+          </RadioGroup.Item>
+        </RadioGroup.Root>
       </div>
 
-      {/* Builder / JSON */}
-      <div className="p-[16px_18px]">
+      <div className={styles.body}>
         {view === 'cons' && (
           <div>
-            <div className="flex items-center gap-[9px] mb-3">
+            <div className={styles.orLabel}>
               <Badge variant="or-badge">ИЛИ · OR</Badge>
-              <span className="text-xs text-muted">срабатывает любая из групп</span>
+              <span className={styles.orText}>срабатывает любая из групп</span>
             </div>
-            <div className="flex flex-col gap-[11px]">
+            <div className={styles.condList}>
               {groups.map((g, i) => <ConditionGroup key={i} conds={g.conds} />)}
-              <Button variant="dashed" className="w-full text-accent border-accent/30">
+              <Button variant="dashed" style={{ width: '100%', color: 'var(--accent)', borderColor: 'color-mix(in srgb, var(--accent) 30%, transparent)' }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                   <path d="M12 5v14M5 12h14" />
                 </svg>
@@ -92,15 +87,14 @@ export function RuleEditor({ name, desc, groups }: Props) {
         )}
       </div>
 
-      {/* Footer */}
-      <div className="flex gap-[9px] px-[18px] py-[13px] border-t border-border bg-bg">
+      <div className={styles.editorFooter}>
         <Button variant="outline" size="sm">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M5 12l4 4 10-10" />
           </svg>
           Тест на текущей странице
         </Button>
-        <div className="flex-1" />
+        <div style={{ flex: 1 }} />
         <Button>Сохранить</Button>
       </div>
     </div>

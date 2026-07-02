@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-@import "tailwindcss";
 
 /* ── Runtime theme tokens (change with data-theme) ── */
 :root,
@@ -45,46 +44,31 @@
   --shadow: rgba(0, 0, 0, 0.13);
 }
 
-/* ── Tailwind theme tokens (expose CSS vars as utilities) ── */
-@theme inline {
-  --font-sans: 'Hanken Grotesk', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  --color-backdrop: var(--backdrop);
-  --color-bg: var(--bg);
-  --color-bg2: var(--bg2);
-  --color-bg3: var(--bg3);
-  --color-hover: var(--hover);
-  --color-border: var(--border);
-  --color-text: var(--text);
-  --color-muted: var(--muted);
-  --color-faint: var(--faint);
-  --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
-  --color-green: var(--green);
-  --color-green-soft: var(--green-soft);
-  --color-red: var(--red);
-  --color-red-soft: var(--red-soft);
-  --color-blue: var(--blue);
-  --color-blue-soft: var(--blue-soft);
-}
-
 /* ── Base ── */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  font-family: var(--font-sans);
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
 }
 
 input,
 textarea {
-  font-family: inherit;
+  font: inherit;
 }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }

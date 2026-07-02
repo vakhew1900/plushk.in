@@ -1,0 +1,9 @@
+.row {
+  display: flex;
+  gap: 13px;
+  padding: 13px 15px;
+  align-items: flex-start;
+}
+.row:not(:last-child) { border-bottom: 1px solid var(--border); }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; align-items: center; }

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Manifest V3 browser extension that automatically sorts bookmarks using user-defined rules, with Markdown export and optional Obsidian integration.
 
-**Stack:** WXT · React · TypeScript · Tailwind CSS · shadcn/ui  
+**Stack:** WXT · React · TypeScript · CSS Modules · Radix UI  
 **Storage:** IndexedDB via Dexie.js (all persistent data)  
 **Parsing:** `@mozilla/readability` + `turndown`  
 **Obsidian:** Local REST API plugin (optional)
@@ -128,7 +128,9 @@ Fallback: if no rule matches → folder `Uncategorized`.
 
 - **`any` is forbidden.** Use `unknown` + type guard for uncertain types.
 - **Strict component decomposition.** Table rows, cards, any reusable element — each gets its own component. All components are functional.
-- **Prefer shadcn/ui over custom components.** Check `src/components/ui/` before writing new UI.
+- **Styling: CSS Modules only.** Every component has a `ComponentName.module.css` alongside it. No inline `style=` except for truly dynamic values (e.g. a color from props). No global utility classes.
+- **Prefer Radix UI primitives** for interactive patterns: `RadioGroup` for segmented controls, `Switch` for toggles, `Slot` for `asChild` composition. Check `@radix-ui/*` packages before writing custom interactive elements.
+- **`components/ui/`** holds thin wrappers around Radix primitives (Button, Badge, Switch, Input, Textarea). Check there before creating new elements.
 - All public service contracts must have an interface in `src/services/interfaces/`.
 - **String constants use `as const` objects, never `enum`.** Derive the union type with `typeof Obj[keyof typeof Obj]`. Use the same name for the object and the type (e.g. `RuleType` object + `type RuleType`).
 
@@ -205,14 +207,17 @@ npm run test:watch  # Watch mode
 
 ## Theme (Obsidian-style)
 
-Dark/light toggle via `class="dark"` on `<html>`. Variables defined in `src/assets/globals.css`:
+Dark/light toggle via `data-theme="dark"/"light"` on the root element. CSS variables defined in `assets/globals.css`, used directly in CSS Modules as `var(--accent)` etc.
 
 ```css
-/* Dark */               /* Light */
---background: #1e1e2e;  --background: #f5f5f5;
---surface:    #2a2a3d;  --surface:    #ffffff;
---border:     #3d3d5c;  --border:     #dddde0;
---foreground: #cdd6f4;  --foreground: #2e2e3e;
---muted:      #6c7086;  --muted:      #8c8c9e;
---accent:     #7c6af7;  --accent:     #7c6af7;
+/* Dark (default) */     /* Light */
+--bg:       #1a1a1d;     --bg:       #fbfaf7;
+--bg2:      #141416;     --bg2:      #f1eee8;
+--border:   #2c2c31;     --border:   #e3ded4;
+--text:     #d8d8dc;     --text:     #33312e;
+--muted:    #8b8b94;     --muted:    #76716a;
+--accent:   #7d6cf0;     --accent:   #6a57d6;
+--green:    #5cba8f;     --green:    #3f9d6f;
+--red:      #e0746e;     --red:      #cf5a52;
+--blue:     #5c9ee0;     --blue:     #3f7fc4;
 ```

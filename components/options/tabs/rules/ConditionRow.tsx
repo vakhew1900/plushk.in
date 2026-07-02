@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import styles from './ConditionRow.module.css';
 
 interface Props {
   field: string;
@@ -9,10 +10,10 @@ interface Props {
 
 export function ConditionRow({ field, opLabel, value, isNot }: Props) {
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className={styles.row}>
       {isNot && <Badge variant="not-badge">НЕ</Badge>}
       <Badge variant="mono">{field}</Badge>
-      <span className="text-xs text-muted">{opLabel}</span>
+      <span className={styles.op}>{opLabel}</span>
       <Badge variant="mono-accent">{value}</Badge>
     </div>
   );

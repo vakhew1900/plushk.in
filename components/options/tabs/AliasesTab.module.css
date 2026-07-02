@@ -1,0 +1,63 @@
+.wrap { max-width: 680px; }
+
+.h1   { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.lead { font-size: 13.5px; color: var(--muted); margin-bottom: 24px; }
+
+.section { margin-bottom: 22px; }
+
+.sectionHeader { display: flex; align-items: center; margin-bottom: 5px; }
+.h2 { font-size: 15px; font-weight: 700; color: var(--text); }
+.sectionDesc { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
+
+.table { border: 1px solid var(--border); border-radius: 11px; overflow: hidden; }
+
+.variableBlock { border: 1px solid var(--border); border-radius: 11px; overflow: hidden; }
+.variableHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.variableName  { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12.5px; color: var(--accent); }
+.variableCount { font-size: 11px; color: var(--faint); }
+.variableList  { display: flex; flex-direction: column; gap: 11px; }
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+}
+.fieldRow:not(:last-child) { border-bottom: 1px solid var(--border); }
+.fieldKey    { width: 90px; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 12.5px; color: var(--text); }
+.fieldArrow  { color: var(--faint); }
+.fieldValue  { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--muted); }
+
+.exportRow { display: flex; gap: 10px; }
+
+.themeGroup {
+  display: flex;
+  gap: 3px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 3px;
+  width: fit-content;
+}
+.themeItem {
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--muted);
+  background: transparent;
+  transition: background-color 0.15s, color 0.15s;
+}
+.themeItem:hover { color: var(--text); }
+.themeItem[data-state="checked"] {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 1px 3px var(--shadow);
+}

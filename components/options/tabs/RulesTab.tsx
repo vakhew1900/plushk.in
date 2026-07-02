@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { RuleListItem } from './rules/RuleListItem';
 import { RuleEditor } from './rules/RuleEditor';
 import type { Condition } from './rules/ConditionGroup';
+import styles from './RulesTab.module.css';
 
 interface Group { conds: Condition[] }
 interface Rule { name: string; desc: string; enabled: boolean; groups: Group[] }
@@ -46,10 +47,10 @@ export function RulesTab() {
 
   return (
     <div>
-      <div className="flex items-start gap-4 mb-5">
-        <div className="flex-1">
-          <h1 className="m-0 mb-1 text-[22px] font-bold text-text">Правила</h1>
-          <p className="m-0 text-[13.5px] text-muted">Проверяются сверху вниз — побеждает первое совпадение.</p>
+      <div className={styles.header}>
+        <div className={styles.headerText}>
+          <h1 className={styles.h1}>Правила</h1>
+          <p className={styles.lead}>Проверяются сверху вниз — побеждает первое совпадение.</p>
         </div>
         <Button>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -59,8 +60,8 @@ export function RulesTab() {
         </Button>
       </div>
 
-      <div className="grid gap-[18px] items-start" style={{ gridTemplateColumns: '262px minmax(0,1fr)' }}>
-        <div className="flex flex-col gap-[9px]">
+      <div className={styles.grid}>
+        <div className={styles.list}>
           {rules.map((r, i) => (
             <RuleListItem
               key={i}

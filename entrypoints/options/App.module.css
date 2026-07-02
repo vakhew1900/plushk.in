@@ -1,0 +1,32 @@
+.root {
+  min-height: 100vh;
+  background: var(--backdrop);
+  color: var(--text);
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  height: 42px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.dots { display: flex; gap: 6px; }
+.dot  { width: 10px; height: 10px; border-radius: 50%; background: var(--border); display: inline-block; }
+
+.chromeTitle {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.body { display: flex; min-height: calc(100vh - 42px); }
+
+.content { flex: 1; min-width: 0; padding: 28px 30px; overflow: auto; }
