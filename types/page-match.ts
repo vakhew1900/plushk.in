@@ -5,9 +5,9 @@ export const PageSelectorType = {
 } as const;
 export type PageSelectorType = typeof PageSelectorType[keyof typeof PageSelectorType];
 
-export type CssSelector   = { type: typeof PageSelectorType.CSS;   selector: string   };
-export type MetaSelector  = { type: typeof PageSelectorType.META;  attribute: string  };
-export type XPathSelector = { type: typeof PageSelectorType.XPATH; expression: string };
+export type CssSelector   = { type: typeof PageSelectorType.CSS;   value: string };
+export type MetaSelector  = { type: typeof PageSelectorType.META;  value: string };
+export type XPathSelector = { type: typeof PageSelectorType.XPATH; value: string };
 
 export type PageSelector = CssSelector | MetaSelector | XPathSelector;
 
