@@ -141,6 +141,54 @@ export type RuleType = typeof RuleType[keyof typeof RuleType];
 enum RuleType { AND = 'and' }
 ```
 
+## Git conventions
+
+### Commit message format
+
+```
+<type>: [<block>] <description>
+```
+
+**Types:**
+
+| Type | When to use |
+|---|---|
+| `add` | New file, type, component, or feature from scratch |
+| `feat` | Enhancement to existing functionality |
+| `fix` | Bug fix |
+| `refactor` | Code change with no behaviour change |
+| `noref` | Non-code change (docs, config, CLAUDE.md, README) |
+
+**Blocks** — the area of the codebase being changed:
+
+| Block | Covers |
+|---|---|
+| `[rule]` | Rule DSL, RuleEngine, rule types |
+| `[ui]` | React components, styles |
+| `[storage]` | Dexie schema, DB services |
+| `[import/export]` | Markdown export, bookmark import |
+| `[ai]` | AI/LLM integration |
+| `[bg]` | Service worker / background script |
+| `[dev]` | Dev tooling, build config |
+| `[setup]` | Initial project setup |
+
+**Examples:**
+
+```
+add: [rule] wildcard rule type
+fix: [ui] rule list not re-rendering on priority change
+feat: [storage] index BookmarkRule by priority
+noref: [dev] update CLAUDE.md storage section
+```
+
+### Pull request title
+
+Same format as the commit, or a short summary if the PR spans multiple blocks:
+
+```
+feat: [rule] Elasticsearch-inspired DSL with AND/OR/NOT support
+```
+
 ## Testing
 
 **Vitest** is the test runner. Mock `chrome.*` APIs via `vitest-chrome`.
