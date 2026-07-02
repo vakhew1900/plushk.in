@@ -14,10 +14,10 @@ A Manifest V3 browser extension that automatically sorts bookmarks using user-de
 ## Commands
 
 ```bash
-pnpm dev        # Dev mode with hot reload (WXT)
-pnpm build      # Production build
-pnpm zip        # Package extension (.zip for store submission)
-pnpm typecheck  # Type check without building
+npm run dev        # Dev mode with hot reload (WXT)
+npm run build      # Production build
+npm run zip        # Package extension (.zip for store submission)
+npm run typecheck  # Type check without building
 ```
 
 ## Architecture
@@ -199,8 +199,8 @@ Rules:
 - React components are not tested.
 
 ```bash
-pnpm test        # Run all tests
-pnpm test:watch  # Watch mode
+npm test        # Run all tests
+npm run test:watch  # Watch mode
 ```
 
 ## Theme (Obsidian-style)

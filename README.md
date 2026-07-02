@@ -53,7 +53,7 @@ add: [rule] wildcard rule type
 fix: [ui] rule list not re-rendering on priority change
 feat: [storage] index BookmarkRule by priority
 noref: [dev] update README
-```
+``` 
 
 ### Pull request title
 

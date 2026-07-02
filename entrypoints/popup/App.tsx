@@ -1,35 +1,22 @@
 import { useState } from 'react';
-import reactLogo from '@/assets/react.svg';
-import wxtLogo from '/wxt.svg';
-import './App.css';
+import './style.css';
+import { PopupHeader } from '@/components/popup/PopupHeader';
+import { PopupModeSelector } from '@/components/popup/PopupModeSelector';
+import type { Mode } from '@/components/popup/PopupModeSelector';
+import { PopupPageCard } from '@/components/popup/PopupPageCard';
+import { PopupActions } from '@/components/popup/PopupActions';
+import { PopupFooter } from '@/components/popup/PopupFooter';
 
-function App() {
-  const [count, setCount] = useState(0);
+export default function App() {
+  const [mode, setMode] = useState<Mode>('auto');
 
   return (
-    <>
-      <div>
-        <a href="https://wxt.dev" target="_blank">
-          <img src={wxtLogo} className="logo" alt="WXT logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>WXT + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the WXT and React logos to learn more
-      </p>
-    </>
+    <div data-theme="dark" className="w-[360px] bg-bg text-text font-sans text-sm antialiased">
+      <PopupHeader mode={mode} />
+      <PopupModeSelector mode={mode} onChange={setMode} />
+      <PopupPageCard />
+      <PopupActions mode={mode} />
+      <PopupFooter />
+    </div>
   );
 }
-
-export default App;

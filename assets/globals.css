@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ── Runtime theme tokens (change with data-theme) ── */
+:root,
+[data-theme="dark"] {
+  --backdrop: #0c0c0e;
+  --bg: #1a1a1d;
+  --bg2: #141416;
+  --bg3: #202023;
+  --hover: #26262b;
+  --border: #2c2c31;
+  --text: #d8d8dc;
+  --muted: #8b8b94;
+  --faint: #56565f;
+  --accent: #7d6cf0;
+  --accent-soft: rgba(125, 108, 240, 0.15);
+  --green: #5cba8f;
+  --green-soft: rgba(92, 186, 143, 0.15);
+  --red: #e0746e;
+  --red-soft: rgba(224, 116, 110, 0.15);
+  --blue: #5c9ee0;
+  --blue-soft: rgba(92, 158, 224, 0.14);
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] {
+  --backdrop: #e7e3db;
+  --bg: #fbfaf7;
+  --bg2: #f1eee8;
+  --bg3: #ffffff;
+  --hover: #eceae3;
+  --border: #e3ded4;
+  --text: #33312e;
+  --muted: #76716a;
+  --faint: #a8a298;
+  --accent: #6a57d6;
+  --accent-soft: rgba(106, 87, 214, 0.12);
+  --green: #3f9d6f;
+  --green-soft: rgba(63, 157, 111, 0.13);
+  --red: #cf5a52;
+  --red-soft: rgba(207, 90, 82, 0.12);
+  --blue: #3f7fc4;
+  --blue-soft: rgba(63, 127, 196, 0.12);
+  --shadow: rgba(0, 0, 0, 0.13);
+}
+
+/* ── Tailwind theme tokens (expose CSS vars as utilities) ── */
+@theme inline {
+  --font-sans: 'Hanken Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-backdrop: var(--backdrop);
+  --color-bg: var(--bg);
+  --color-bg2: var(--bg2);
+  --color-bg3: var(--bg3);
+  --color-hover: var(--hover);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-green: var(--green);
+  --color-green-soft: var(--green-soft);
+  --color-red: var(--red);
+  --color-red-soft: var(--red-soft);
+  --color-blue: var(--blue);
+  --color-blue-soft: var(--blue-soft);
+}
+
+/* ── Base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+input,
+textarea {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--faint); }
+::-webkit-scrollbar-track { background: transparent; }
