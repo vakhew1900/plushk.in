@@ -61,29 +61,29 @@
     "invalid": "JSON syntax error"
   },
   "aliasesTab": {
-    "lead": "Domain aliases, extraction variables, and backups.",
-    "aliases": {
-      "title": "Domain aliases",
-      "addAlias": "Alias",
-      "desc": "One alias for multiple domains — e.g. regional mirrors."
-    },
-    "variables": {
-      "title": "Variables",
-      "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",
-      "fieldsCount": "{{count}} fields"
-    },
-    "export": {
-      "title": "Export / Import",
-      "desc": "A single-file backup of all rules, aliases, and variables.",
-      "exportButton": "Export .json",
-      "importButton": "Import"
-    },
-    "theme": {
-      "title": "Theme",
-      "dark": "Dark",
-      "light": "Light",
-      "system": "System"
-    }
+    "lead": "Domain aliases, extraction variables, and backups."
+  },
+  "aliasesSection": {
+    "title": "Domain aliases",
+    "addAlias": "Alias",
+    "desc": "One alias for multiple domains — e.g. regional mirrors."
+  },
+  "variablesSection": {
+    "title": "Variables",
+    "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",
+    "fieldsCount": "{{count}} fields"
+  },
+  "exportSection": {
+    "title": "Export / Import",
+    "desc": "A single-file backup of all rules, aliases, and variables.",
+    "exportButton": "Export .json",
+    "importButton": "Import"
+  },
+  "themeSection": {
+    "title": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
   },
   "popup": {
     "appName": "Sorter",

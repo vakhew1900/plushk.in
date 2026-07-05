@@ -1,0 +1,28 @@
+.section { margin-bottom: 22px; }
+
+.h2 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+
+.themeGroup {
+  display: flex;
+  gap: 3px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 3px;
+  width: fit-content;
+}
+.themeItem {
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--muted);
+  background: transparent;
+  transition: background-color 0.15s, color 0.15s;
+}
+.themeItem:hover { color: var(--text); }
+.themeItem[data-state="checked"] {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 1px 3px var(--shadow);
+}

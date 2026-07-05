@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { ModeCard } from './main/ModeCard';
 import { ActivityItem } from './main/ActivityItem';
+import { ThemeSection } from './main/ThemeSection';
+import { ExportImportSection } from './main/ExportImportSection';
 import styles from './MainTab.module.css';
 
 const MODES = [
@@ -38,6 +40,9 @@ export function MainTab() {
           />
         ))}
       </div>
+
+      <ThemeSection />
+      <ExportImportSection />
 
       <h2 className={styles.h2}>{t('mainTab.recentActivity')}</h2>
       <div className={styles.activityWrap}>

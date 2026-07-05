@@ -127,7 +127,7 @@ Fallback: if no rule matches → folder `Uncategorized`.
 ## Code rules
 
 - **`any` is forbidden.** Use `unknown` + type guard for uncertain types.
-- **Strict component decomposition.** Table rows, cards, any reusable element — each gets its own component. All components are functional.
+- **Strict component decomposition.** Table rows, cards, page sections/blocks (e.g. a theme picker or an export/import panel within a tab), any reusable element — each gets its own component. All components are functional.
 - **Styling: CSS Modules only.** Every component has a `ComponentName.module.css` alongside it. No inline `style=` except for truly dynamic values (e.g. a color from props). No global utility classes.
 - **SVG icons must be extracted as components.** Never write `<svg>` inline in component JSX. Create a named component in `components/icons/` (e.g. `IconPlus`, `IconFolder`) and import it. Inline SVG is allowed only inside the icon component file itself.
 - **Prefer Radix UI primitives** for interactive patterns: `RadioGroup` for segmented controls, `Switch` for toggles, `Slot` for `asChild` composition. Check `@radix-ui/*` packages before writing custom interactive elements.
