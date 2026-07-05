@@ -12,15 +12,6 @@ export default function App() {
 
   return (
     <div data-theme="dark" className={styles.root}>
-      <div className={styles.chrome}>
-        <div className={styles.dots}>
-          <span className={styles.dot} />
-          <span className={styles.dot} />
-          <span className={styles.dot} />
-        </div>
-        <div className={styles.chromeTitle}>Сортировщик — Страница настроек</div>
-        <div style={{ width: 42 }} />
-      </div>
 
       <div className={styles.body}>
         <OptionsSidebar tab={tab} onTabChange={setTab} ruleCount={3} />

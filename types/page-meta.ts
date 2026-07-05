@@ -1,18 +1,18 @@
 export const PageMetaField = {
-  URL:          'url',
-  DOMAIN:       'domain',
-  TITLE:        'title',
-  DESCRIPTION:  'description',
-  AUTHOR:       'author',
-  LANGUAGE:     'language',
-  OG_TYPE:      'ogType',
-  TAGS:         'tags',
-  PUBLISHED_AT: 'publishedAt',
-  CONTENT:      'content',
-  EXTRAS:       'extras',
+  URL: "url",
+  DOMAIN: "domain",
+  TITLE: "title",
+  DESCRIPTION: "description",
+  AUTHOR: "author",
+  LANGUAGE: "language",
+  OG_TYPE: "ogType",
+  TAGS: "tags",
+  PUBLISHED_AT: "publishedAt",
+  CONTENT: "content",
+  EXTRAS: "extras",
 } as const;
 
-export type PageMetaField = typeof PageMetaField[keyof typeof PageMetaField];
+export type PageMetaField = (typeof PageMetaField)[keyof typeof PageMetaField];
 
 // ---
 
