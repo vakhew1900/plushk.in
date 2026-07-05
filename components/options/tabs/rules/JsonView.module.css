@@ -18,24 +18,24 @@
   color: var(--muted);
 }
 
-.editor {
-  display: block;
-  width: 100%;
-  min-height: 180px;
-  max-height: 380px;
-  padding: 14px 16px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+/* CodeMirror container overrides */
+.editor :global(.cm-editor) {
+  outline: none;
+}
+
+.editor :global(.cm-scroller) {
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 12.5px;
   line-height: 1.7;
-  border: none;
-  outline: none;
-  resize: vertical;
-  tab-size: 2;
-  caret-color: var(--accent);
 }
-.editor:focus { background: color-mix(in srgb, var(--bg) 96%, var(--accent)); }
+
+.editor :global(.cm-content) {
+  padding: 14px 16px;
+}
+
+.editor :global(.cm-focused) {
+  outline: none;
+}
 
 .footer {
   display: flex;
@@ -48,7 +48,7 @@
   font-weight: 600;
   transition: color 0.2s;
 }
-.valid { color: var(--green); }
+.valid   { color: var(--green); }
 .invalid { color: var(--red); }
 
 .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
