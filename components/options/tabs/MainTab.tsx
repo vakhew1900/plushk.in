@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { TabHeader } from '@/components/options/TabHeader';
 import { ModeCard } from './main/ModeCard';
 import { ActivityItem } from './main/ActivityItem';
 import { ThemeSection } from './main/ThemeSection';
@@ -24,8 +25,7 @@ export function MainTab() {
   const { translate: t } = useTranslation();
   return (
     <div>
-      <h1 className={styles.h1}>{t('common.modeSectionTitle')}</h1>
-      <p className={styles.lead}>{t('mainTab.lead')}</p>
+      <TabHeader title={t('common.modeSectionTitle')} lead={t('mainTab.lead')} />
 
       <div className={styles.modeList}>
         {MODES.map(({ key, ...rest }) => (

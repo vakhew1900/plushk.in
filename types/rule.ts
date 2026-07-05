@@ -1,14 +1,14 @@
 export const RuleType = {
-  AND:      'and',
-  OR:       'or',
-  NOT:      'not',
-  TERM:     'term',
-  TERMS:    'terms',
-  REGEX:    'regex',
-  WILDCARD: 'wildcard',
+  AND: "and",
+  OR: "or",
+  NOT: "not",
+  TERM: "term",
+  TERMS: "terms",
+  REGEX: "regex",
+  WILDCARD: "wildcard",
 } as const;
 
-export type RuleType = typeof RuleType[keyof typeof RuleType];
+export type RuleType = (typeof RuleType)[keyof typeof RuleType];
 
 // ---
 
@@ -71,10 +71,16 @@ export type RuleNode =
 
 // Type guards
 
-export const isCompoundRule = (rule: RuleNode): rule is AndRule | OrRule | NotRule =>
-  rule.type === RuleType.AND || rule.type === RuleType.OR || rule.type === RuleType.NOT;
+export const isCompoundRule = (
+  rule: RuleNode,
+): rule is AndRule | OrRule | NotRule =>
+  rule.type === RuleType.AND ||
+  rule.type === RuleType.OR ||
+  rule.type === RuleType.NOT;
 
-export const isLeafRule = (rule: RuleNode): rule is TermRule | TermsRule | RegexRule | WildcardRule =>
+export const isLeafRule = (
+  rule: RuleNode,
+): rule is TermRule | TermsRule | RegexRule | WildcardRule =>
   !isCompoundRule(rule);
 
 // A bookmark rule: wraps the DSL condition with metadata
@@ -84,13 +90,16 @@ export interface BookmarkRule {
   readonly condition: RuleNode;
   readonly targetFolder: string;
   readonly priority: number;
+  readonly enabled: boolean;
 }
 
 export const BookmarkRuleField = {
-  ID:            'id',
-  NAME:          'name',
-  CONDITION:     'condition',
-  TARGET_FOLDER: 'targetFolder',
-  PRIORITY:      'priority',
+  ID: "id",
+  NAME: "name",
+  CONDITION: "condition",
+  TARGET_FOLDER: "targetFolder",
+  PRIORITY: "priority",
+  ENABLED: "enabled",
 } as const;
-export type BookmarkRuleField = typeof BookmarkRuleField[keyof typeof BookmarkRuleField];
+export type BookmarkRuleField =
+  (typeof BookmarkRuleField)[keyof typeof BookmarkRuleField];

@@ -1,39 +1,62 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { IconPlus } from '@/components/icons';
-import { useTranslation } from '@/hooks/useTranslation';
-import { RuleListItem } from './rules/RuleListItem';
-import { RuleEditor } from './rules/RuleEditor';
-import type { Condition } from './rules/ConditionGroup';
-import styles from './RulesTab.module.css';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { IconPlus } from "@/components/icons";
+import { useTranslation } from "@/hooks/useTranslation";
+import { TabHeader } from "@/components/options/TabHeader";
+import { RuleListItem } from "./rules/RuleListItem";
+import { RuleEditor } from "./rules/RuleEditor";
+import type { Condition } from "./rules/ConditionGroup";
+import styles from "./RulesTab.module.css";
 
-interface Group { conds: Condition[] }
-interface Rule { name: string; desc: string; enabled: boolean; groups: Group[] }
+interface Group {
+  conds: Condition[];
+}
+interface Rule {
+  name: string;
+  desc: string;
+  enabled: boolean;
+  groups: Group[];
+}
 
 const INITIAL_RULES: Rule[] = [
   {
-    name: 'Соцсети',
-    desc: 'Facebook, Reddit, Pinterest и другие соцсети → папка «Соцсети». Региональные зеркала ловятся через алиасы.',
+    name: "Соцсети",
+    desc: "Facebook, Reddit, Pinterest и другие соцсети → папка «Соцсети». Региональные зеркала ловятся через алиасы.",
     enabled: true,
     groups: [
-      { conds: [{ field: 'alias', opLabel: 'равно', value: 'reddit' }, { field: 'title', opLabel: 'не равно', value: 'ad', isNot: true }] },
-      { conds: [{ field: 'alias', opLabel: 'равно', value: 'facebook' }] },
+      {
+        conds: [
+          { field: "alias", opLabel: "равно", value: "reddit" },
+          { field: "title", opLabel: "не равно", value: "ad", isNot: true },
+        ],
+      },
+      { conds: [{ field: "alias", opLabel: "равно", value: "facebook" }] },
     ],
   },
   {
-    name: 'Чтение / Лонгриды',
-    desc: 'Habr и длинные статьи (более 800 слов или тег article) → папка «Чтение».',
+    name: "Чтение / Лонгриды",
+    desc: "Habr и длинные статьи (более 800 слов или тег article) → папка «Чтение».",
     enabled: true,
     groups: [
-      { conds: [{ field: 'alias', opLabel: 'равно', value: 'habr' }, { field: 'tag', opLabel: 'равно', value: 'article' }] },
+      {
+        conds: [
+          { field: "alias", opLabel: "равно", value: "habr" },
+          { field: "tag", opLabel: "равно", value: "article" },
+        ],
+      },
     ],
   },
   {
-    name: 'Дизайн-инспирация',
-    desc: 'Pinterest и дизайн-ресурсы с UI в заголовке → папка «Инспирация».',
+    name: "Дизайн-инспирация",
+    desc: "Pinterest и дизайн-ресурсы с UI в заголовке → папка «Инспирация».",
     enabled: false,
     groups: [
-      { conds: [{ field: 'alias', opLabel: 'равно', value: 'dribbble' }, { field: 'title', opLabel: 'содержит', value: 'UI' }] },
+      {
+        conds: [
+          { field: "alias", opLabel: "равно", value: "dribbble" },
+          { field: "title", opLabel: "содержит", value: "UI" },
+        ],
+      },
     ],
   },
 ];
@@ -44,22 +67,15 @@ export function RulesTab() {
   const { translate: t } = useTranslation();
 
   const toggle = (i: number) =>
-    setRules((prev) => prev.map((r, idx) => (idx === i ? { ...r, enabled: !r.enabled } : r)));
+    setRules((prev) =>
+      prev.map((r, idx) => (idx === i ? { ...r, enabled: !r.enabled } : r)),
+    );
 
   const selected = rules[sel] ?? rules[0];
 
   return (
     <div>
-      <div className={styles.header}>
-        <div className={styles.headerText}>
-          <h1 className={styles.h1}>{t('nav.rules')}</h1>
-          <p className={styles.lead}>{t('rulesTab.lead')}</p>
-        </div>
-        <Button>
-          <IconPlus size={15} />
-          {t('rulesTab.addRule')}
-        </Button>
-      </div>
+      <TabHeader title={t("nav.rules")} lead={t("rulesTab.lead")} />
 
       <div className={styles.grid}>
         <div className={styles.list}>
@@ -75,9 +91,17 @@ export function RulesTab() {
               onToggle={() => toggle(i)}
             />
           ))}
+          <Button variant="dashed" style={{ width: "100%" }}>
+            <IconPlus size={13} />
+            {t("rulesTab.addRule")}
+          </Button>
         </div>
 
-        <RuleEditor name={selected.name} desc={selected.desc} groups={selected.groups} />
+        <RuleEditor
+          name={selected.name}
+          desc={selected.desc}
+          groups={selected.groups}
+        />
       </div>
     </div>
   );

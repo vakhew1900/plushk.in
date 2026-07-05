@@ -1,6 +1,3 @@
-.h1 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-.lead { font-size: 13.5px; color: var(--muted); max-width: 560px; margin-bottom: 22px; }
-
 .modeList { display: flex; flex-direction: column; gap: 11px; max-width: 620px; }
 
 .h2 { font-size: 15px; font-weight: 700; color: var(--text); margin-top: 30px; margin-bottom: 14px; }
