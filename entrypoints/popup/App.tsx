@@ -15,7 +15,7 @@ export default function App() {
     <div data-theme="dark" className={styles.root}>
       <PopupHeader mode={mode} />
       <PopupModeSelector mode={mode} onChange={setMode} />
-      <PopupPageCard />
+      {/* <PopupPageCard /> */}
       <PopupActions mode={mode} />
       <PopupFooter />
     </div>
