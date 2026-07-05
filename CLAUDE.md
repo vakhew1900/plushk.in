@@ -144,6 +144,44 @@ export type RuleType = typeof RuleType[keyof typeof RuleType];
 enum RuleType { AND = 'and' }
 ```
 
+## Specs
+
+Planning and task tracking live in `specs/`, not in this file:
+
+| File | Purpose |
+|---|---|
+| `specs/specification.md` | What we're building — product/feature spec |
+| `specs/plan.md` | How we're building it — implementation plan |
+| `specs/backlog.md` | Tasks not yet started |
+| `specs/tasks.md` | Tasks currently in progress |
+
+A task lives in exactly one of `backlog.md` / `tasks.md` at a time. When work on a task begins, move it from `backlog.md` to `tasks.md`. Completed work is tracked by git history, not kept in either file.
+
+**Surface candidate tasks as you go.** If, while doing unrelated work, you notice a piece of work that could reasonably be split out and tracked on its own, flag it to the user and ask whether it should become a separate `backlog.md` entry. Do not add it yourself without asking, and do not silently fold it into the task at hand.
+
+Use the `specs` skill to read and update these files.
+
+### Task entry format
+
+Every backlog/task entry has:
+
+| Field | Description |
+|---|---|
+| ID | `<CATEGORY>-<N>` — a category tag (`RULE`, `AI`, `UI`, more may be added; see `specs/specification.md` for what each covers) plus a number sequential within that category |
+| Priority | `low` / `medium` / `high` / `critical` |
+| Added | Date the task entered the backlog (`YYYY-MM-DD`) |
+| Description | A sentence or two describing the task |
+
+Example entry:
+
+```md
+### RULE-1 — Реализация ConsView
+**Priority:** Low
+**Added:** 2026-07-06
+
+Подключить визуальный конструктор условий (ConsView → ConditionGroup → ConditionRow) к RuleEditor.
+```
+
 ## Git conventions
 
 ### Commit message format
