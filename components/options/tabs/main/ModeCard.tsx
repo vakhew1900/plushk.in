@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { Badge } from '@/components/ui/badge';
+import { IconFolder } from '@/components/icons';
 import styles from './ModeCard.module.css';
 
 interface Props {
@@ -26,9 +27,7 @@ export function ModeCard({ label, tag, desc, selected, showFallback, onSelect }:
         <span className={styles.desc}>{desc}</span>
         {showFallback && (
           <span className={styles.fallback}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="var(--faint)" style={{ flexShrink: 0 }}>
-              <path d="M3 6a1 1 0 0 1 1-1h5l2 2h8a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
-            </svg>
+            <IconFolder size={13} fill="var(--faint)" style={{ flexShrink: 0 }} />
             нет совпадений → <span className={styles.fallbackText}>Несортированные</span>
           </span>
         )}

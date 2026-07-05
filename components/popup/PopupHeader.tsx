@@ -1,4 +1,5 @@
 import type { Mode } from './PopupModeSelector';
+import { IconLogo } from '@/components/icons';
 import styles from './PopupHeader.module.css';
 
 const MODE_LABELS: Record<Mode, string> = {
@@ -13,12 +14,7 @@ export function PopupHeader({ mode }: Props) {
   return (
     <div className={styles.header}>
       <div className={styles.icon}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <circle cx="6"  cy="6"  r="2.4" fill="var(--accent)" />
-          <circle cx="6"  cy="18" r="2.4" fill="var(--accent)" />
-          <circle cx="18" cy="12" r="2.4" fill="var(--accent)" />
-          <path d="M8 7l8 4M8 17l8-4" stroke="var(--accent)" strokeWidth="1.6" />
-        </svg>
+        <IconLogo size={20} />
       </div>
 
       <div className={styles.meta}>

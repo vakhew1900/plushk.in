@@ -1,0 +1,11 @@
+export { IconLogo }     from './IconLogo';
+export { IconNetwork }  from './IconNetwork';
+export { IconSliders }  from './IconSliders';
+export { IconHome }     from './IconHome';
+export { IconPlus }     from './IconPlus';
+export { IconFolder }   from './IconFolder';
+export { IconBookmark } from './IconBookmark';
+export { IconCheck }    from './IconCheck';
+export { IconCopy }     from './IconCopy';
+export { IconDownload } from './IconDownload';
+export { IconUpload }   from './IconUpload';

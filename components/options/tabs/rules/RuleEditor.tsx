@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { IconNetwork, IconPlus, IconCheck } from '@/components/icons';
 import { ConditionGroup } from './ConditionGroup';
 import type { Condition } from './ConditionGroup';
 import { JsonEditor } from './JsonEditor';
@@ -46,12 +47,7 @@ export function RuleEditor({ name, desc, groups }: Props) {
           className={styles.viewToggle}
         >
           <RadioGroup.Item value="cons" className={styles.viewBtn}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-              <circle cx="6" cy="6" r="1.8" fill="currentColor" />
-              <circle cx="6" cy="18" r="1.8" fill="currentColor" />
-              <circle cx="17" cy="12" r="1.8" fill="currentColor" />
-              <path d="M8 6.5l7 4.5M8 17.5l7-4.5" stroke="currentColor" strokeWidth="1.4" />
-            </svg>
+            <IconNetwork size={13} />
             Конструктор
           </RadioGroup.Item>
           <RadioGroup.Item value="json" className={`${styles.viewBtn} ${styles.viewBtnMono}`}>
@@ -70,9 +66,7 @@ export function RuleEditor({ name, desc, groups }: Props) {
             <div className={styles.condList}>
               {groups.map((g, i) => <ConditionGroup key={i} conds={g.conds} />)}
               <Button variant="dashed" style={{ width: '100%', color: 'var(--accent)', borderColor: 'color-mix(in srgb, var(--accent) 30%, transparent)' }}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
+                <IconPlus size={13} />
                 Группа ИЛИ
               </Button>
             </div>
@@ -89,9 +83,7 @@ export function RuleEditor({ name, desc, groups }: Props) {
 
       <div className={styles.editorFooter}>
         <Button variant="outline" size="sm">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M5 12l4 4 10-10" />
-          </svg>
+          <IconCheck size={13} />
           Тест на текущей странице
         </Button>
         <div style={{ flex: 1 }} />

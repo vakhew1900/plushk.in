@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { IconBookmark, IconFolder } from '@/components/icons';
 import type { Mode } from './PopupModeSelector';
 import styles from './PopupActions.module.css';
 
@@ -14,15 +15,11 @@ export function PopupActions({ mode }: Props) {
   return (
     <div className={styles.wrap}>
       <Button size="lg" style={{ width: '100%' }}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z" />
-        </svg>
+        <IconBookmark size={15} />
         {ACTION_LABELS[mode]}
       </Button>
       <Button variant="outline" style={{ width: '100%' }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M3 6a1 1 0 0 1 1-1h5l2 2h8a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
-        </svg>
+        <IconFolder size={14} />
         Изменить папку
       </Button>
     </div>

@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { IconFolder } from '@/components/icons';
 import styles from './ActivityItem.module.css';
 
 interface Props {
@@ -18,9 +19,7 @@ export function ActivityItem({ letter, color, title, folder, rule, time }: Props
       <span className={styles.info}>
         <span className={styles.title}>{title}</span>
         <span className={styles.folder}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 6a1 1 0 0 1 1-1h5l2 2h8a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
-          </svg>
+          <IconFolder size={11} />
           {folder}
         </span>
       </span>

@@ -1,0 +1,11 @@
+import type React from 'react';
+
+type IconProps = React.SVGProps<SVGSVGElement> & { size?: number };
+
+export function IconFolder({ size = 16, ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M3 6a1 1 0 0 1 1-1h5l2 2h8a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+    </svg>
+  );
+}

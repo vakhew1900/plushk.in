@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { IconPlus } from '@/components/icons';
 import { ConditionRow } from './ConditionRow';
 import styles from './ConditionGroup.module.css';
 
@@ -29,9 +30,7 @@ export function ConditionGroup({ conds, onRemove }: Props) {
           <ConditionRow key={i} field={c.field} opLabel={c.opLabel} value={c.value} isNot={c.isNot} />
         ))}
         <Button variant="dashed" size="sm" style={{ alignSelf: 'flex-start', marginTop: 4 }}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
+          <IconPlus size={11} />
           Условие
         </Button>
       </div>

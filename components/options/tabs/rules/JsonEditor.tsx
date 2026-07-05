@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { IconCopy } from '@/components/icons';
 import styles from './JsonEditor.module.css';
 
 interface Token { text: string; color: string }
@@ -29,10 +30,7 @@ export function JsonEditor({ json, filename, condCount }: Props) {
       <div className={styles.toolbar}>
         <span className={styles.filename}>{filename}</span>
         <Button variant="ghost" size="icon-sm" style={{ marginLeft: 'auto', color: 'var(--muted)' }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <rect x="9" y="9" width="11" height="11" rx="2" />
-            <path d="M5 15V5a2 2 0 0 1 2-2h10" />
-          </svg>
+          <IconCopy size={12} />
         </Button>
       </div>
 

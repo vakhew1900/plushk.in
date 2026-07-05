@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { Button } from '@/components/ui/button';
+import { IconPlus, IconDownload, IconUpload } from '@/components/icons';
 import { AliasRow } from './aliases/AliasRow';
 import styles from './AliasesTab.module.css';
 
@@ -28,9 +29,7 @@ export function AliasesTab() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.h2}>Алиасы доменов</h2>
           <Button variant="outline" size="sm" style={{ marginLeft: 'auto' }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
+            <IconPlus size={12} />
             Алиас
           </Button>
         </div>
@@ -67,15 +66,11 @@ export function AliasesTab() {
         <p className={styles.sectionDesc}>Резервная копия всех правил, алиасов и переменных одним файлом.</p>
         <div className={styles.exportRow}>
           <Button variant="outline">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M12 3v12M7 11l5 4 5-4M5 21h14" />
-            </svg>
+            <IconDownload size={15} />
             Экспорт .json
           </Button>
           <Button variant="outline">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M12 15V3M7 7l5-4 5 4M5 21h14" />
-            </svg>
+            <IconUpload size={15} />
             Импорт
           </Button>
         </div>
