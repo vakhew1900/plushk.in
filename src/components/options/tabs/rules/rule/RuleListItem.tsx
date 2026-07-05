@@ -10,9 +10,10 @@ interface Props {
   selected: boolean;
   onSelect: () => void;
   onToggle: () => void;
+  onRemove: () => void;
 }
 
-export function RuleListItem({ index, name, desc, enabled, selected, onSelect, onToggle }: Props) {
+export function RuleListItem({ index, name, desc, enabled, selected, onSelect, onToggle, onRemove }: Props) {
   return (
     <div onClick={onSelect} className={clsx(styles.item, selected && styles.selected)}>
       <div className={styles.top}>
@@ -21,6 +22,12 @@ export function RuleListItem({ index, name, desc, enabled, selected, onSelect, o
         <span onClick={(e) => { e.stopPropagation(); onToggle(); }}>
           <Switch checked={enabled} onCheckedChange={onToggle} />
         </span>
+        <button
+          onClick={(e) => { e.stopPropagation(); onRemove(); }}
+          className={styles.removeBtn}
+        >
+          ×
+        </button>
       </div>
       <div className={styles.desc}>{desc}</div>
     </div>

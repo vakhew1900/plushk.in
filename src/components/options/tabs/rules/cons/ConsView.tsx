@@ -2,8 +2,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
-import { ConditionGroup } from './ConditionGroup';
-import type { Condition } from './ConditionGroup';
+import { ConditionGroup } from '../condition/ConditionGroup';
+import type { Condition } from '../condition/ConditionGroup';
 import styles from './ConsView.module.css';
 
 interface Group { conds: Condition[] }

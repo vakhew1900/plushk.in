@@ -3,14 +3,20 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { IconCheck } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
-import type { Condition } from './ConditionGroup';
-import { JsonView } from './JsonView';
+import type { Condition } from '../condition/ConditionGroup';
+import { JsonView } from '../json/JsonView';
 import styles from './RuleEditor.module.css';
 
 interface Group { conds: Condition[] }
-interface Props { name: string; desc: string; groups: Group[] }
+interface Props {
+  name: string;
+  desc: string;
+  groups: Group[];
+  onNameChange: (name: string) => void;
+  onDescChange: (desc: string) => void;
+}
 
-export function RuleEditor({ name, desc, groups }: Props) {
+export function RuleEditor({ name, desc, groups, onNameChange, onDescChange }: Props) {
   const { translate: t } = useTranslation();
   const slug = name.toLowerCase().replace(/[^a-zа-я0-9]+/gi, '_').replace(/^_|_$/g, '');
   const jsonObj = {
@@ -24,11 +30,11 @@ export function RuleEditor({ name, desc, groups }: Props) {
       <div className={styles.nameSection}>
         <div>
           <div className={styles.fieldLabel}>{t('ruleEditor.nameLabel')}</div>
-          <Input defaultValue={name} />
+          <Input value={name} onChange={(e) => onNameChange(e.target.value)} />
         </div>
         <div>
           <div className={styles.fieldLabel}>{t('ruleEditor.descLabel')}</div>
-          <Textarea defaultValue={desc} rows={2} />
+          <Textarea value={desc} onChange={(e) => onDescChange(e.target.value)} rows={2} />
         </div>
       </div>
 
@@ -38,7 +44,7 @@ export function RuleEditor({ name, desc, groups }: Props) {
 
       <div className={styles.body}>
         <JsonView
-          initialJson={JSON.stringify(jsonObj, null, 2)}
+          json={JSON.stringify(jsonObj, null, 2)}
           filename={(slug || 'rule') + '.rule.json'}
         />
       </div>

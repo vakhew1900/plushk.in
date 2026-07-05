@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
 import CodeMirror from '@uiw/react-codemirror';
-import { json } from '@codemirror/lang-json';
+import { json as jsonLang } from '@codemirror/lang-json';
 import { createTheme } from '@uiw/codemirror-themes';
 import { tags } from '@lezer/highlight';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -30,7 +30,7 @@ const obsidianDark = createTheme({
 });
 
 interface Props {
-  initialJson: string;
+  json: string;
   filename: string;
 }
 
@@ -51,9 +51,13 @@ function countConditions(raw: string): number | null {
   }
 }
 
-export function JsonView({ initialJson, filename }: Props) {
-  const [value, setValue] = useState(initialJson);
+export function JsonView({ json, filename }: Props) {
+  const [value, setValue] = useState(json);
   const { translate: t } = useTranslation();
+
+  useEffect(() => {
+    setValue(json);
+  }, [json]);
 
   const condCount = countConditions(value);
   const isValid = condCount !== null;
@@ -66,7 +70,7 @@ export function JsonView({ initialJson, filename }: Props) {
 
       <CodeMirror
         value={value}
-        extensions={[json()]}
+        extensions={[jsonLang()]}
         theme={obsidianDark}
         onChange={setValue}
         minHeight="180px"

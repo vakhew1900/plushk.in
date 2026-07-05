@@ -1,17 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { IconPlus } from "@/components/icons";
 import { useTranslation } from "@/hooks/useTranslation";
 import { TabHeader } from "@/components/options/TabHeader";
-import { RuleListItem } from "./rules/RuleListItem";
-import { RuleEditor } from "./rules/RuleEditor";
-import type { Condition } from "./rules/ConditionGroup";
+import { RuleListItem } from "./rules/rule/RuleListItem";
+import { RuleEditor } from "./rules/rule/RuleEditor";
+import type { Condition } from "./rules/condition/ConditionGroup";
 import styles from "./RulesTab.module.css";
 
 interface Group {
   conds: Condition[];
 }
 interface Rule {
+  id: string;
   name: string;
   desc: string;
   enabled: boolean;
@@ -20,6 +21,7 @@ interface Rule {
 
 const INITIAL_RULES: Rule[] = [
   {
+    id: "social",
     name: "Соцсети",
     desc: "Facebook, Reddit, Pinterest и другие соцсети → папка «Соцсети». Региональные зеркала ловятся через алиасы.",
     enabled: true,
@@ -34,6 +36,7 @@ const INITIAL_RULES: Rule[] = [
     ],
   },
   {
+    id: "reading",
     name: "Чтение / Лонгриды",
     desc: "Habr и длинные статьи (более 800 слов или тег article) → папка «Чтение».",
     enabled: true,
@@ -47,6 +50,7 @@ const INITIAL_RULES: Rule[] = [
     ],
   },
   {
+    id: "design",
     name: "Дизайн-инспирация",
     desc: "Pinterest и дизайн-ресурсы с UI в заголовке → папка «Инспирация».",
     enabled: false,
@@ -66,12 +70,25 @@ export function RulesTab() {
   const [sel, setSel] = useState(0);
   const { translate: t } = useTranslation();
 
-  const toggle = (i: number) =>
-    setRules((prev) =>
-      prev.map((r, idx) => (idx === i ? { ...r, enabled: !r.enabled } : r)),
-    );
+  useEffect(() => {
+    setSel((s) => Math.min(s, Math.max(rules.length - 1, 0)));
+  }, [rules.length]);
 
-  const selected = rules[sel] ?? rules[0];
+  const updateRule = (id: string, patch: Partial<Rule>) =>
+    setRules((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+
+  const addRule = () => {
+    setRules((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), name: "", desc: "", enabled: true, groups: [] },
+    ]);
+    setSel(rules.length);
+  };
+
+  const removeRule = (id: string) =>
+    setRules((prev) => prev.filter((r) => r.id !== id));
+
+  const selected = rules[sel];
 
   return (
     <div>
@@ -81,27 +98,32 @@ export function RulesTab() {
         <div className={styles.list}>
           {rules.map((r, i) => (
             <RuleListItem
-              key={i}
+              key={r.id}
               index={i + 1}
               name={r.name}
               desc={r.desc}
               enabled={r.enabled}
               selected={sel === i}
               onSelect={() => setSel(i)}
-              onToggle={() => toggle(i)}
+              onToggle={() => updateRule(r.id, { enabled: !r.enabled })}
+              onRemove={() => removeRule(r.id)}
             />
           ))}
-          <Button variant="dashed" style={{ width: "100%" }}>
+          <Button variant="dashed" style={{ width: "100%" }} onClick={addRule}>
             <IconPlus size={13} />
             {t("rulesTab.addRule")}
           </Button>
         </div>
 
-        <RuleEditor
-          name={selected.name}
-          desc={selected.desc}
-          groups={selected.groups}
-        />
+        {selected && (
+          <RuleEditor
+            name={selected.name}
+            desc={selected.desc}
+            groups={selected.groups}
+            onNameChange={(name) => updateRule(selected.id, { name })}
+            onDescChange={(desc) => updateRule(selected.id, { desc })}
+          />
+        )}
       </div>
     </div>
   );
