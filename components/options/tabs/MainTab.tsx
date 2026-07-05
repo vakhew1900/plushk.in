@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 import { ModeCard } from './main/ModeCard';
 import { ActivityItem } from './main/ActivityItem';
 import styles from './MainTab.module.css';
 
 const MODES = [
-  { key: 'auto', label: 'Авто', tag: 'по умолчанию', desc: 'Подходит под правило — раскладываем сразу. Если совпадений нет — поведение по умолчанию.', showFallback: true },
-  { key: 'hint', label: 'Подсказка', tag: 'с подтверждением', desc: 'Показываем, куда попадёт закладка, и даём изменить папку перед сохранением.' },
-  { key: 'off',  label: 'Выключен', tag: 'без вмешательства', desc: 'Обычные закладки браузера — расширение не вмешивается.' },
+  { key: 'auto', showFallback: true },
+  { key: 'hint' },
+  { key: 'off' },
 ] as const;
 
 const ACTIVITY = [
@@ -18,20 +19,27 @@ const ACTIVITY = [
 
 export function MainTab() {
   const [mode, setMode] = useState('auto');
+  const { translate: t } = useTranslation();
   return (
     <div>
-      <h1 className={styles.h1}>Режим работы</h1>
-      <p className={styles.lead}>
-        Определяет, что происходит, когда вы добавляете закладку. Изменяется здесь или прямо в попапе.
-      </p>
+      <h1 className={styles.h1}>{t('common.modeSectionTitle')}</h1>
+      <p className={styles.lead}>{t('mainTab.lead')}</p>
 
       <div className={styles.modeList}>
         {MODES.map(({ key, ...rest }) => (
-          <ModeCard key={key} {...rest} selected={mode === key} onSelect={() => setMode(key)} />
+          <ModeCard
+            key={key}
+            {...rest}
+            label={t(`modes.${key}.label`)}
+            tag={t(`modes.${key}.tag`)}
+            desc={t(`modes.${key}.desc`)}
+            selected={mode === key}
+            onSelect={() => setMode(key)}
+          />
         ))}
       </div>
 
-      <h2 className={styles.h2}>Последние действия</h2>
+      <h2 className={styles.h2}>{t('mainTab.recentActivity')}</h2>
       <div className={styles.activityWrap}>
         {ACTIVITY.map((a, i) => <ActivityItem key={i} {...a} />)}
       </div>

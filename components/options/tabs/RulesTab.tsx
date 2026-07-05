@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { IconPlus } from '@/components/icons';
+import { useTranslation } from '@/hooks/useTranslation';
 import { RuleListItem } from './rules/RuleListItem';
 import { RuleEditor } from './rules/RuleEditor';
 import type { Condition } from './rules/ConditionGroup';
@@ -40,6 +41,7 @@ const INITIAL_RULES: Rule[] = [
 export function RulesTab() {
   const [rules, setRules] = useState<Rule[]>(INITIAL_RULES);
   const [sel, setSel] = useState(0);
+  const { translate: t } = useTranslation();
 
   const toggle = (i: number) =>
     setRules((prev) => prev.map((r, idx) => (idx === i ? { ...r, enabled: !r.enabled } : r)));
@@ -50,12 +52,12 @@ export function RulesTab() {
     <div>
       <div className={styles.header}>
         <div className={styles.headerText}>
-          <h1 className={styles.h1}>Правила</h1>
-          <p className={styles.lead}>Проверяются сверху вниз — побеждает первое совпадение.</p>
+          <h1 className={styles.h1}>{t('nav.rules')}</h1>
+          <p className={styles.lead}>{t('rulesTab.lead')}</p>
         </div>
         <Button>
           <IconPlus size={15} />
-          Правило
+          {t('rulesTab.addRule')}
         </Button>
       </div>
 

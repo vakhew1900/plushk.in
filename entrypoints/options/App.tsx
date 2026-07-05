@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./style.css";
+import { LocaleProvider } from "@/context/LocaleContext";
 import { OptionsSidebar } from "@/components/options/OptionsSidebar";
 import type { Tab } from "@/components/options/OptionsSidebar";
 import { MainTab } from "@/components/options/tabs/MainTab";
@@ -11,15 +12,17 @@ export default function App() {
   const [tab, setTab] = useState<Tab>("main");
 
   return (
-    <div data-theme="dark" className={styles.root}>
-      <div className={styles.body}>
-        <OptionsSidebar tab={tab} onTabChange={setTab} ruleCount={3} />
-        <div className={styles.content}>
-          {tab === "main" && <MainTab />}
-          {tab === "rules" && <RulesTab />}
-          {tab === "aliases" && <AliasesTab />}
+    <LocaleProvider>
+      <div data-theme="dark" className={styles.root}>
+        <div className={styles.body}>
+          <OptionsSidebar tab={tab} onTabChange={setTab} ruleCount={3} />
+          <div className={styles.content}>
+            {tab === "main" && <MainTab />}
+            {tab === "rules" && <RulesTab />}
+            {tab === "aliases" && <AliasesTab />}
+          </div>
         </div>
       </div>
-    </div>
+    </LocaleProvider>
   );
 }

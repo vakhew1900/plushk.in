@@ -1,0 +1,99 @@
+{
+  "common": {
+    "modeSectionTitle": "Operating mode",
+    "condition": "Condition",
+    "noMatchFallback": "no match →",
+    "uncategorizedFolder": "Uncategorized"
+  },
+  "nav": {
+    "section": "General",
+    "main": "Home",
+    "rules": "Rules",
+    "aliases": "Aliases"
+  },
+  "modes": {
+    "auto": {
+      "label": "Auto",
+      "tag": "default",
+      "desc": "Matches a rule — files it right away. If nothing matches, falls back to the default behavior."
+    },
+    "hint": {
+      "label": "Hint",
+      "tag": "with confirmation",
+      "desc": "Shows where the bookmark will go and lets you change the folder before saving."
+    },
+    "off": {
+      "label": "Off",
+      "tag": "no intervention",
+      "desc": "Regular browser bookmarks — the extension doesn't interfere."
+    }
+  },
+  "mainTab": {
+    "lead": "Determines what happens when you add a bookmark. Change it here or right in the popup.",
+    "recentActivity": "Recent activity"
+  },
+  "rulesTab": {
+    "lead": "Checked top to bottom — the first match wins.",
+    "addRule": "Rule"
+  },
+  "ruleEditor": {
+    "nameLabel": "Name",
+    "descLabel": "Description",
+    "conditionTitle": "Condition",
+    "testButton": "Test on current page",
+    "saveButton": "Save"
+  },
+  "conditionGroup": {
+    "andBadge": "AND",
+    "andDesc": "all conditions match",
+    "addCondition": "Condition"
+  },
+  "conditionRow": {
+    "notBadge": "NOT"
+  },
+  "consView": {
+    "orBadge": "OR",
+    "orDesc": "any group matches",
+    "addGroup": "OR group"
+  },
+  "jsonView": {
+    "valid": "Valid JSON · {{count}} conditions",
+    "invalid": "JSON syntax error"
+  },
+  "aliasesTab": {
+    "lead": "Domain aliases, extraction variables, and backups.",
+    "aliases": {
+      "title": "Domain aliases",
+      "addAlias": "Alias",
+      "desc": "One alias for multiple domains — e.g. regional mirrors."
+    },
+    "variables": {
+      "title": "Variables",
+      "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",
+      "fieldsCount": "{{count}} fields"
+    },
+    "export": {
+      "title": "Export / Import",
+      "desc": "A single-file backup of all rules, aliases, and variables.",
+      "exportButton": "Export .json",
+      "importButton": "Import"
+    },
+    "theme": {
+      "title": "Theme",
+      "dark": "Dark",
+      "light": "Light",
+      "system": "System"
+    }
+  },
+  "popup": {
+    "appName": "Sorter",
+    "appSub": "Bookmarks",
+    "settingsButton": "Settings",
+    "changeFolderButton": "Change folder",
+    "actions": {
+      "auto": "Save automatically",
+      "hint": "Confirm and save",
+      "off": "Save to Bookmarks"
+    }
+  }
+}

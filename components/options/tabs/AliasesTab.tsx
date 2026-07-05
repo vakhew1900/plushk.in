@@ -2,6 +2,7 @@ import { useState } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { Button } from '@/components/ui/button';
 import { IconPlus, IconDownload, IconUpload } from '@/components/icons';
+import { useTranslation } from '@/hooks/useTranslation';
 import { AliasRow } from './aliases/AliasRow';
 import styles from './AliasesTab.module.css';
 
@@ -19,35 +20,36 @@ const VARIABLES = [
 
 export function AliasesTab() {
   const [theme, setTheme] = useState('dark');
+  const { translate: t } = useTranslation();
 
   return (
     <div className={styles.wrap}>
-      <h1 className={styles.h1}>Алиасы</h1>
-      <p className={styles.lead}>Алиасы доменов, переменные извлечения и резервные копии.</p>
+      <h1 className={styles.h1}>{t('nav.aliases')}</h1>
+      <p className={styles.lead}>{t('aliasesTab.lead')}</p>
 
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.h2}>Алиасы доменов</h2>
+          <h2 className={styles.h2}>{t('aliasesTab.aliases.title')}</h2>
           <Button variant="outline" size="sm" style={{ marginLeft: 'auto' }}>
             <IconPlus size={12} />
-            Алиас
+            {t('aliasesTab.aliases.addAlias')}
           </Button>
         </div>
-        <p className={styles.sectionDesc}>Один псевдоним для нескольких доменов — например, региональных зеркал.</p>
+        <p className={styles.sectionDesc}>{t('aliasesTab.aliases.desc')}</p>
         <div className={styles.table}>
           {ALIASES.map((a) => <AliasRow key={a.name} {...a} />)}
         </div>
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.h2} style={{ marginBottom: 5 }}>Переменные</h2>
-        <p className={styles.sectionDesc}>Поля-псевдонимы для путей по HTML-дереву страницы. Используются в правилах и при экспорте.</p>
+        <h2 className={styles.h2} style={{ marginBottom: 5 }}>{t('aliasesTab.variables.title')}</h2>
+        <p className={styles.sectionDesc}>{t('aliasesTab.variables.desc')}</p>
         <div className={styles.variableList}>
           {VARIABLES.map((v) => (
             <div key={v.name} className={styles.variableBlock}>
               <div className={styles.variableHead}>
                 <span className={styles.variableName}>{v.name}</span>
-                <span className={styles.variableCount}>{v.fields.length} поля</span>
+                <span className={styles.variableCount}>{t('aliasesTab.variables.fieldsCount', { count: v.fields.length })}</span>
               </div>
               {v.fields.map((f) => (
                 <div key={f.k} className={styles.fieldRow}>
@@ -62,26 +64,26 @@ export function AliasesTab() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.h2} style={{ marginBottom: 5 }}>Экспорт / Импорт</h2>
-        <p className={styles.sectionDesc}>Резервная копия всех правил, алиасов и переменных одним файлом.</p>
+        <h2 className={styles.h2} style={{ marginBottom: 5 }}>{t('aliasesTab.export.title')}</h2>
+        <p className={styles.sectionDesc}>{t('aliasesTab.export.desc')}</p>
         <div className={styles.exportRow}>
           <Button variant="outline">
             <IconDownload size={15} />
-            Экспорт .json
+            {t('aliasesTab.export.exportButton')}
           </Button>
           <Button variant="outline">
             <IconUpload size={15} />
-            Импорт
+            {t('aliasesTab.export.importButton')}
           </Button>
         </div>
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.h2} style={{ marginBottom: 12 }}>Тема</h2>
+        <h2 className={styles.h2} style={{ marginBottom: 12 }}>{t('aliasesTab.theme.title')}</h2>
         <RadioGroup.Root value={theme} onValueChange={setTheme} className={styles.themeGroup}>
-          {(['dark', 'light', 'system'] as const).map((t) => (
-            <RadioGroup.Item key={t} value={t} className={styles.themeItem}>
-              {t === 'dark' ? 'Тёмная' : t === 'light' ? 'Светлая' : 'Системная'}
+          {(['dark', 'light', 'system'] as const).map((themeOption) => (
+            <RadioGroup.Item key={themeOption} value={themeOption} className={styles.themeItem}>
+              {t(`aliasesTab.theme.${themeOption}`)}
             </RadioGroup.Item>
           ))}
         </RadioGroup.Root>

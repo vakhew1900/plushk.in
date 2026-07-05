@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { IconHome, IconNetwork, IconSliders } from '@/components/icons';
+import { useTranslation } from '@/hooks/useTranslation';
 import styles from './OptionsSidebar.module.css';
 
 export type Tab = 'main' | 'rules' | 'aliases';
@@ -19,24 +20,25 @@ function NavBtn({ active, onClick, children }: { active: boolean; onClick: () =>
 }
 
 export function OptionsSidebar({ tab, onTabChange, ruleCount }: Props) {
+  const { translate: t } = useTranslation();
   return (
     <div className={styles.sidebar}>
-      <div className={styles.section}>Основное</div>
+      <div className={styles.section}>{t('nav.section')}</div>
 
       <NavBtn active={tab === 'main'} onClick={() => onTabChange('main')}>
         <IconHome size={16} />
-        Главное
+        {t('nav.main')}
       </NavBtn>
 
       <NavBtn active={tab === 'rules'} onClick={() => onTabChange('rules')}>
         <IconNetwork size={16} />
-        Правила
+        {t('nav.rules')}
         <span className={styles.count}>{ruleCount}</span>
       </NavBtn>
 
       <NavBtn active={tab === 'aliases'} onClick={() => onTabChange('aliases')}>
         <IconSliders size={16} />
-        Алиасы
+        {t('nav.aliases')}
       </NavBtn>
     </div>
   );

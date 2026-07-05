@@ -1,16 +1,12 @@
 import type { Mode } from './PopupModeSelector';
 import { IconLogo } from '@/components/icons';
+import { useTranslation } from '@/hooks/useTranslation';
 import styles from './PopupHeader.module.css';
-
-const MODE_LABELS: Record<Mode, string> = {
-  auto: 'Авто',
-  hint: 'Подсказка',
-  off:  'Выключен',
-};
 
 interface Props { mode: Mode }
 
 export function PopupHeader({ mode }: Props) {
+  const { translate: t } = useTranslation();
   return (
     <div className={styles.header}>
       <div className={styles.icon}>
@@ -18,13 +14,13 @@ export function PopupHeader({ mode }: Props) {
       </div>
 
       <div className={styles.meta}>
-        <div className={styles.name}>Сортировщик</div>
-        <div className={styles.sub}>Закладки</div>
+        <div className={styles.name}>{t('popup.appName')}</div>
+        <div className={styles.sub}>{t('popup.appSub')}</div>
       </div>
 
       <span className={styles.status}>
         <span className={styles.dot} />
-        {MODE_LABELS[mode]}
+        {t(`modes.${mode}.label`)}
       </span>
     </div>
   );

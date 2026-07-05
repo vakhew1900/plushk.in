@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { Badge } from '@/components/ui/badge';
 import { IconFolder } from '@/components/icons';
+import { useTranslation } from '@/hooks/useTranslation';
 import styles from './ModeCard.module.css';
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function ModeCard({ label, tag, desc, selected, showFallback, onSelect }: Props) {
+  const { translate: t } = useTranslation();
   return (
     <button onClick={onSelect} className={clsx(styles.card, selected && styles.selected)}>
       <span className={styles.radio}>
@@ -28,7 +30,7 @@ export function ModeCard({ label, tag, desc, selected, showFallback, onSelect }:
         {showFallback && (
           <span className={styles.fallback}>
             <IconFolder size={13} fill="var(--faint)" style={{ flexShrink: 0 }} />
-            нет совпадений → <span className={styles.fallbackText}>Несортированные</span>
+            {t('common.noMatchFallback')} <span className={styles.fallbackText}>{t('common.uncategorizedFolder')}</span>
           </span>
         )}
       </span>

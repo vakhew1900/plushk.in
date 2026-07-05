@@ -3,7 +3,8 @@ import { clsx } from 'clsx';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
 import { createTheme } from '@uiw/codemirror-themes';
-import { tags as t } from '@lezer/highlight';
+import { tags } from '@lezer/highlight';
+import { useTranslation } from '@/hooks/useTranslation';
 import styles from './JsonView.module.css';
 
 const obsidianDark = createTheme({
@@ -19,12 +20,12 @@ const obsidianDark = createTheme({
     gutterForeground:'#56565f',
   },
   styles: [
-    { tag: t.propertyName,      color: '#5c9ee0' },
-    { tag: t.string,            color: '#5cba8f' },
-    { tag: t.number,            color: '#7d6cf0' },
-    { tag: [t.bool, t.null],    color: '#e0746e' },
-    { tag: t.punctuation,       color: '#8b8b94' },
-    { tag: t.bracket,           color: '#8b8b94' },
+    { tag: tags.propertyName,      color: '#5c9ee0' },
+    { tag: tags.string,            color: '#5cba8f' },
+    { tag: tags.number,            color: '#7d6cf0' },
+    { tag: [tags.bool, tags.null], color: '#e0746e' },
+    { tag: tags.punctuation,       color: '#8b8b94' },
+    { tag: tags.bracket,           color: '#8b8b94' },
   ],
 });
 
@@ -35,6 +36,7 @@ interface Props {
 
 function countConditions(raw: string): number | null {
   try {
+    //todo нужно подрефакторить
     const obj = JSON.parse(raw) as unknown;
     if (typeof obj !== 'object' || obj === null) return null;
     const or = (obj as Record<string, unknown>)['or'];
@@ -51,6 +53,7 @@ function countConditions(raw: string): number | null {
 
 export function JsonView({ initialJson, filename }: Props) {
   const [value, setValue] = useState(initialJson);
+  const { translate: t } = useTranslation();
 
   const condCount = countConditions(value);
   const isValid = condCount !== null;
@@ -84,7 +87,7 @@ export function JsonView({ initialJson, filename }: Props) {
 
       <div className={clsx(styles.footer, isValid ? styles.valid : styles.invalid)}>
         <span className={clsx(styles.dot, isValid ? styles.dotValid : styles.dotInvalid)} />
-        {isValid ? `Валидный JSON · ${condCount} условий` : 'Ошибка синтаксиса JSON'}
+        {isValid ? t('jsonView.valid', { count: condCount }) : t('jsonView.invalid')}
       </div>
     </div>
   );
