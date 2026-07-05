@@ -6,4 +6,64 @@
 }
 .row:not(:last-child) { border-bottom: 1px solid var(--border); }
 
+.nameInput {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  width: 120px;
+  flex-shrink: 0;
+}
+
 .tags { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; align-items: center; }
+
+.domainChip {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 6px 2px 8px;
+}
+
+.domainInput {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  width: 108px;
+  border: none;
+  background: transparent;
+  padding: 2px 0;
+}
+
+.removeChip {
+  font-size: 13px;
+  line-height: 1;
+  color: var(--faint);
+  transition: color 0.15s;
+}
+.removeChip:hover { color: var(--red); }
+
+.addChip {
+  font-size: 13px;
+  line-height: 1;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+.addChip:hover { color: var(--accent); border-color: var(--accent); }
+
+.removeRow {
+  margin-left: auto;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--faint);
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.removeRow:hover { color: var(--red); }

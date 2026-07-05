@@ -1,6 +1,7 @@
 .section { margin-bottom: 22px; }
 
-.h2 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+.sectionHeader { display: flex; align-items: center; margin-bottom: 5px; }
+.h2 { font-size: 15px; font-weight: 700; color: var(--text); }
 .sectionDesc { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
 
 .variableList { display: flex; flex-direction: column; gap: 11px; }

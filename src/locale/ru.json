@@ -66,12 +66,19 @@
   "aliasesSection": {
     "title": "Алиасы доменов",
     "addAlias": "Алиас",
-    "desc": "Один псевдоним для нескольких доменов — например, региональных зеркал."
+    "desc": "Один псевдоним для нескольких доменов — например, региональных зеркал.",
+    "namePlaceholder": "имя",
+    "domainPlaceholder": "domain.com"
   },
   "variablesSection": {
     "title": "Переменные",
     "desc": "Поля-псевдонимы для путей по HTML-дереву страницы. Используются в правилах и при экспорте.",
-    "fieldsCount": "{{count}} поля"
+    "fieldsCount": "{{count}} поля",
+    "addGroup": "Группа",
+    "addField": "Поле",
+    "namePlaceholder": "имя",
+    "fieldKeyPlaceholder": "поле",
+    "fieldValuePlaceholder": "селектор"
   },
   "exportSection": {
     "title": "Экспорт / Импорт",

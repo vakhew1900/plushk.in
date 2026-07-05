@@ -66,12 +66,19 @@
   "aliasesSection": {
     "title": "Domain aliases",
     "addAlias": "Alias",
-    "desc": "One alias for multiple domains — e.g. regional mirrors."
+    "desc": "One alias for multiple domains — e.g. regional mirrors.",
+    "namePlaceholder": "name",
+    "domainPlaceholder": "domain.com"
   },
   "variablesSection": {
     "title": "Variables",
     "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",
-    "fieldsCount": "{{count}} fields"
+    "fieldsCount": "{{count}} fields",
+    "addGroup": "Group",
+    "addField": "Field",
+    "namePlaceholder": "name",
+    "fieldKeyPlaceholder": "field",
+    "fieldValuePlaceholder": "selector"
   },
   "exportSection": {
     "title": "Export / Import",

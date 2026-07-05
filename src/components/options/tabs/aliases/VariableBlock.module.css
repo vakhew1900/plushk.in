@@ -7,16 +7,47 @@
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
 }
-.variableName  { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12.5px; color: var(--accent); }
+.variableNameInput {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--accent);
+  width: 120px;
+  flex-shrink: 0;
+}
 .variableCount { font-size: 11px; color: var(--faint); }
+.removeBlock {
+  margin-left: auto;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--faint);
+  transition: color 0.15s;
+}
+.removeBlock:hover { color: var(--red); }
+
+.fields { display: flex; flex-direction: column; gap: 7px; padding: 9px 14px; }
 
 .fieldRow {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 9px 14px;
 }
-.fieldRow:not(:last-child) { border-bottom: 1px solid var(--border); }
-.fieldKey    { width: 90px; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 12.5px; color: var(--text); }
-.fieldArrow  { color: var(--faint); }
-.fieldValue  { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--muted); }
+.fieldKeyInput {
+  width: 90px;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 12.5px;
+}
+.fieldArrow { color: var(--faint); }
+.fieldValueInput {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+}
+.removeField {
+  font-size: 13px;
+  line-height: 1;
+  color: var(--faint);
+  transition: color 0.15s;
+}
+.removeField:hover { color: var(--red); }
