@@ -98,11 +98,10 @@
     "appName": "Сортировщик",
     "appSub": "Закладки",
     "settingsButton": "Настройки",
-    "changeFolderButton": "Изменить папку",
-    "actions": {
-      "auto": "Сохранить автоматически",
-      "hint": "Подтвердить и сохранить",
-      "off": "Сохранить в Закладки"
+    "hintConfirm": {
+      "pathPlaceholder": "Папка/Подпапка",
+      "confirm": "Сохранить",
+      "cancel": "Отмена"
     }
   }
 }

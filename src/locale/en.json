@@ -98,11 +98,10 @@
     "appName": "Sorter",
     "appSub": "Bookmarks",
     "settingsButton": "Settings",
-    "changeFolderButton": "Change folder",
-    "actions": {
-      "auto": "Save automatically",
-      "hint": "Confirm and save",
-      "off": "Save to Bookmarks"
+    "hintConfirm": {
+      "pathPlaceholder": "Folder/Subfolder",
+      "confirm": "Save",
+      "cancel": "Cancel"
     }
   }
 }

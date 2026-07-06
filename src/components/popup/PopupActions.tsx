@@ -1,23 +1,23 @@
-import { Button } from '@/components/ui/button';
-import { IconBookmark, IconFolder } from '@/components/icons';
-import { useTranslation } from '@/hooks/useTranslation';
 import type { Mode } from './PopupModeSelector';
+import { PopupHintConfirm } from './PopupHintConfirm';
 import styles from './PopupActions.module.css';
 
 interface Props { mode: Mode }
 
+// TODO(RULE-2): targetFolder should come from HintModeHandler.onBookmarkSelected
+// once the background/popup integration exists — this is a placeholder for now.
+const MOCK_SUGGESTED_FOLDER = 'Чтение/Статьи';
+
 export function PopupActions({ mode }: Props) {
-  const { translate: t } = useTranslation();
+  if (mode !== 'hint') return null;
+
   return (
     <div className={styles.wrap}>
-      <Button size="lg" style={{ width: '100%' }}>
-        <IconBookmark size={15} />
-        {t(`popup.actions.${mode}`)}
-      </Button>
-      <Button variant="outline" style={{ width: '100%' }}>
-        <IconFolder size={14} />
-        {t('popup.changeFolderButton')}
-      </Button>
+      <PopupHintConfirm
+        targetFolder={MOCK_SUGGESTED_FOLDER}
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />
     </div>
   );
 }
