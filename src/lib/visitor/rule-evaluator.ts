@@ -2,6 +2,7 @@ import type { PageMeta } from '../../types/page-meta';
 import { getMetaField } from '../../types/page-meta';
 import type {
   AndRule,
+  BookmarkRule,
   NotRule,
   OrRule,
   RegexRule,
@@ -56,6 +57,12 @@ class EvaluatorVisitor implements RuleVisitor<boolean> {
 
 export function evaluate(rule: RuleNode, meta: PageMeta): boolean {
   return visitRule(rule, new EvaluatorVisitor(meta));
+}
+
+// Rules are expected pre-sorted by descending priority (e.g. via
+// IBookmarkRuleRepository.getAll()) — the first enabled match wins.
+export function findMatchingRule(rules: BookmarkRule[], meta: PageMeta): BookmarkRule | undefined {
+  return rules.find((rule) => rule.enabled && evaluate(rule.condition, meta));
 }
 
 class LeafCounterVisitor implements RuleVisitor<number> {

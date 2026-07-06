@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { PageMeta } from '../../../types/page-meta';
+import type { BookmarkRule } from '../../../types/rule';
 import { RuleType } from '../../../types/rule';
-import { countLeafRules, evaluate, parseRuleNode } from '../rule-evaluator';
+import { countLeafRules, evaluate, findMatchingRule, parseRuleNode } from '../rule-evaluator';
 
 const meta: PageMeta = {
   url: 'https://youtube.com/watch?v=abc123',
@@ -365,5 +366,59 @@ describe('parseRuleNode', () => {
     expect(parseRuleNode('[]')).toBeNull();
     expect(parseRuleNode('"just a string"')).toBeNull();
     expect(parseRuleNode('42')).toBeNull();
+  });
+});
+
+// ─── findMatchingRule ────────────────────────────────────────────────────────
+
+function makeRule(overrides: Partial<BookmarkRule> & Pick<BookmarkRule, 'id' | 'condition'>): BookmarkRule {
+  return {
+    name: overrides.id,
+    targetFolder: 'Folder',
+    priority: 0,
+    enabled: true,
+    ...overrides,
+  };
+}
+
+describe('findMatchingRule', () => {
+  it('returns the first enabled rule whose condition matches, in list order', () => {
+    const rules: BookmarkRule[] = [
+      makeRule({ id: 'a', targetFolder: 'A', condition: { type: RuleType.TERM, field: 'domain', value: 'github.com' } }),
+      makeRule({ id: 'b', targetFolder: 'B', condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' } }),
+      makeRule({ id: 'c', targetFolder: 'C', condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' } }),
+    ];
+
+    expect(findMatchingRule(rules, meta)?.id).toBe('b');
+  });
+
+  it('skips a disabled rule even if its condition matches', () => {
+    const rules: BookmarkRule[] = [
+      makeRule({
+        id: 'disabled',
+        enabled: false,
+        targetFolder: 'Disabled',
+        condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
+      }),
+      makeRule({
+        id: 'enabled',
+        targetFolder: 'Enabled',
+        condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
+      }),
+    ];
+
+    expect(findMatchingRule(rules, meta)?.id).toBe('enabled');
+  });
+
+  it('returns undefined when no rule matches', () => {
+    const rules: BookmarkRule[] = [
+      makeRule({ id: 'a', condition: { type: RuleType.TERM, field: 'domain', value: 'github.com' } }),
+    ];
+
+    expect(findMatchingRule(rules, meta)).toBeUndefined();
+  });
+
+  it('returns undefined for an empty rule list', () => {
+    expect(findMatchingRule([], meta)).toBeUndefined();
   });
 });
