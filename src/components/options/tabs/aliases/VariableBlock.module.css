@@ -40,10 +40,7 @@
   font-size: 12.5px;
 }
 .fieldArrow { color: var(--faint); }
-.fieldValueInput {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
-}
+.fieldValueInput { flex: 1; min-width: 0; }
 .removeField {
   font-size: 13px;
   line-height: 1;

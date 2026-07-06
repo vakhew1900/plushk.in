@@ -1,67 +1,45 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
+import { usePageMatchGroups } from '@/hooks/usePageMatchGroups';
+import { DEFAULT_SELECTOR_TYPE, fromPageMatchGroup, toPageMatchGroup } from '@/lib/page-match-mapping';
+import type { VariableFieldDraft, VariableGroupDraft } from '@/lib/page-match-mapping';
 import { VariableBlock } from './VariableBlock';
 import styles from './VariablesSection.module.css';
 
-interface FieldDraft { k: string; v: string }
-interface VariableGroupDraft { id: string; name: string; fields: FieldDraft[] }
-
-const INITIAL_VARIABLES: VariableGroupDraft[] = [
-  {
-    id: 'reddit',
-    name: 'reddit',
-    fields: [
-      { k: 'title', v: 'body h1.post-title' },
-      { k: 'author', v: 'a.author-name' },
-      { k: 'content', v: 'div.post-body' },
-    ],
-  },
-  {
-    id: 'habr',
-    name: 'habr',
-    fields: [
-      { k: 'title', v: 'h1.tm-title' },
-      { k: 'author', v: 'a.tm-user__nickname' },
-    ],
-  },
-];
-
 export function VariablesSection() {
   const { translate: t } = useTranslation();
-  const [groups, setGroups] = useState<VariableGroupDraft[]>(INITIAL_VARIABLES);
+  const { items, save, remove } = usePageMatchGroups();
+  const groups = items.map(fromPageMatchGroup);
 
-  const addGroup = () =>
-    setGroups((prev) => [...prev, { id: crypto.randomUUID(), name: '', fields: [] }]);
+  const saveDraft = (draft: VariableGroupDraft) => save(toPageMatchGroup(draft));
 
-  const removeGroup = (id: string) =>
-    setGroups((prev) => prev.filter((g) => g.id !== id));
+  const addGroup = () => saveDraft({ id: crypto.randomUUID(), name: '', fields: [] });
 
-  const renameGroup = (id: string, name: string) =>
-    setGroups((prev) => prev.map((g) => (g.id === id ? { ...g, name } : g)));
+  const renameGroup = (id: string, name: string) => {
+    const group = groups.find((g) => g.id === id);
+    if (group) saveDraft({ ...group, name });
+  };
 
-  const addField = (id: string) =>
-    setGroups((prev) => prev.map((g) => (g.id === id ? { ...g, fields: [...g.fields, { k: '', v: '' }] } : g)));
+  const addField = (id: string) => {
+    const group = groups.find((g) => g.id === id);
+    if (group) {
+      const field: VariableFieldDraft = { k: '', v: '', selectorType: DEFAULT_SELECTOR_TYPE };
+      saveDraft({ ...group, fields: [...group.fields, field] });
+    }
+  };
 
-  const updateFieldKey = (id: string, index: number, k: string) =>
-    setGroups((prev) =>
-      prev.map((g) =>
-        g.id === id ? { ...g, fields: g.fields.map((f, i) => (i === index ? { ...f, k } : f)) } : g,
-      ),
-    );
+  const updateField = (id: string, index: number, patch: Partial<VariableFieldDraft>) => {
+    const group = groups.find((g) => g.id === id);
+    if (group) {
+      saveDraft({ ...group, fields: group.fields.map((f, i) => (i === index ? { ...f, ...patch } : f)) });
+    }
+  };
 
-  const updateFieldValue = (id: string, index: number, v: string) =>
-    setGroups((prev) =>
-      prev.map((g) =>
-        g.id === id ? { ...g, fields: g.fields.map((f, i) => (i === index ? { ...f, v } : f)) } : g,
-      ),
-    );
-
-  const removeField = (id: string, index: number) =>
-    setGroups((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, fields: g.fields.filter((_, i) => i !== index) } : g)),
-    );
+  const removeField = (id: string, index: number) => {
+    const group = groups.find((g) => g.id === id);
+    if (group) saveDraft({ ...group, fields: group.fields.filter((_, i) => i !== index) });
+  };
 
   return (
     <section className={styles.section}>
@@ -80,11 +58,12 @@ export function VariablesSection() {
             name={g.name}
             fields={g.fields}
             onNameChange={(name) => renameGroup(g.id, name)}
-            onFieldKeyChange={(index, k) => updateFieldKey(g.id, index, k)}
-            onFieldValueChange={(index, v) => updateFieldValue(g.id, index, v)}
+            onFieldKeyChange={(index, k) => updateField(g.id, index, { k })}
+            onFieldValueChange={(index, v) => updateField(g.id, index, { v })}
+            onFieldSelectorTypeChange={(index, selectorType) => updateField(g.id, index, { selectorType })}
             onAddField={() => addField(g.id)}
             onRemoveField={(index) => removeField(g.id, index)}
-            onRemove={() => removeGroup(g.id)}
+            onRemove={() => remove(g.id)}
           />
         ))}
       </div>

@@ -2,7 +2,9 @@ import { useState } from "react";
 import "./style.css";
 import { LocaleProvider } from "@/context/LocaleContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { ServicesProvider } from "@/context/ServicesContext";
 import { useTheme } from "@/hooks/useTheme";
+import { useBookmarkRules } from "@/hooks/useBookmarkRules";
 import { OptionsSidebar } from "@/components/options/OptionsSidebar";
 import type { Tab } from "@/components/options/OptionsSidebar";
 import { MainTab } from "@/components/options/tabs/MainTab";
@@ -13,14 +15,15 @@ import styles from "./App.module.css";
 function AppShell() {
   const [tab, setTab] = useState<Tab>("main");
   const { resolvedTheme } = useTheme();
+  const rules = useBookmarkRules();
 
   return (
     <div data-theme={resolvedTheme} className={styles.root}>
       <div className={styles.body}>
-        <OptionsSidebar tab={tab} onTabChange={setTab} ruleCount={3} />
+        <OptionsSidebar tab={tab} onTabChange={setTab} ruleCount={rules.items.length} />
         <div className={styles.content}>
           {tab === "main" && <MainTab />}
-          {tab === "rules" && <RulesTab />}
+          {tab === "rules" && <RulesTab rules={rules.items} onSave={rules.save} onRemove={rules.remove} />}
           {tab === "aliases" && <AliasesTab />}
         </div>
       </div>
@@ -32,7 +35,9 @@ export default function App() {
   return (
     <LocaleProvider>
       <ThemeProvider>
-        <AppShell />
+        <ServicesProvider>
+          <AppShell />
+        </ServicesProvider>
       </ThemeProvider>
     </LocaleProvider>
   );

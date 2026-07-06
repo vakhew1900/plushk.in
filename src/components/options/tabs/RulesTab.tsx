@@ -5,90 +5,41 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { TabHeader } from "@/components/options/TabHeader";
 import { RuleListItem } from "./rules/rule/RuleListItem";
 import { RuleEditor } from "./rules/rule/RuleEditor";
-import type { Condition } from "./rules/condition/ConditionGroup";
+import { RuleType } from "@/types/rule";
+import type { BookmarkRule } from "@/types/rule";
 import styles from "./RulesTab.module.css";
 
-interface Group {
-  conds: Condition[];
-}
-interface Rule {
-  id: string;
-  name: string;
-  desc: string;
-  enabled: boolean;
-  groups: Group[];
+interface Props {
+  rules: BookmarkRule[];
+  onSave: (rule: BookmarkRule) => void;
+  onRemove: (id: string) => void;
 }
 
-const INITIAL_RULES: Rule[] = [
-  {
-    id: "social",
-    name: "Соцсети",
-    desc: "Facebook, Reddit, Pinterest и другие соцсети → папка «Соцсети». Региональные зеркала ловятся через алиасы.",
-    enabled: true,
-    groups: [
-      {
-        conds: [
-          { field: "alias", opLabel: "равно", value: "reddit" },
-          { field: "title", opLabel: "не равно", value: "ad", isNot: true },
-        ],
-      },
-      { conds: [{ field: "alias", opLabel: "равно", value: "facebook" }] },
-    ],
-  },
-  {
-    id: "reading",
-    name: "Чтение / Лонгриды",
-    desc: "Habr и длинные статьи (более 800 слов или тег article) → папка «Чтение».",
-    enabled: true,
-    groups: [
-      {
-        conds: [
-          { field: "alias", opLabel: "равно", value: "habr" },
-          { field: "tag", opLabel: "равно", value: "article" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "design",
-    name: "Дизайн-инспирация",
-    desc: "Pinterest и дизайн-ресурсы с UI в заголовке → папка «Инспирация».",
-    enabled: false,
-    groups: [
-      {
-        conds: [
-          { field: "alias", opLabel: "равно", value: "dribbble" },
-          { field: "title", opLabel: "содержит", value: "UI" },
-        ],
-      },
-    ],
-  },
-];
-
-export function RulesTab() {
-  const [rules, setRules] = useState<Rule[]>(INITIAL_RULES);
-  const [sel, setSel] = useState(0);
+export function RulesTab({ rules, onSave, onRemove }: Props) {
+  const [selectedId, setSelectedId] = useState<string | null>(rules[0]?.id ?? null);
   const { translate: t } = useTranslation();
 
   useEffect(() => {
-    setSel((s) => Math.min(s, Math.max(rules.length - 1, 0)));
-  }, [rules.length]);
-
-  const updateRule = (id: string, patch: Partial<Rule>) =>
-    setRules((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+    if (selectedId === null || !rules.some((r) => r.id === selectedId)) {
+      setSelectedId(rules[0]?.id ?? null);
+    }
+  }, [rules, selectedId]);
 
   const addRule = () => {
-    setRules((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), name: "", desc: "", enabled: true, groups: [] },
-    ]);
-    setSel(rules.length);
+    const rule: BookmarkRule = {
+      id: crypto.randomUUID(),
+      name: "",
+      desc: "",
+      condition: { type: RuleType.OR, or: [] },
+      targetFolder: "",
+      priority: 0,
+      enabled: true,
+    };
+    onSave(rule);
+    setSelectedId(rule.id);
   };
 
-  const removeRule = (id: string) =>
-    setRules((prev) => prev.filter((r) => r.id !== id));
-
-  const selected = rules[sel];
+  const selected = rules.find((r) => r.id === selectedId) ?? null;
 
   return (
     <div>
@@ -101,12 +52,12 @@ export function RulesTab() {
               key={r.id}
               index={i + 1}
               name={r.name}
-              desc={r.desc}
+              desc={r.desc ?? ""}
               enabled={r.enabled}
-              selected={sel === i}
-              onSelect={() => setSel(i)}
-              onToggle={() => updateRule(r.id, { enabled: !r.enabled })}
-              onRemove={() => removeRule(r.id)}
+              selected={selectedId === r.id}
+              onSelect={() => setSelectedId(r.id)}
+              onToggle={() => onSave({ ...r, enabled: !r.enabled })}
+              onRemove={() => onRemove(r.id)}
             />
           ))}
           <Button variant="dashed" style={{ width: "100%" }} onClick={addRule}>
@@ -115,15 +66,7 @@ export function RulesTab() {
           </Button>
         </div>
 
-        {selected && (
-          <RuleEditor
-            name={selected.name}
-            desc={selected.desc}
-            groups={selected.groups}
-            onNameChange={(name) => updateRule(selected.id, { name })}
-            onDescChange={(desc) => updateRule(selected.id, { desc })}
-          />
-        )}
+        {selected && <RuleEditor key={selected.id} rule={selected} onSave={onSave} />}
       </div>
     </div>
   );

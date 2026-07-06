@@ -1,16 +1,19 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { CodeInput } from '@/components/ui/code-input';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
+import type { VariableFieldDraft } from '@/lib/page-match-mapping';
+import { SelectorTypeToggle } from './SelectorTypeToggle';
 import styles from './VariableBlock.module.css';
 
-interface Field { k: string; v: string }
 interface Props {
   name: string;
-  fields: Field[];
+  fields: VariableFieldDraft[];
   onNameChange: (name: string) => void;
   onFieldKeyChange: (index: number, key: string) => void;
   onFieldValueChange: (index: number, value: string) => void;
+  onFieldSelectorTypeChange: (index: number, selectorType: VariableFieldDraft['selectorType']) => void;
   onAddField: () => void;
   onRemoveField: (index: number) => void;
   onRemove: () => void;
@@ -22,6 +25,7 @@ export function VariableBlock({
   onNameChange,
   onFieldKeyChange,
   onFieldValueChange,
+  onFieldSelectorTypeChange,
   onAddField,
   onRemoveField,
   onRemove,
@@ -44,6 +48,10 @@ export function VariableBlock({
       <div className={styles.fields}>
         {fields.map((f, i) => (
           <div key={i} className={styles.fieldRow}>
+            <SelectorTypeToggle
+              value={f.selectorType}
+              onChange={(selectorType) => onFieldSelectorTypeChange(i, selectorType)}
+            />
             <Input
               value={f.k}
               onChange={(e) => onFieldKeyChange(i, e.target.value)}
@@ -51,9 +59,9 @@ export function VariableBlock({
               className={styles.fieldKeyInput}
             />
             <span className={styles.fieldArrow}>→</span>
-            <Input
+            <CodeInput
               value={f.v}
-              onChange={(e) => onFieldValueChange(i, e.target.value)}
+              onChange={(v) => onFieldValueChange(i, v)}
               placeholder={t('variablesSection.fieldValuePlaceholder')}
               className={styles.fieldValueInput}
             />

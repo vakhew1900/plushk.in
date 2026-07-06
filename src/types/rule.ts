@@ -87,6 +87,7 @@ export const isLeafRule = (
 export interface BookmarkRule {
   readonly id: string;
   readonly name: string;
+  readonly desc?: string;
   readonly condition: RuleNode;
   readonly targetFolder: string;
   readonly priority: number;
@@ -96,6 +97,7 @@ export interface BookmarkRule {
 export const BookmarkRuleField = {
   ID: "id",
   NAME: "name",
+  DESC: "desc",
   CONDITION: "condition",
   TARGET_FOLDER: "targetFolder",
   PRIORITY: "priority",

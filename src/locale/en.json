@@ -39,6 +39,8 @@
   "ruleEditor": {
     "nameLabel": "Name",
     "descLabel": "Description",
+    "targetFolderLabel": "Target folder",
+    "priorityLabel": "Priority",
     "conditionTitle": "Condition",
     "testButton": "Test on current page",
     "saveButton": "Save"

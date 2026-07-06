@@ -39,6 +39,8 @@
   "ruleEditor": {
     "nameLabel": "Название",
     "descLabel": "Описание",
+    "targetFolderLabel": "Целевая папка",
+    "priorityLabel": "Приоритет",
     "conditionTitle": "Условие",
     "testButton": "Тест на текущей странице",
     "saveButton": "Сохранить"

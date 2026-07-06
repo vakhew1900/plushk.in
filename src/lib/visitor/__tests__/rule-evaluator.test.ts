@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { PageMeta } from '../../../types/page-meta';
 import { RuleType } from '../../../types/rule';
-import { evaluate } from '../rule-evaluator';
+import { countLeafRules, evaluate, parseRuleNode } from '../rule-evaluator';
 
 const meta: PageMeta = {
   url: 'https://youtube.com/watch?v=abc123',
@@ -277,5 +277,93 @@ describe('complex: deeply nested AND inside OR', () => {
         },
       ],
     }, meta)).toBe(true);
+  });
+});
+
+// ─── countLeafRules ──────────────────────────────────────────────────────────
+
+describe('countLeafRules', () => {
+  it('returns 1 for a single leaf rule', () => {
+    expect(countLeafRules({ type: RuleType.TERM, field: 'domain', value: 'youtube.com' })).toBe(1);
+  });
+
+  it('sums leaves across an AND group', () => {
+    expect(countLeafRules({
+      type: RuleType.AND,
+      and: [
+        { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
+        { type: RuleType.TERM, field: 'author', value: 'John Doe' },
+      ],
+    })).toBe(2);
+  });
+
+  it('sums leaves across nested OR/AND/NOT groups', () => {
+    expect(countLeafRules({
+      type: RuleType.OR,
+      or: [
+        {
+          type: RuleType.AND,
+          and: [
+            { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
+            { type: RuleType.NOT, not: [{ type: RuleType.TERM, field: 'author', value: 'Jane Doe' }] },
+          ],
+        },
+        { type: RuleType.WILDCARD, field: 'title', pattern: '*Tutorial*' },
+      ],
+    })).toBe(3);
+  });
+
+  it('returns 0 for an empty compound rule', () => {
+    expect(countLeafRules({ type: RuleType.OR, or: [] })).toBe(0);
+  });
+});
+
+// ─── parseRuleNode ───────────────────────────────────────────────────────────
+
+describe('parseRuleNode', () => {
+  it('parses a valid leaf rule', () => {
+    const raw = JSON.stringify({ type: RuleType.TERM, field: 'domain', value: 'youtube.com' });
+    expect(parseRuleNode(raw)).toEqual({ type: RuleType.TERM, field: 'domain', value: 'youtube.com' });
+  });
+
+  it('parses a valid nested compound rule', () => {
+    const node = {
+      type: RuleType.AND,
+      and: [
+        { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
+        { type: RuleType.TERMS, field: 'tags', values: ['tutorial', 'course'] },
+      ],
+    };
+    expect(parseRuleNode(JSON.stringify(node))).toEqual(node);
+  });
+
+  it('returns null for syntactically invalid JSON', () => {
+    expect(parseRuleNode('{ not valid json')).toBeNull();
+  });
+
+  it('returns null when the type discriminator is missing', () => {
+    expect(parseRuleNode(JSON.stringify({ field: 'domain', value: 'youtube.com' }))).toBeNull();
+  });
+
+  it('returns null when the type is unrecognized', () => {
+    expect(parseRuleNode(JSON.stringify({ type: 'contains', field: 'title', value: 'foo' }))).toBeNull();
+  });
+
+  it('returns null when a leaf rule is missing a required field', () => {
+    expect(parseRuleNode(JSON.stringify({ type: RuleType.TERM, field: 'domain' }))).toBeNull();
+  });
+
+  it('returns null when a compound rule child is invalid', () => {
+    const raw = JSON.stringify({
+      type: RuleType.AND,
+      and: [{ type: RuleType.TERM, field: 'domain', value: 'youtube.com' }, { type: 'bogus' }],
+    });
+    expect(parseRuleNode(raw)).toBeNull();
+  });
+
+  it('returns null for a plain array or primitive', () => {
+    expect(parseRuleNode('[]')).toBeNull();
+    expect(parseRuleNode('"just a string"')).toBeNull();
+    expect(parseRuleNode('42')).toBeNull();
   });
 });

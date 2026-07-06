@@ -1,28 +1,33 @@
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { IconCheck } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
-import type { Condition } from '../condition/ConditionGroup';
+import { parseRuleNode } from '@/lib/visitor/rule-evaluator';
+import type { BookmarkRule } from '@/types/rule';
 import { JsonView } from '../json/JsonView';
 import styles from './RuleEditor.module.css';
 
-interface Group { conds: Condition[] }
 interface Props {
-  name: string;
-  desc: string;
-  groups: Group[];
-  onNameChange: (name: string) => void;
-  onDescChange: (desc: string) => void;
+  rule: BookmarkRule;
+  onSave: (rule: BookmarkRule) => void;
 }
 
-export function RuleEditor({ name, desc, groups, onNameChange, onDescChange }: Props) {
+export function RuleEditor({ rule, onSave }: Props) {
   const { translate: t } = useTranslation();
+  const [name, setName] = useState(rule.name);
+  const [desc, setDesc] = useState(rule.desc ?? '');
+  const [targetFolder, setTargetFolder] = useState(rule.targetFolder);
+  const [priority, setPriority] = useState(rule.priority);
+  const [conditionText, setConditionText] = useState(JSON.stringify(rule.condition, null, 2));
+
   const slug = name.toLowerCase().replace(/[^a-zа-я0-9]+/gi, '_').replace(/^_|_$/g, '');
-  const jsonObj = {
-    or: groups.map((g) => ({
-      and: g.conds.map((c) => (c.isNot ? { not: { [c.field]: c.value } } : { [c.field]: c.value })),
-    })),
+  const parsedCondition = parseRuleNode(conditionText);
+
+  const handleSave = () => {
+    if (!parsedCondition) return;
+    onSave({ ...rule, name, desc, targetFolder, priority, condition: parsedCondition });
   };
 
   return (
@@ -30,11 +35,25 @@ export function RuleEditor({ name, desc, groups, onNameChange, onDescChange }: P
       <div className={styles.nameSection}>
         <div>
           <div className={styles.fieldLabel}>{t('ruleEditor.nameLabel')}</div>
-          <Input value={name} onChange={(e) => onNameChange(e.target.value)} />
+          <Input value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div>
           <div className={styles.fieldLabel}>{t('ruleEditor.descLabel')}</div>
-          <Textarea value={desc} onChange={(e) => onDescChange(e.target.value)} rows={2} />
+          <Textarea value={desc} onChange={(e) => setDesc(e.target.value)} rows={2} />
+        </div>
+        <div className={styles.row}>
+          <div>
+            <div className={styles.fieldLabel}>{t('ruleEditor.targetFolderLabel')}</div>
+            <Input value={targetFolder} onChange={(e) => setTargetFolder(e.target.value)} />
+          </div>
+          <div>
+            <div className={styles.fieldLabel}>{t('ruleEditor.priorityLabel')}</div>
+            <Input
+              type="number"
+              value={priority}
+              onChange={(e) => setPriority(Number(e.target.value))}
+            />
+          </div>
         </div>
       </div>
 
@@ -44,8 +63,9 @@ export function RuleEditor({ name, desc, groups, onNameChange, onDescChange }: P
 
       <div className={styles.body}>
         <JsonView
-          json={JSON.stringify(jsonObj, null, 2)}
+          json={conditionText}
           filename={(slug || 'rule') + '.rule.json'}
+          onChange={setConditionText}
         />
       </div>
 
@@ -55,7 +75,7 @@ export function RuleEditor({ name, desc, groups, onNameChange, onDescChange }: P
           {t('ruleEditor.testButton')}
         </Button>
         <div style={{ flex: 1 }} />
-        <Button>{t('ruleEditor.saveButton')}</Button>
+        <Button onClick={handleSave} disabled={!parsedCondition}>{t('ruleEditor.saveButton')}</Button>
       </div>
     </div>
   );

@@ -70,5 +70,6 @@ Every backlog/task ID starts with a category tag (see the entry format in `CLAUD
 | `RULE` | Rule DSL, rule matching/evaluation, the rule editor UI (name/desc, condition groups, JSON view) |
 | `AI` | AI/LLM integration |
 | `UI` | UI/UX work not specific to rules or AI — layout, theming, localization, shared components |
+| `ARCH` | Cross-cutting architecture decisions not tied to a single feature — state management, dependency injection, data-layer patterns |
 
 More categories are added as new areas of the project need one.

@@ -10,6 +10,7 @@ import type {
   TermsRule,
   WildcardRule,
 } from '../../types/rule';
+import { RuleType } from '../../types/rule';
 import type { RuleVisitor } from './rule-visitor';
 import { visitRule } from './rule-visitor';
 
@@ -55,4 +56,55 @@ class EvaluatorVisitor implements RuleVisitor<boolean> {
 
 export function evaluate(rule: RuleNode, meta: PageMeta): boolean {
   return visitRule(rule, new EvaluatorVisitor(meta));
+}
+
+class LeafCounterVisitor implements RuleVisitor<number> {
+  and(r: AndRule): number { return r.and.reduce((sum, sub) => sum + visitRule(sub, this), 0); }
+  or(r: OrRule): number   { return r.or.reduce((sum, sub) => sum + visitRule(sub, this), 0); }
+  not(r: NotRule): number { return r.not.reduce((sum, sub) => sum + visitRule(sub, this), 0); }
+  term(): number     { return 1; }
+  terms(): number    { return 1; }
+  regex(): number    { return 1; }
+  wildcard(): number { return 1; }
+}
+
+export function countLeafRules(rule: RuleNode): number {
+  return visitRule(rule, new LeafCounterVisitor());
+}
+
+function isRuleNode(value: unknown): value is RuleNode {
+  if (typeof value !== 'object' || value === null) return false;
+  const v = value as Record<string, unknown>;
+
+  switch (v.type) {
+    case RuleType.AND:
+      return Array.isArray(v.and) && v.and.every(isRuleNode);
+    case RuleType.OR:
+      return Array.isArray(v.or) && v.or.every(isRuleNode);
+    case RuleType.NOT:
+      return Array.isArray(v.not) && v.not.every(isRuleNode);
+    case RuleType.TERM:
+      return typeof v.field === 'string' && typeof v.value === 'string';
+    case RuleType.TERMS:
+      return (
+        typeof v.field === 'string' &&
+        Array.isArray(v.values) &&
+        v.values.every((x) => typeof x === 'string')
+      );
+    case RuleType.REGEX:
+    case RuleType.WILDCARD:
+      return typeof v.field === 'string' && typeof v.pattern === 'string';
+    default:
+      return false;
+  }
+}
+
+export function parseRuleNode(raw: string): RuleNode | null {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  return isRuleNode(parsed) ? parsed : null;
 }
