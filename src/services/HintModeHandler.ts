@@ -2,12 +2,14 @@ import { findMatchingRule } from '../lib/visitor/rule-evaluator';
 import type { PageMeta } from '../types/page-meta';
 import type { IBookmarkRuleRepository } from './interfaces/data/IBookmarkRuleRepository';
 import type { BookmarkDecision, IBookmarkModeHandler } from './interfaces/IBookmarkModeHandler';
-import { BookmarkDecisionStatus, UNCATEGORIZED_FOLDER } from './interfaces/IBookmarkModeHandler';
+import { BookmarkDecisionStatus } from './interfaces/IBookmarkModeHandler';
 
 /**
  * Hint mode never places the bookmark itself — it only suggests a folder.
  * The actual save happens via a separate, later user-confirmed action
- * (not modeled by this handler).
+ * (not modeled by this handler). If no rule matches, `targetFolder` is left
+ * undefined: no specific folder is suggested, and confirming falls back to
+ * the browser's default placement.
  */
 export class HintModeHandler implements IBookmarkModeHandler {
   constructor(private readonly bookmarkRuleRepository: IBookmarkRuleRepository) {}
@@ -18,7 +20,7 @@ export class HintModeHandler implements IBookmarkModeHandler {
 
     return {
       status: BookmarkDecisionStatus.PENDING_CONFIRMATION,
-      targetFolder: matchedRule?.targetFolder ?? UNCATEGORIZED_FOLDER,
+      targetFolder: matchedRule?.targetFolder,
       matchedRule,
     };
   }

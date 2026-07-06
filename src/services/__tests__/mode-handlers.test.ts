@@ -3,7 +3,7 @@ import type { PageMeta } from '../../types/page-meta';
 import type { BookmarkRule } from '../../types/rule';
 import { RuleType } from '../../types/rule';
 import type { IBookmarkRuleRepository } from '../interfaces/data/IBookmarkRuleRepository';
-import { BookmarkDecisionStatus, UNCATEGORIZED_FOLDER } from '../interfaces/IBookmarkModeHandler';
+import { BookmarkDecisionStatus } from '../interfaces/IBookmarkModeHandler';
 import { AutoModeHandler } from '../AutoModeHandler';
 import { HintModeHandler } from '../HintModeHandler';
 import { OffModeHandler } from '../OffModeHandler';
@@ -59,13 +59,13 @@ describe('AutoModeHandler', () => {
     });
   });
 
-  it('falls back to Uncategorized when nothing matches', async () => {
+  it('leaves targetFolder undefined when nothing matches (browser default applies)', async () => {
     const handler = new AutoModeHandler(new FakeBookmarkRuleRepository([nonMatchingRule]));
     const decision = await handler.onBookmarkSelected(meta);
 
     expect(decision).toEqual({
       status: BookmarkDecisionStatus.PLACED,
-      targetFolder: UNCATEGORIZED_FOLDER,
+      targetFolder: undefined,
       matchedRule: undefined,
     });
   });
@@ -75,7 +75,7 @@ describe('AutoModeHandler', () => {
     const handler = new AutoModeHandler(new FakeBookmarkRuleRepository([disabled]));
     const decision = await handler.onBookmarkSelected(meta);
 
-    expect(decision.targetFolder).toBe(UNCATEGORIZED_FOLDER);
+    expect(decision.targetFolder).toBeUndefined();
     expect(decision.matchedRule).toBeUndefined();
   });
 });
@@ -92,13 +92,13 @@ describe('HintModeHandler', () => {
     });
   });
 
-  it('falls back to Uncategorized when nothing matches, still pending confirmation', async () => {
+  it('leaves targetFolder undefined when nothing matches, still pending confirmation', async () => {
     const handler = new HintModeHandler(new FakeBookmarkRuleRepository([nonMatchingRule]));
     const decision = await handler.onBookmarkSelected(meta);
 
     expect(decision).toEqual({
       status: BookmarkDecisionStatus.PENDING_CONFIRMATION,
-      targetFolder: UNCATEGORIZED_FOLDER,
+      targetFolder: undefined,
       matchedRule: undefined,
     });
   });

@@ -1,9 +1,6 @@
 import type { PageMeta } from '../../types/page-meta';
 import type { BookmarkRule } from '../../types/rule';
 
-// Fallback target when no rule matches (see CLAUDE.md's rule system spec).
-export const UNCATEGORIZED_FOLDER = 'Uncategorized';
-
 // What happened (or should happen next) as a result of onBookmarkSelected:
 //  - PLACED:               the mode owns saving the bookmark itself (Auto).
 //  - PENDING_CONFIRMATION: a folder was suggested, but nothing is saved yet —
@@ -20,6 +17,9 @@ export type BookmarkDecisionStatus = typeof BookmarkDecisionStatus[keyof typeof 
 
 export interface BookmarkDecision {
   readonly status: BookmarkDecisionStatus;
+  // A `/`-separated folder path (e.g. "Social/Reddit"), or undefined when no
+  // rule matched — meaning no specific folder is chosen and the browser's own
+  // default placement applies (same as an unhandled/Off decision).
   readonly targetFolder?: string;
   readonly matchedRule?: BookmarkRule;
 }

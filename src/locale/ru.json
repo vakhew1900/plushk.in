@@ -3,7 +3,7 @@
     "modeSectionTitle": "Режим работы",
     "condition": "Условие",
     "noMatchFallback": "нет совпадений →",
-    "uncategorizedFolder": "Несортированные"
+    "browserDefault": "как решит браузер"
   },
   "nav": {
     "section": "Основное",

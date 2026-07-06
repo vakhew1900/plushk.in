@@ -2,10 +2,12 @@ import { findMatchingRule } from '../lib/visitor/rule-evaluator';
 import type { PageMeta } from '../types/page-meta';
 import type { IBookmarkRuleRepository } from './interfaces/data/IBookmarkRuleRepository';
 import type { BookmarkDecision, IBookmarkModeHandler } from './interfaces/IBookmarkModeHandler';
-import { BookmarkDecisionStatus, UNCATEGORIZED_FOLDER } from './interfaces/IBookmarkModeHandler';
+import { BookmarkDecisionStatus } from './interfaces/IBookmarkModeHandler';
 
 /**
  * Auto mode owns placing the bookmark itself — no user confirmation.
+ * If no rule matches, `targetFolder` is left undefined: no specific folder
+ * is chosen, and the bookmark goes wherever the browser places it by default.
  *
  * TODO(RULE): once a bookmark gateway exists (chrome.bookmarks.create/move +
  * resolving `targetFolder` to a real parentId), this handler should call it
@@ -21,7 +23,7 @@ export class AutoModeHandler implements IBookmarkModeHandler {
 
     return {
       status: BookmarkDecisionStatus.PLACED,
-      targetFolder: matchedRule?.targetFolder ?? UNCATEGORIZED_FOLDER,
+      targetFolder: matchedRule?.targetFolder,
       matchedRule,
     };
   }

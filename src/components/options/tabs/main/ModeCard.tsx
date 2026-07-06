@@ -30,7 +30,7 @@ export function ModeCard({ label, tag, desc, selected, showFallback, onSelect }:
         {showFallback && (
           <span className={styles.fallback}>
             <IconFolder size={13} fill="var(--faint)" style={{ flexShrink: 0 }} />
-            {t('common.noMatchFallback')} <span className={styles.fallbackText}>{t('common.uncategorizedFolder')}</span>
+            {t('common.noMatchFallback')} <span className={styles.fallbackText}>{t('common.browserDefault')}</span>
           </span>
         )}
       </span>

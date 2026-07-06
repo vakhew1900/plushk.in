@@ -3,7 +3,7 @@
     "modeSectionTitle": "Operating mode",
     "condition": "Condition",
     "noMatchFallback": "no match →",
-    "uncategorizedFolder": "Uncategorized"
+    "browserDefault": "browser default"
   },
   "nav": {
     "section": "General",
