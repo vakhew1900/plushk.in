@@ -13,3 +13,4 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 **Added:** 2026-07-06
 
 Сейчас используется голый React Context (`LocaleContext`, `ThemeContext`, `ServicesContext`) + по хуку на сущность. Если количество контекстов и cross-компонентных состояний вырастет, стоит рассмотреть более общее решение (Redux, Zustand и т.п.) вместо ручного прокидывания и точечных хуков.
+

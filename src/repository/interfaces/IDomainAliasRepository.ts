@@ -1,4 +1,4 @@
-import type { DomainAlias } from '../../../types/domain-alias';
+import type { DomainAlias } from '../../types/domain-alias';
 
 export interface IDomainAliasRepository {
   getAll(): Promise<DomainAlias[]>;

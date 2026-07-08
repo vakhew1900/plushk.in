@@ -1,4 +1,4 @@
-import type { BookmarkRule } from '../../../types/rule';
+import type { BookmarkRule } from '../../types/rule';
 
 export interface IBookmarkRuleRepository {
   getAll(): Promise<BookmarkRule[]>;

@@ -1,6 +1,6 @@
-import { db } from '../../db/index';
-import type { DomainAlias } from '../../types/domain-alias';
-import type { IDomainAliasRepository } from '../interfaces/data/IDomainAliasRepository';
+import { db } from '../db/index';
+import type { DomainAlias } from '../types/domain-alias';
+import type { IDomainAliasRepository } from './interfaces/IDomainAliasRepository';
 
 export class DomainAliasRepository implements IDomainAliasRepository {
   async getAll(): Promise<DomainAlias[]> {

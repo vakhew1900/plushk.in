@@ -1,4 +1,4 @@
-import type { PageMatchGroup } from '../../../types/page-match';
+import type { PageMatchGroup } from '../../types/page-match';
 
 export interface IPageMatchGroupRepository {
   getAll(): Promise<PageMatchGroup[]>;

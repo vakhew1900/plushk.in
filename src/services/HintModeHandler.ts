@@ -1,6 +1,6 @@
 import { findMatchingRule } from '../lib/visitor/rule-evaluator';
 import type { PageMeta } from '../types/page-meta';
-import type { IBookmarkRuleRepository } from './interfaces/data/IBookmarkRuleRepository';
+import type { IBookmarkRuleRepository } from '../repository/interfaces/IBookmarkRuleRepository';
 import type { BookmarkDecision, IBookmarkModeHandler } from './interfaces/IBookmarkModeHandler';
 import { BookmarkDecisionStatus } from './interfaces/IBookmarkModeHandler';
 

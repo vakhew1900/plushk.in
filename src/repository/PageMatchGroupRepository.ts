@@ -1,7 +1,7 @@
-import { db } from '../../db/index';
-import type { PageMatchGroup, PageMatch } from '../../types/page-match';
-import type { IPageMatchGroupRepository } from '../interfaces/data/IPageMatchGroupRepository';
-import type { StoredPageMatchGroup } from '../../db/index';
+import { db } from '../db/index';
+import type { PageMatchGroup, PageMatch } from '../types/page-match';
+import type { IPageMatchGroupRepository } from './interfaces/IPageMatchGroupRepository';
+import type { StoredPageMatchGroup } from '../db/index';
 
 function toStored(group: PageMatchGroup): StoredPageMatchGroup {
   return {

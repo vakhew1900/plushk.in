@@ -25,10 +25,10 @@ npm run typecheck  # Type check without building
 ### Layer order (top-down only)
 
 ```
-components/ → hooks/ → context/ → services/ → chrome.* / IndexedDB
+components/ → hooks/ → context/ → services/ → repository/ → chrome.* / IndexedDB
 ```
 
-No reverse dependencies. Components have no knowledge of concrete service implementations.
+No reverse dependencies. Components have no knowledge of concrete service or repository implementations.
 
 ### Services
 
@@ -36,13 +36,17 @@ Each service is a class implementing an interface from `src/services/interfaces/
 
 Example chain: `useRules()` (hook) → `ServicesContext` → `RuleEngine` (class) → `chrome.storage.local`.
 
+### Repositories
+
+Data-access gateways (Dexie or `browser.*` APIs) are a separate layer from services: classes live in `src/repository/`, with their interfaces in `src/repository/interfaces/`. Services depend on repositories (via the same `ServicesContext` injection), never the other way around.
+
 ### Storage
 
 | Store | What | Library |
 |---|---|---|
 | IndexedDB | `BookmarkRule`, `DomainAlias`, `PageMatchGroup`, bookmark metadata | **Dexie.js** |
 
-**Never call Dexie directly from components or hooks.** All IndexedDB access goes through service classes implementing interfaces in `src/services/interfaces/`. The service layer is the only place that knows Dexie exists.
+**Never call Dexie directly from components or hooks.** All IndexedDB access goes through repository classes in `src/repository/` implementing interfaces in `src/repository/interfaces/`. The repository layer is the only place that knows Dexie exists.
 
 ### Service Worker (`src/entrypoints/background.ts`)
 
@@ -116,13 +120,15 @@ Any field from `PageMeta` (including `extras.*`) can be used as the key.
 interface BookmarkRule {
   id: string;
   name: string;
+  desc?: string;
   condition: RuleNode;   // the JSON DSL tree
-  targetFolder: string;
+  targetFolder: string;  // `/`-separated path, e.g. "Social/Reddit"
   priority: number;      // higher = evaluated first
+  enabled: boolean;
 }
 ```
 
-Fallback: if no rule matches → folder `Uncategorized`.
+Fallback: if no rule matches, no specific folder is chosen — the bookmark is created wherever the browser places it by default (same as Off mode).
 
 ## Code rules
 
@@ -132,7 +138,7 @@ Fallback: if no rule matches → folder `Uncategorized`.
 - **SVG icons must be extracted as components.** Never write `<svg>` inline in component JSX. Create a named component in `components/icons/` (e.g. `IconPlus`, `IconFolder`) and import it. Inline SVG is allowed only inside the icon component file itself.
 - **Prefer Radix UI primitives** for interactive patterns: `RadioGroup` for segmented controls, `Switch` for toggles, `Slot` for `asChild` composition. Check `@radix-ui/*` packages before writing custom interactive elements.
 - **`components/ui/`** holds thin wrappers around Radix primitives (Button, Badge, Switch, Input, Textarea). Check there before creating new elements.
-- All public service contracts must have an interface in `src/services/interfaces/`.
+- All public service contracts must have an interface in `src/services/interfaces/`. Repositories are a separate layer: classes go in `src/repository/`, interfaces in `src/repository/interfaces/`.
 - **String constants use `as const` objects, never `enum`.** Derive the union type with `typeof Obj[keyof typeof Obj]`. Use the same name for the object and the type (e.g. `RuleType` object + `type RuleType`).
 
 ```ts

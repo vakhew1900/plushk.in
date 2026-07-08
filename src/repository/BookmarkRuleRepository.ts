@@ -1,6 +1,6 @@
-import { db } from '../../db/index';
-import type { BookmarkRule } from '../../types/rule';
-import type { IBookmarkRuleRepository } from '../interfaces/data/IBookmarkRuleRepository';
+import { db } from '../db/index';
+import type { BookmarkRule } from '../types/rule';
+import type { IBookmarkRuleRepository } from './interfaces/IBookmarkRuleRepository';
 
 export class BookmarkRuleRepository implements IBookmarkRuleRepository {
   async getAll(): Promise<BookmarkRule[]> {

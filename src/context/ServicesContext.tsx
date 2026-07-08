@@ -1,11 +1,11 @@
 import { createContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import { BookmarkRuleRepository } from '@/services/data/BookmarkRuleRepository';
-import { DomainAliasRepository } from '@/services/data/DomainAliasRepository';
-import { PageMatchGroupRepository } from '@/services/data/PageMatchGroupRepository';
-import type { IBookmarkRuleRepository } from '@/services/interfaces/data/IBookmarkRuleRepository';
-import type { IDomainAliasRepository } from '@/services/interfaces/data/IDomainAliasRepository';
-import type { IPageMatchGroupRepository } from '@/services/interfaces/data/IPageMatchGroupRepository';
+import { BookmarkRuleRepository } from '@/repository/BookmarkRuleRepository';
+import { DomainAliasRepository } from '@/repository/DomainAliasRepository';
+import { PageMatchGroupRepository } from '@/repository/PageMatchGroupRepository';
+import type { IBookmarkRuleRepository } from '@/repository/interfaces/IBookmarkRuleRepository';
+import type { IDomainAliasRepository } from '@/repository/interfaces/IDomainAliasRepository';
+import type { IPageMatchGroupRepository } from '@/repository/interfaces/IPageMatchGroupRepository';
 
 export interface Services {
   bookmarkRuleRepository: IBookmarkRuleRepository;
