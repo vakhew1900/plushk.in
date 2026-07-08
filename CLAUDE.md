@@ -160,8 +160,9 @@ Planning and task tracking live in `specs/`, not in this file:
 | `specs/plan.md` | How we're building it — implementation plan |
 | `specs/backlog.md` | Tasks not yet started |
 | `specs/tasks.md` | Tasks currently in progress |
+| `specs/changelog.md` | Finished tasks |
 
-A task lives in exactly one of `backlog.md` / `tasks.md` at a time. When work on a task begins, move it from `backlog.md` to `tasks.md`. Completed work is tracked by git history, not kept in either file.
+A task lives in exactly one of `backlog.md` / `tasks.md` / `changelog.md` at a time. When work on a task begins, move it from `backlog.md` to `tasks.md`. When it's finished, move it from `tasks.md` to `changelog.md`, adding a **Completed:** date — don't delete it. (Before this convention, finished tasks were deleted outright and relied on git history alone; that made completed work invisible unless someone went digging through commits, so now the entry itself is kept.)
 
 **Surface candidate tasks as you go.** If, while doing unrelated work, you notice a piece of work that could reasonably be split out and tracked on its own, flag it to the user and ask whether it should become a separate `backlog.md` entry. Do not add it yourself without asking, and do not silently fold it into the task at hand.
 
@@ -187,6 +188,12 @@ Example entry:
 
 Подключить визуальный конструктор условий (ConsView → ConditionGroup → ConditionRow) к RuleEditor.
 ```
+
+`changelog.md` entries have the same four fields plus a fifth, added when the task is moved there:
+
+| Field | Description |
+|---|---|
+| Completed | Date the task was finished (`YYYY-MM-DD`) |
 
 ## Git conventions
 
