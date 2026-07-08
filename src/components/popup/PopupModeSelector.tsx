@@ -1,10 +1,9 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useTranslation } from '@/hooks/useTranslation';
+import { Mode } from '@/types/mode';
 import styles from './PopupModeSelector.module.css';
 
-export type Mode = 'auto' | 'hint' | 'off';
-
-const MODES: Mode[] = ['auto', 'hint', 'off'];
+const MODES: Mode[] = [Mode.AUTO, Mode.HINT, Mode.OFF];
 
 interface Props {
   mode: Mode;

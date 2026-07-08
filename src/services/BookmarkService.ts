@@ -1,8 +1,9 @@
-import type { PageMeta } from '../types/page-meta';
+import type { Browser } from 'wxt/browser';
 import type { BookmarkDecision, IBookmarkModeHandler } from './interfaces/IBookmarkModeHandler';
 import { BookmarkDecisionStatus } from './interfaces/IBookmarkModeHandler';
 import type { IBookmarkRepository } from '../repository/interfaces/IBookmarkRepository';
 import type { IBookmarkService } from './interfaces/IBookmarkService';
+import type { IPageMetaFiller } from './interfaces/IPageMetaFiller';
 
 /**
  * Ties a mode's decision to the actual `browser.bookmarks` gateway.
@@ -14,19 +15,17 @@ export class BookmarkService implements IBookmarkService {
   constructor(
     private readonly modeHandler: IBookmarkModeHandler,
     private readonly bookmarkRepository: IBookmarkRepository,
+    private readonly pageMetaFiller: IPageMetaFiller,
   ) {}
 
-  async handleBookmarkCreated(bookmarkId: string, meta: PageMeta): Promise<BookmarkDecision> {
+  async handleBookmarkCreated(bookmark: Browser.bookmarks.BookmarkTreeNode): Promise<BookmarkDecision> {
+    const meta = await this.pageMetaFiller.fillPageMeta(bookmark);
     const decision = await this.modeHandler.onBookmarkSelected(meta);
 
     if (decision.status === BookmarkDecisionStatus.PLACED && decision.targetFolder) {
-      await this.bookmarkRepository.move(bookmarkId, decision.targetFolder);
+      await this.bookmarkRepository.move(bookmark.id, decision.targetFolder);
     }
 
     return decision;
-  }
-
-  async confirmPlacement(bookmarkId: string, targetFolder: string): Promise<void> {
-    await this.bookmarkRepository.move(bookmarkId, targetFolder);
   }
 }

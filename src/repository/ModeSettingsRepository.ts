@@ -1,0 +1,15 @@
+import { storage } from 'wxt/utils/storage';
+import { Mode } from '../types/mode';
+import type { IModeSettingsRepository } from './interfaces/IModeSettingsRepository';
+
+const modeItem = storage.defineItem<Mode>('local:mode', { fallback: Mode.AUTO });
+
+export class ModeSettingsRepository implements IModeSettingsRepository {
+  get(): Promise<Mode> {
+    return modeItem.getValue();
+  }
+
+  set(mode: Mode): Promise<void> {
+    return modeItem.setValue(mode);
+  }
+}

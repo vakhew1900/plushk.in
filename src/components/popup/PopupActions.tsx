@@ -1,22 +1,21 @@
-import type { Mode } from './PopupModeSelector';
+import { usePendingHint } from '@/hooks/usePendingHint';
+import { Mode } from '@/types/mode';
 import { PopupHintConfirm } from './PopupHintConfirm';
 import styles from './PopupActions.module.css';
 
 interface Props { mode: Mode }
 
-// TODO(RULE-2): targetFolder should come from HintModeHandler.onBookmarkSelected
-// once the background/popup integration exists — this is a placeholder for now.
-const MOCK_SUGGESTED_FOLDER = 'Чтение/Статьи';
-
 export function PopupActions({ mode }: Props) {
-  if (mode !== 'hint') return null;
+  const { hint, confirm, cancel } = usePendingHint();
+
+  if (mode !== Mode.HINT || !hint) return null;
 
   return (
     <div className={styles.wrap}>
       <PopupHintConfirm
-        targetFolder={MOCK_SUGGESTED_FOLDER}
-        onConfirm={() => {}}
-        onCancel={() => {}}
+        targetFolder={hint.targetFolder}
+        onConfirm={confirm}
+        onCancel={cancel}
       />
     </div>
   );

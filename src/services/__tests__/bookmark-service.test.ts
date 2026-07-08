@@ -4,12 +4,20 @@ import type { PageMeta } from '../../types/page-meta';
 import type { BookmarkDecision, IBookmarkModeHandler } from '../interfaces/IBookmarkModeHandler';
 import { BookmarkDecisionStatus } from '../interfaces/IBookmarkModeHandler';
 import type { IBookmarkRepository } from '../../repository/interfaces/IBookmarkRepository';
+import type { IPageMetaFiller } from '../interfaces/IPageMetaFiller';
 import { BookmarkService } from '../BookmarkService';
 
-const meta: PageMeta = {
-  url: 'https://youtube.com/watch?v=abc123',
-  domain: 'youtube.com',
+const bookmark: Browser.bookmarks.BookmarkTreeNode = {
+  id: 'bm-1',
   title: 'React Tutorial for Beginners',
+  url: 'https://youtube.com/watch?v=abc123',
+  syncing: false,
+};
+
+const meta: PageMeta = {
+  url: bookmark.url!,
+  domain: 'youtube.com',
+  title: bookmark.title,
 };
 
 class FakeModeHandler implements IBookmarkModeHandler {
@@ -27,15 +35,20 @@ function makeBookmarkRepository(): IBookmarkRepository & { move: ReturnType<type
   };
 }
 
+function makePageMetaFiller(): IPageMetaFiller {
+  return { fillPageMeta: vi.fn(async () => meta) };
+}
+
 describe('BookmarkService.handleBookmarkCreated', () => {
   it('moves the bookmark into the decided folder when placed', async () => {
     const repo = makeBookmarkRepository();
     const service = new BookmarkService(
       new FakeModeHandler({ status: BookmarkDecisionStatus.PLACED, targetFolder: 'Videos' }),
       repo,
+      makePageMetaFiller(),
     );
 
-    const decision = await service.handleBookmarkCreated('bm-1', meta);
+    const decision = await service.handleBookmarkCreated(bookmark);
 
     expect(repo.move).toHaveBeenCalledWith('bm-1', 'Videos');
     expect(decision.targetFolder).toBe('Videos');
@@ -46,9 +59,10 @@ describe('BookmarkService.handleBookmarkCreated', () => {
     const service = new BookmarkService(
       new FakeModeHandler({ status: BookmarkDecisionStatus.PLACED, targetFolder: undefined }),
       repo,
+      makePageMetaFiller(),
     );
 
-    await service.handleBookmarkCreated('bm-1', meta);
+    await service.handleBookmarkCreated(bookmark);
 
     expect(repo.move).not.toHaveBeenCalled();
   });
@@ -58,30 +72,37 @@ describe('BookmarkService.handleBookmarkCreated', () => {
     const service = new BookmarkService(
       new FakeModeHandler({ status: BookmarkDecisionStatus.PENDING_CONFIRMATION, targetFolder: 'Videos' }),
       repo,
+      makePageMetaFiller(),
     );
 
-    await service.handleBookmarkCreated('bm-1', meta);
+    await service.handleBookmarkCreated(bookmark);
 
     expect(repo.move).not.toHaveBeenCalled();
   });
 
   it('does not move the bookmark when not handled', async () => {
     const repo = makeBookmarkRepository();
-    const service = new BookmarkService(new FakeModeHandler({ status: BookmarkDecisionStatus.NOT_HANDLED }), repo);
+    const service = new BookmarkService(
+      new FakeModeHandler({ status: BookmarkDecisionStatus.NOT_HANDLED }),
+      repo,
+      makePageMetaFiller(),
+    );
 
-    await service.handleBookmarkCreated('bm-1', meta);
+    await service.handleBookmarkCreated(bookmark);
 
     expect(repo.move).not.toHaveBeenCalled();
   });
-});
 
-describe('BookmarkService.confirmPlacement', () => {
-  it('moves the bookmark into the given folder', async () => {
+  it('fills PageMeta from the bookmark before asking the mode handler', async () => {
     const repo = makeBookmarkRepository();
-    const service = new BookmarkService(new FakeModeHandler({ status: BookmarkDecisionStatus.NOT_HANDLED }), repo);
+    const filler = makePageMetaFiller();
+    const modeHandler = new FakeModeHandler({ status: BookmarkDecisionStatus.NOT_HANDLED });
+    const onBookmarkSelectedSpy = vi.spyOn(modeHandler, 'onBookmarkSelected');
+    const service = new BookmarkService(modeHandler, repo, filler);
 
-    await service.confirmPlacement('bm-1', 'Social/Reddit');
+    await service.handleBookmarkCreated(bookmark);
 
-    expect(repo.move).toHaveBeenCalledWith('bm-1', 'Social/Reddit');
+    expect(filler.fillPageMeta).toHaveBeenCalledWith(bookmark);
+    expect(onBookmarkSelectedSpy).toHaveBeenCalledWith(meta);
   });
 });

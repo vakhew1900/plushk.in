@@ -1,4 +1,4 @@
-import type { Mode } from './PopupModeSelector';
+import type { Mode } from '@/types/mode';
 import { IconLogo } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './PopupHeader.module.css';

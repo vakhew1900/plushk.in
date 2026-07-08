@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useMode } from '@/hooks/useMode';
 import { useTranslation } from '@/hooks/useTranslation';
+import { Mode } from '@/types/mode';
 import { TabHeader } from '@/components/options/TabHeader';
 import { ModeCard } from './main/ModeCard';
 import { ActivityItem } from './main/ActivityItem';
@@ -8,9 +9,9 @@ import { ExportImportSection } from './main/ExportImportSection';
 import styles from './MainTab.module.css';
 
 const MODES = [
-  { key: 'auto', showFallback: true },
-  { key: 'hint' },
-  { key: 'off' },
+  { key: Mode.AUTO, showFallback: true },
+  { key: Mode.HINT },
+  { key: Mode.OFF },
 ] as const;
 
 const ACTIVITY = [
@@ -21,7 +22,7 @@ const ACTIVITY = [
 ];
 
 export function MainTab() {
-  const [mode, setMode] = useState('auto');
+  const { mode, setMode } = useMode();
   const { translate: t } = useTranslation();
   return (
     <div>
