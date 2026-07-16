@@ -1,3 +1,10 @@
+---
+name: specs
+description: Maintain the project's specification and task-tracking files in specs/ (specification.md, plan.md, backlog.md, tasks.md, changelog.md). Use when adding, starting, finishing, removing, or re-prioritizing a task, or updating the spec/plan.
+---
+
+# Specs
+
 Maintain the project's specification and task-tracking files in `specs/`.
 
 ## Files to read before making any change
