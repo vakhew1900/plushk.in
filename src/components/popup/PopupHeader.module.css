@@ -6,6 +6,11 @@
   border-bottom: 1px solid var(--border);
 }
 
+.back {
+  transform: rotate(180deg);
+  flex-shrink: 0;
+}
+
 .icon {
   width: 32px;
   height: 32px;

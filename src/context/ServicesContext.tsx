@@ -12,6 +12,8 @@ import type { IDomainAliasRepository } from '@/repository/interfaces/IDomainAlia
 import type { IModeSettingsRepository } from '@/repository/interfaces/IModeSettingsRepository';
 import type { IPageMatchGroupRepository } from '@/repository/interfaces/IPageMatchGroupRepository';
 import type { IPendingHintRepository } from '@/repository/interfaces/IPendingHintRepository';
+import { QuickSaveService } from '@/services/QuickSaveService';
+import type { IQuickSaveService } from '@/services/interfaces/IQuickSaveService';
 
 export interface Services {
   bookmarkRepository: IBookmarkRepository;
@@ -20,6 +22,7 @@ export interface Services {
   modeSettingsRepository: IModeSettingsRepository;
   pageMatchGroupRepository: IPageMatchGroupRepository;
   pendingHintRepository: IPendingHintRepository;
+  quickSaveService: IQuickSaveService;
 }
 
 export const ServicesContext = createContext<Services | null>(null);
@@ -37,6 +40,7 @@ export function ServicesProvider({ children }: Props) {
       modeSettingsRepository: new ModeSettingsRepository(),
       pageMatchGroupRepository: new PageMatchGroupRepository(),
       pendingHintRepository: new PendingHintRepository(),
+      quickSaveService: new QuickSaveService(),
     }),
     [],
   );

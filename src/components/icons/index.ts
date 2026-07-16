@@ -9,3 +9,5 @@ export { IconX }        from './IconX';
 export { IconCopy }     from './IconCopy';
 export { IconDownload } from './IconDownload';
 export { IconUpload }   from './IconUpload';
+export { IconStar }     from './IconStar';
+export { IconArrowRight } from './IconArrowRight';

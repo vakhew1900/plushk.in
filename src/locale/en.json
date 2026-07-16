@@ -102,6 +102,16 @@
       "pathPlaceholder": "Folder/Subfolder",
       "confirm": "Save",
       "cancel": "Cancel"
+    },
+    "quickSave": {
+      "title": "Quick save",
+      "openSettings": "Mode settings",
+      "save": "Save",
+      "saved": "Saved",
+      "offNote": "Quick save is off — \"Off\" mode doesn't touch bookmarks."
+    },
+    "settings": {
+      "back": "Back"
     }
   }
 }

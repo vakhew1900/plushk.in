@@ -1,14 +1,30 @@
 import type { Mode } from '@/types/mode';
-import { IconLogo } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { IconArrowRight, IconLogo } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './PopupHeader.module.css';
 
-interface Props { mode: Mode }
+interface Props {
+  mode: Mode;
+  onBack?: () => void;
+}
 
-export function PopupHeader({ mode }: Props) {
+export function PopupHeader({ mode, onBack }: Props) {
   const { translate: t } = useTranslation();
   return (
     <div className={styles.header}>
+      {onBack && (
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          onClick={onBack}
+          aria-label={t('popup.settings.back')}
+          className={styles.back}
+        >
+          <IconArrowRight size={14} />
+        </Button>
+      )}
+
       <div className={styles.icon}>
         <IconLogo size={20} />
       </div>
