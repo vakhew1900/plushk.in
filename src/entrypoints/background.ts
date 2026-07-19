@@ -50,11 +50,12 @@ export default defineBackground(() => {
     if (!isQuickSaveMessage(message)) return;
 
     return (async () => {
+      const modeHandler = createModeHandler(message.mode, ruleRepository);
       let targetFolder = message.targetFolder;
 
-      if (message.mode === Mode.AUTO) {
+      if (modeHandler.status === BookmarkDecisionStatus.PLACED) {
         const meta: PageMeta = { url: message.url, domain: new URL(message.url).hostname, title: message.title };
-        const decision = await createModeHandler(Mode.AUTO, ruleRepository).onBookmarkSelected(meta);
+        const decision = await modeHandler.onBookmarkSelected(meta);
         targetFolder = decision.targetFolder;
       }
 

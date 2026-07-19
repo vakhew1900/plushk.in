@@ -1,5 +1,5 @@
 import './style.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LocaleProvider } from '@/context/LocaleContext';
 import { ServicesProvider } from '@/context/ServicesContext';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -11,7 +11,8 @@ import { PopupPageCard } from '@/components/popup/PopupPageCard';
 import { PopupActions } from '@/components/popup/PopupActions';
 import { PopupFooter } from '@/components/popup/PopupFooter';
 import { PopupQuickSave } from '@/components/popup/PopupQuickSave';
-import type { Mode } from '@/types/mode';
+import { Mode } from '@/types/mode';
+import type { } from '@/types/mode';
 import styles from './App.module.css';
 
 const PopupView = { QUICK_SAVE: 'quickSave', SETTINGS: 'settings' } as const;
@@ -24,7 +25,7 @@ function QuickSaveView({ mode, onOpenSettings }: { mode: Mode; onOpenSettings: (
 function SettingsView({ mode, setMode, onBack }: {
   mode: Mode;
   setMode: (mode: Mode) => void;
-  onBack: () => void;
+  onBack?: () => void;
 }) {
   return (
     <>
@@ -42,7 +43,7 @@ function AppBody({ view, mode, setMode, onOpenSettings, onBack }: {
   mode: Mode;
   setMode: (mode: Mode) => void;
   onOpenSettings: () => void;
-  onBack: () => void;
+  onBack?: () => void;
 }) {
   switch (view) {
     case PopupView.QUICK_SAVE:
@@ -55,7 +56,16 @@ function AppBody({ view, mode, setMode, onOpenSettings, onBack }: {
 function AppShell() {
   const { mode, setMode } = useMode();
   const { resolvedTheme } = useTheme();
-  const [view, setView] = useState<PopupView>(PopupView.QUICK_SAVE);
+  const [view, setView] = useState<PopupView>(
+    mode === Mode.OFF ? PopupView.SETTINGS : PopupView.QUICK_SAVE
+  );
+
+  // Sync view when mode becomes OFF
+  useEffect(() => {
+    if (mode === Mode.OFF) {
+      setView(PopupView.SETTINGS);
+    }
+  }, [mode]);
 
   return (
     <div data-theme={resolvedTheme} className={styles.root}>
@@ -64,7 +74,7 @@ function AppShell() {
         mode={mode}
         setMode={setMode}
         onOpenSettings={() => setView(PopupView.SETTINGS)}
-        onBack={() => setView(PopupView.QUICK_SAVE)}
+        onBack={mode !== Mode.OFF ? () => setView(PopupView.QUICK_SAVE) : undefined}
       />
     </div>
   );

@@ -15,6 +15,8 @@ import { BookmarkDecisionStatus } from './interfaces/IBookmarkModeHandler';
  * put it. Tracked as a separate backlog task.
  */
 export class AutoModeHandler implements IBookmarkModeHandler {
+  readonly status = BookmarkDecisionStatus.PLACED;
+
   constructor(private readonly bookmarkRuleRepository: IBookmarkRuleRepository) {}
 
   async onBookmarkSelected(meta: PageMeta): Promise<BookmarkDecision> {

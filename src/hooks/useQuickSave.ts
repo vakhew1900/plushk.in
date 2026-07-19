@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { useServices } from '@/hooks/useServices';
-import { HintModeHandler } from '@/services/HintModeHandler';
+import { createModeHandler } from '@/services/createModeHandler';
+import { BookmarkDecisionStatus } from '@/services/interfaces/IBookmarkModeHandler';
 import { Mode } from '@/types/mode';
 import type { PageMeta } from '@/types/page-meta';
 
@@ -29,8 +30,9 @@ export function useQuickSave(mode: Mode) {
       };
       setTab({ title: meta.title, url: meta.url });
 
-      if (mode === Mode.HINT) {
-        const decision = await new HintModeHandler(bookmarkRuleRepository).onBookmarkSelected(meta);
+      const handler = createModeHandler(mode, bookmarkRuleRepository);
+      if (handler.status === BookmarkDecisionStatus.PENDING_CONFIRMATION) {
+        const decision = await handler.onBookmarkSelected(meta);
         if (!cancelled) setSuggestedFolder(decision.targetFolder);
       }
     });

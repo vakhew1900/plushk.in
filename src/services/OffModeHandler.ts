@@ -8,6 +8,8 @@ import { BookmarkDecisionStatus } from './interfaces/IBookmarkModeHandler';
  * proceed completely untouched by this handler.
  */
 export class OffModeHandler implements IBookmarkModeHandler {
+  readonly status = BookmarkDecisionStatus.NOT_HANDLED;
+
   async onBookmarkSelected(_meta: PageMeta): Promise<BookmarkDecision> {
     return { status: BookmarkDecisionStatus.NOT_HANDLED };
   }

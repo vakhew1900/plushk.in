@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { IconArrowRight, IconCheck, IconFolder, IconStar } from '@/components/icons';
+import { IconArrowRight, IconCheck, IconFolder, IconStar, IconX } from '@/components/icons';
 import { useQuickSave } from '@/hooks/useQuickSave';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useServices } from '@/hooks/useServices';
+import { createModeHandler } from '@/services/createModeHandler';
+import { BookmarkDecisionStatus } from '@/services/interfaces/IBookmarkModeHandler';
 import { Mode } from '@/types/mode';
+import { FolderTree } from './FolderTree';
 import styles from './PopupQuickSave.module.css';
 
 interface Props {
@@ -17,37 +21,6 @@ function OffView() {
   return <div className={styles.offNote}>{t('popup.quickSave.offNote')}</div>;
 }
 
-function AutoView({ onSave }: { onSave: () => void }) {
-  const { translate: t } = useTranslation();
-  return (
-    <Button onClick={onSave} className={styles.saveWide}>
-      {t('popup.quickSave.save')}
-    </Button>
-  );
-}
-
-function HintView({ path, onPathChange, onSave }: {
-  path: string;
-  onPathChange: (value: string) => void;
-  onSave: () => void;
-}) {
-  const { translate: t } = useTranslation();
-  return (
-    <div className={styles.hintRow}>
-      <IconFolder size={14} className={styles.folderIcon} />
-      <Input
-        value={path}
-        onChange={(e) => onPathChange(e.target.value)}
-        placeholder={t('popup.hintConfirm.pathPlaceholder')}
-        className={styles.pathInput}
-      />
-      <Button variant="outline" size="icon" onClick={onSave} aria-label={t('popup.quickSave.save')}>
-        <IconCheck size={14} />
-      </Button>
-    </div>
-  );
-}
-
 function SavedView() {
   const { translate: t } = useTranslation();
   return (
@@ -58,30 +31,16 @@ function SavedView() {
   );
 }
 
-function QuickSaveBody({ mode, saved, path, onPathChange, save }: {
-  mode: Mode;
-  saved: boolean;
-  path: string;
-  onPathChange: (value: string) => void;
-  save: (targetFolder?: string) => void;
-}) {
-  if (saved) return <SavedView />;
-
-  switch (mode) {
-    case Mode.OFF:
-      return <OffView />;
-    case Mode.AUTO:
-      return <AutoView onSave={() => save()} />;
-    case Mode.HINT:
-      return <HintView path={path} onPathChange={onPathChange} onSave={() => save(path)} />;
-  }
-}
-
 export function PopupQuickSave({ mode, onOpenSettings }: Props) {
   const { translate: t } = useTranslation();
+  const { bookmarkRuleRepository } = useServices();
   const { suggestedFolder, saved, save } = useQuickSave(mode);
+
   const [path, setPath] = useState('');
   const [pathTouched, setPathTouched] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+
+  const handler = createModeHandler(mode, bookmarkRuleRepository);
 
   useEffect(() => {
     if (!pathTouched && suggestedFolder !== undefined) setPath(suggestedFolder);
@@ -92,6 +51,14 @@ export function PopupQuickSave({ mode, onOpenSettings }: Props) {
     const timer = setTimeout(() => window.close(), 900);
     return () => clearTimeout(timer);
   }, [saved]);
+
+  const handleSaveClick = () => {
+    if (handler.status === BookmarkDecisionStatus.PENDING_CONFIRMATION) {
+      setConfirming(true);
+    } else {
+      save();
+    }
+  };
 
   return (
     <div className={styles.wrap}>
@@ -111,16 +78,53 @@ export function PopupQuickSave({ mode, onOpenSettings }: Props) {
       </div>
 
       <div className={styles.body}>
-        <QuickSaveBody
-          mode={mode}
-          saved={saved}
-          path={path}
-          onPathChange={(value) => {
-            setPathTouched(true);
-            setPath(value);
-          }}
-          save={save}
-        />
+        {saved ? (
+          <SavedView />
+        ) : handler.status === BookmarkDecisionStatus.NOT_HANDLED ? (
+          <OffView />
+        ) : confirming && handler.status === BookmarkDecisionStatus.PENDING_CONFIRMATION ? (
+          <div className={styles.confirmColumn}>
+            <div className={styles.hintRow}>
+              <IconFolder size={14} className={styles.folderIcon} />
+              <Input
+                value={path}
+                onChange={(e) => {
+                  setPathTouched(true);
+                  setPath(e.target.value);
+                }}
+                placeholder={t('popup.hintConfirm.pathPlaceholder')}
+                className={styles.pathInput}
+              />
+            </div>
+
+            <FolderTree
+              selectedPath={path}
+              onSelect={(selected) => {
+                setPathTouched(true);
+                setPath(selected);
+              }}
+            />
+
+            <div className={styles.buttonRow}>
+              <Button
+                variant="outline"
+                className={styles.actionBtn}
+                onClick={() => setConfirming(false)}
+              >
+                <IconX size={14} className={styles.btnIcon} />
+                {t('popup.hintConfirm.cancel')}
+              </Button>
+              <Button className={styles.actionBtn} onClick={() => save(path)}>
+                <IconCheck size={14} className={styles.btnIcon} />
+                {t('popup.hintConfirm.confirm')}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button onClick={handleSaveClick} className={styles.saveWide}>
+            {t('popup.quickSave.save')}
+          </Button>
+        )}
       </div>
     </div>
   );

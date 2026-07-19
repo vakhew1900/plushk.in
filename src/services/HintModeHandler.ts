@@ -12,6 +12,8 @@ import { BookmarkDecisionStatus } from './interfaces/IBookmarkModeHandler';
  * the browser's default placement.
  */
 export class HintModeHandler implements IBookmarkModeHandler {
+  readonly status = BookmarkDecisionStatus.PENDING_CONFIRMATION;
+
   constructor(private readonly bookmarkRuleRepository: IBookmarkRuleRepository) {}
 
   async onBookmarkSelected(meta: PageMeta): Promise<BookmarkDecision> {

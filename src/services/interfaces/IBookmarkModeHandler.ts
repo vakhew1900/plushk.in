@@ -25,5 +25,6 @@ export interface BookmarkDecision {
 }
 
 export interface IBookmarkModeHandler {
+  readonly status: BookmarkDecisionStatus;
   onBookmarkSelected(meta: PageMeta): Promise<BookmarkDecision>;
 }

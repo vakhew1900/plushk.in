@@ -1,0 +1,90 @@
+.treeContainer {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  background: var(--bg2);
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.treeNode {
+  display: flex;
+  flex-direction: column;
+}
+
+.nodeRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: var(--text);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nodeRow:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="light"] .nodeRow:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.selected {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+
+.caret {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.caretExpanded {
+  transform: rotate(90deg);
+}
+
+.caretHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.folderIcon {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.selected .folderIcon {
+  color: var(--accent);
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.childrenContainer {
+  padding-left: 14px;
+  border-left: 1px dashed var(--border);
+  margin-left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}

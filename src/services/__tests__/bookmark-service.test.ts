@@ -21,7 +21,10 @@ const meta: PageMeta = {
 };
 
 class FakeModeHandler implements IBookmarkModeHandler {
-  constructor(private readonly decision: BookmarkDecision) {}
+  readonly status: BookmarkDecisionStatus;
+  constructor(private readonly decision: BookmarkDecision) {
+    this.status = decision.status;
+  }
   async onBookmarkSelected(): Promise<BookmarkDecision> {
     return this.decision;
   }
