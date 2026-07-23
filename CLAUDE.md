@@ -152,6 +152,8 @@ export type RuleType = typeof RuleType[keyof typeof RuleType];
 enum RuleType { AND = 'and' }
 ```
 
+- **Debug logging: use `debugLog` from `src/lib/debug-log.ts`, never raw `console.log`, for temporary/tracing logs.** It only logs while running under `npm run dev:firefox` (or any `wxt dev` variant — checks `import.meta.env.COMMAND === 'serve'`) and is fully stripped from production output (`npm run build`/`build:firefox`/`zip`) by the minifier, since that check becomes a dead branch once WXT inlines `COMMAND` as `'build'`. Safe to leave tracing calls in place — they never ship.
+
 ## Specs
 
 Planning and task tracking live in `specs/`, not in this file:
