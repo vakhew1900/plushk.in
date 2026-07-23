@@ -199,6 +199,10 @@ Example entry:
 |---|---|
 | Completed | Date the task was finished (`YYYY-MM-DD`) |
 
+### Chat naming
+
+When work in a Claude Code chat maps to a specs task, rename the chat so its title starts with that task's ID, e.g. `RULE-1 — ConsView integration`. Makes it possible to find the conversation for a given task later without digging through history.
+
 ## Git conventions
 
 ### Commit message format
