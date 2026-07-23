@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { IconCheck, IconFolder } from '@/components/icons';
 import styles from './PopupPageCard.module.css';
 
+/** @deprecated Dropped from SettingsView (App.tsx) — kept for reference, may be revisited later. */
 export function PopupPageCard() {
   return (
     <div className={styles.wrap}>

@@ -1,6 +1,6 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { clsx } from 'clsx';
-import { obsidianDark } from '@/components/options/codeTheme';
+import { obsidianDark } from '@/components/options/code/codeTheme';
 import styles from './code-input.module.css';
 
 interface Props {

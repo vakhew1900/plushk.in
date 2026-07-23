@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 import { useTranslation } from '@/hooks/useTranslation';
-import { CodeView } from '@/components/options/CodeView';
+import { CodeView } from '@/components/options/code/CodeView';
 import { countLeafRules, parseRuleNode } from '@/lib/visitor/rule-evaluator';
 import styles from './JsonView.module.css';
 

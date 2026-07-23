@@ -8,7 +8,7 @@ import { createModeHandler } from '@/services/createModeHandler';
 import { BookmarkDecisionStatus } from '@/services/interfaces/IBookmarkModeHandler';
 import { QuickSaveView, getQuickSaveView } from '@/lib/quick-save-view';
 import { Mode } from '@/types/mode';
-import { ConfirmFolderView } from './ConfirmFolderView';
+import { ConfirmFolderView } from './folder/ConfirmFolderView';
 import styles from './PopupQuickSave.module.css';
 
 interface Props {
