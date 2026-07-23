@@ -18,11 +18,14 @@ export default defineBackground(() => {
   const pendingHintRepository = new PendingHintRepository();
   const pageMetaFiller = new PageMetaFiller();
 
+  // Chrome-only events — Firefox's `browser.bookmarks` doesn't implement
+  // onImportBegan/onImportEnded, so guard with optional chaining instead of
+  // crashing the background script on startup there.
   let importing = false;
-  browser.bookmarks.onImportBegan.addListener(() => {
+  browser.bookmarks.onImportBegan?.addListener(() => {
     importing = true;
   });
-  browser.bookmarks.onImportEnded.addListener(() => {
+  browser.bookmarks.onImportEnded?.addListener(() => {
     importing = false;
   });
 
