@@ -86,7 +86,9 @@
     "title": "Export / Import",
     "desc": "A single-file backup of all rules, aliases, and variables.",
     "exportButton": "Export .json",
-    "importButton": "Import"
+    "importButton": "Import",
+    "exportError": "Couldn't save the export file.",
+    "importError": "Couldn't import the file — check its format."
   },
   "themeSection": {
     "title": "Theme",
