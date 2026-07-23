@@ -94,8 +94,11 @@
     "light": "Light",
     "system": "System"
   },
+  "options": {
+    "documentTitle": "plushk.in — Settings"
+  },
   "popup": {
-    "appName": "Sorter",
+    "appName": "plushk.in",
     "appSub": "Bookmarks",
     "settingsButton": "Settings",
     "hintConfirm": {

@@ -94,8 +94,11 @@
     "light": "Светлая",
     "system": "Системная"
   },
+  "options": {
+    "documentTitle": "plushk.in — Настройки"
+  },
   "popup": {
-    "appName": "Сортировщик",
+    "appName": "plushk.in",
     "appSub": "Закладки",
     "settingsButton": "Настройки",
     "hintConfirm": {

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./style.css";
 import { LocaleProvider } from "@/context/LocaleContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { ServicesProvider } from "@/context/ServicesContext";
 import { useTheme } from "@/hooks/useTheme";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useBookmarkRules } from "@/hooks/useBookmarkRules";
 import { OptionsSidebar } from "@/components/options/OptionsSidebar";
 import type { Tab } from "@/components/options/OptionsSidebar";
@@ -15,7 +16,12 @@ import styles from "./App.module.css";
 function AppShell() {
   const [tab, setTab] = useState<Tab>("main");
   const { resolvedTheme } = useTheme();
+  const { translate: t, locale } = useTranslation();
   const rules = useBookmarkRules();
+
+  useEffect(() => {
+    document.title = t("options.documentTitle");
+  }, [t, locale]);
 
   return (
     <div data-theme={resolvedTheme} className={styles.root}>
