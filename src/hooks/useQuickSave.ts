@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { useServices } from '@/hooks/useServices';
-import { createModeHandler } from '@/services/createModeHandler';
-import { BookmarkDecisionStatus } from '@/services/interfaces/IBookmarkModeHandler';
+import { createModeHandler } from '@/services/handler/createModeHandler';
+import { BookmarkDecisionStatus } from '@/services/handler/interfaces/IBookmarkModeHandler';
 import { debugLog } from '@/lib/debug-log';
 import { Mode } from '@/types/mode';
 import type { PageMeta } from '@/types/page-meta';

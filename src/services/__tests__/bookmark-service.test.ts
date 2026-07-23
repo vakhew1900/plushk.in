@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Browser } from 'wxt/browser';
 import type { PageMeta } from '../../types/page-meta';
-import type { BookmarkDecision, IBookmarkModeHandler } from '../interfaces/IBookmarkModeHandler';
-import { BookmarkDecisionStatus } from '../interfaces/IBookmarkModeHandler';
+import type { BookmarkDecision, IBookmarkModeHandler } from '../handler/interfaces/IBookmarkModeHandler';
+import { BookmarkDecisionStatus } from '../handler/interfaces/IBookmarkModeHandler';
 import type { IBookmarkRepository } from '../../repository/interfaces/IBookmarkRepository';
 import type { IPageMetaFiller } from '../interfaces/IPageMetaFiller';
 import { BookmarkService } from '../BookmarkService';

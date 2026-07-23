@@ -1,4 +1,4 @@
-import { BookmarkDecisionStatus } from '../services/interfaces/IBookmarkModeHandler';
+import { BookmarkDecisionStatus } from '../services/handler/interfaces/IBookmarkModeHandler';
 
 export const QuickSaveView = {
   SAVED: 'saved',

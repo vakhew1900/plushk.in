@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { Mode } from '../../types/mode';
-import type { BookmarkRule } from '../../types/rule';
-import type { IBookmarkRuleRepository } from '../../repository/interfaces/IBookmarkRuleRepository';
+import { Mode } from '../../../types/mode';
+import type { BookmarkRule } from '../../../types/rule';
+import type { IBookmarkRuleRepository } from '../../../repository/interfaces/IBookmarkRuleRepository';
 import { AutoModeHandler } from '../AutoModeHandler';
 import { HintModeHandler } from '../HintModeHandler';
 import { OffModeHandler } from '../OffModeHandler';

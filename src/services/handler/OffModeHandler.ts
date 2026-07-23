@@ -1,4 +1,4 @@
-import type { PageMeta } from '../types/page-meta';
+import type { PageMeta } from '../../types/page-meta';
 import type { BookmarkDecision, IBookmarkModeHandler } from './interfaces/IBookmarkModeHandler';
 import { BookmarkDecisionStatus } from './interfaces/IBookmarkModeHandler';
 

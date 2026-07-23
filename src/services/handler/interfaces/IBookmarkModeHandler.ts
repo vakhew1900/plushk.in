@@ -1,5 +1,5 @@
-import type { PageMeta } from '../../types/page-meta';
-import type { BookmarkRule } from '../../types/rule';
+import type { PageMeta } from '../../../types/page-meta';
+import type { BookmarkRule } from '../../../types/rule';
 
 // What happened (or should happen next) as a result of onBookmarkSelected:
 //  - PLACED:               the mode owns saving the bookmark itself (Auto).

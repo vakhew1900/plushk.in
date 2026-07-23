@@ -1,6 +1,6 @@
 import type { Browser } from 'wxt/browser';
-import type { BookmarkDecision, IBookmarkModeHandler } from './interfaces/IBookmarkModeHandler';
-import { BookmarkDecisionStatus } from './interfaces/IBookmarkModeHandler';
+import type { BookmarkDecision, IBookmarkModeHandler } from './handler/interfaces/IBookmarkModeHandler';
+import { BookmarkDecisionStatus } from './handler/interfaces/IBookmarkModeHandler';
 import type { IBookmarkRepository } from '../repository/interfaces/IBookmarkRepository';
 import type { IBookmarkService } from './interfaces/IBookmarkService';
 import type { IPageMetaFiller } from './interfaces/IPageMetaFiller';

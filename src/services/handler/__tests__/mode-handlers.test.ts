@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { PageMeta } from '../../types/page-meta';
-import type { BookmarkRule } from '../../types/rule';
-import { RuleType } from '../../types/rule';
-import type { IBookmarkRuleRepository } from '../../repository/interfaces/IBookmarkRuleRepository';
+import type { PageMeta } from '../../../types/page-meta';
+import type { BookmarkRule } from '../../../types/rule';
+import { RuleType } from '../../../types/rule';
+import type { IBookmarkRuleRepository } from '../../../repository/interfaces/IBookmarkRuleRepository';
 import { BookmarkDecisionStatus } from '../interfaces/IBookmarkModeHandler';
 import { AutoModeHandler } from '../AutoModeHandler';
 import { HintModeHandler } from '../HintModeHandler';

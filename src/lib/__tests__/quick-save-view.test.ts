@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BookmarkDecisionStatus } from '../../services/interfaces/IBookmarkModeHandler';
+import { BookmarkDecisionStatus } from '../../services/handler/interfaces/IBookmarkModeHandler';
 import { QuickSaveView, getQuickSaveView } from '../quick-save-view';
 
 describe('getQuickSaveView', () => {

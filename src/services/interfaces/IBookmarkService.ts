@@ -1,5 +1,5 @@
 import type { Browser } from 'wxt/browser';
-import type { BookmarkDecision } from './IBookmarkModeHandler';
+import type { BookmarkDecision } from '../handler/interfaces/IBookmarkModeHandler';
 
 export interface IBookmarkService {
   /**
