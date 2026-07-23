@@ -1,23 +1,23 @@
-# scaffold — скилл для генерации компонентов и сервисов/репозиториев
+# scaffold — skill for generating components and services/repositories
 
-> Этот файл только для людей. Агент его не читает — вся логика для агента в [SKILL.md](SKILL.md) и файлах в `reference/`.
+> This file is for humans only. The agent doesn't read it — all agent-facing logic lives in [SKILL.md](SKILL.md) and the files in `reference/`.
 
-## Что это
+## What this is
 
-Объединяет то, что раньше было двумя отдельными командами (`add-component`, `add-service`), в один скилл с маршрутизацией:
+Merges what used to be two separate commands (`add-component`, `add-service`) into one skill with routing:
 
-- Просят компонент → агент читает [reference/component.md](reference/component.md).
-- Просят сервис или репозиторий → агент читает [reference/service.md](reference/service.md).
+- Asked for a component → the agent reads [reference/component.md](reference/component.md).
+- Asked for a service or repository → the agent reads [reference/service.md](reference/service.md).
 
-Если непонятно, что именно нужно — агент обязан спросить, а не гадать.
+If it's unclear which one is meant, the agent must ask, not guess.
 
-## Почему объединили
+## Why merged
 
-Обе задачи по сути одинаковы (интерфейс/пропсы → реализация → где подключить), различаются только правилами конкретного слоя. Держать их одним скиллом с разными reference-файлами проще поддерживать, чем два почти одинаковых командных файла.
+Both tasks are structurally the same (interface/props → implementation → where to wire it up), differing only in the rules of the specific layer. Keeping them as one skill with separate reference files is easier to maintain than two nearly-identical command files.
 
-## Что нового по сравнению со старыми командами
+## What's new compared to the old commands
 
-- **component**: добавлены актуальные правила — CSS Modules вместо shadcn/Tailwind, Radix UI вместо кастомных интерактивных элементов, обязательный вынос SVG-иконок в `src/components/icons/`.
-- **service**: явно разделены **service** (бизнес-логика, `src/services/`) и **repository** (доступ к Dexie/`browser.*`, `src/repository/`) — этого разделения не было в старой команде `add-service`, а в текущем `CLAUDE.md` оно есть. Добавлено правило про `as const` вместо `enum` для строковых констант.
+- **component**: current rules added — CSS Modules instead of shadcn/Tailwind, Radix UI instead of custom interactive elements, mandatory extraction of SVG icons into `src/components/icons/`.
+- **service**: **service** (business logic, `src/services/`) and **repository** (Dexie/`browser.*` access, `src/repository/`) are now explicitly separated — this split didn't exist in the old `add-service` command, but does in the current `CLAUDE.md`. Added the rule for `as const` instead of `enum` for string constants.
 
-Точные правила и формат вывода — см. соответствующий файл в `reference/`.
+Exact rules and output format — see the matching file in `reference/`.

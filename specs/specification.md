@@ -72,5 +72,8 @@ Every backlog/task ID starts with a category tag (see the entry format in `CLAUD
 | `AI` | AI/LLM integration |
 | `UI` | UI/UX work not specific to rules or AI — layout, theming, localization, shared components |
 | `ARCH` | Cross-cutting architecture decisions not tied to a single feature — state management, dependency injection, data-layer patterns |
+| `SETTINGS` | Import/export of extension settings (rules, domain aliases, page match groups) as a single file — backup/portability of the auto-sorter's configuration |
+| `EXPORT` | Article content extraction and Markdown export, Obsidian integration (Local REST API) |
+| `DEV` | Dev tooling and process — build config, Claude Code skills, specs workflow itself, non-product infrastructure |
 
 More categories are added as new areas of the project need one.

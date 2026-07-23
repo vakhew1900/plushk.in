@@ -20,3 +20,10 @@ Finished tasks, moved here from `tasks.md` when completed. Kept for history — 
 - В `background.ts` обработка сообщения quick-save переписана с динамическим использованием `modeHandler.status` для определения папки.
 - Исправлены тесты и добавлены соответствующие свойства в фиктивные обработчики.
 
+### DEV-1 — Расширить specs-скилл: глубокая спецификация задачи (specs/tasks/<id>/)
+**Priority:** Medium
+**Added:** 2026-07-23
+**Completed:** 2026-07-23
+
+Добавлена в `specs`-скилл опциональная глубокая спецификация на задачу: `specs/tasks/<CATEGORY>-<N>-<slug>/` с `description.md` (контекст, ограничения, тестовые случаи, non-goals, ответы предварительного расспроса), `reference.md` (связанные задачи + тип связи: continuation/logic-change/refinement/fix/depends-on/supersedes) и папкой `reference/` для вспомогательных файлов. Папка создаётся не для каждой задачи, а по необходимости. Перед написанием `description.md` скилл обязан провести предварительный расспрос пользователя. `specs/tasks/` добавлена в `.gitignore` — хранится только локально. Реализовано вручную (`.claude/skills/specs/SKILL.md` + новый `reference/task-folder.md`, по аналогии со `scaffold`-скиллом, зеркалировано в `.agents/skills/specs/`) — установленный плагин `skill-creator` не подхватился текущей сессией без перезапуска, решили не ждать.
+

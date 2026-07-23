@@ -1,23 +1,25 @@
-# specs — скилл для ведения specs/
+# specs — skill for maintaining specs/
 
-> Этот файл только для людей. Агент его не читает — вся логика для агента в [SKILL.md](SKILL.md).
+> This file is for humans only. The agent doesn't read it — all agent-facing logic lives in [SKILL.md](SKILL.md).
 
-## Что это
+## What this is
 
-Скилл поддерживает файлы спецификации и трекинга задач в `specs/`: `specification.md`, `plan.md`, `backlog.md`, `tasks.md`, `changelog.md`.
+Maintains the specification and task-tracking files in `specs/`: `specification.md`, `plan.md`, `backlog.md`, `tasks.md`, `changelog.md`. Optionally, a deep spec for a single task in `specs/tasks/<id>/` (local only, not in git).
 
-## Когда срабатывает
+## When it fires
 
-- Просьба добавить/начать/завершить/удалить/перeприоритизировать задачу.
-- Просьба обновить `specs/specification.md` или `specs/plan.md`.
-- Агент сам замечает, что кусок текущей работы стоит вынести в отдельную задачу — в этом случае он должен спросить, а не решать сам.
+- A request to add/start/finish/remove/re-prioritize a task.
+- A request to update `specs/specification.md` or `specs/plan.md`.
+- A request to write a detailed spec for a specific task before implementation starts.
+- The agent notices, on its own, that a chunk of current work should be split into its own task — in that case it must ask, not decide on its own.
 
-## Ключевые правила
+## Key rules
 
-1. ID задачи — `<CATEGORY>-<N>`, номер последовательный **в рамках категории**, категория берётся из таблицы в `specs/specification.md`.
-2. Новая задача всегда стартует в `backlog.md`.
-3. Задача живёт ровно в одном файле одновременно (`backlog.md` / `tasks.md` / `changelog.md`) — перенос это вырезать+вставить, не копия.
-4. Завершённая задача переезжает в `changelog.md` с полем **Completed** (`YYYY-MM-DD`), не удаляется.
-5. Перед любым изменением задач нужно прочитать все пять файлов `specs/*.md` — статус и нумерация зависят от нескольких файлов сразу.
+1. Task ID — `<CATEGORY>-<N>`, sequential **within the category**, category comes from the table in `specs/specification.md`.
+2. A new task always starts in `backlog.md`.
+3. A task lives in exactly one file at a time (`backlog.md` / `tasks.md` / `changelog.md`) — moving it is cut+paste, never a copy.
+4. A finished task moves to `changelog.md` with a **Completed** field (`YYYY-MM-DD`), never deleted.
+5. Before any change to tasks, read all five `specs/*.md` files — status and numbering depend on more than one of them at once.
+6. A deep spec (`specs/tasks/<id>/`) isn't for every task — only when it's complex/ambiguous enough. Before writing it, the agent must interview the user first, not draft it from its own assumptions.
 
-Подробности и точные формулировки — см. [SKILL.md](SKILL.md).
+Details and exact wording — see [SKILL.md](SKILL.md); the deep-spec template — see [reference/task-folder.md](reference/task-folder.md).
