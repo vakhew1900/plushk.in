@@ -73,3 +73,20 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 Прогнать полноценный skill-creator триггер-eval на скиллах `.claude/skills/scaffold` и `.claude/skills/specs`: сгенерировать по 20 запросов (should-trigger / should-not-trigger, включая пограничные кейсы) на скилл, согласовать сет с пользователем, затем прогнать автоматическую оптимизацию description через `scripts.run_loop` (skill-creator). Выявлено при аудите скиллов: описания выглядят разумно, но эмпирически не проверялись — ни разу не гонялся полный цикл skill-creator (evals/бенчмарк), а доработка DEV-1 (deep-spec) была написана вручную, т.к. плагин skill-creator не подхватился в той сессии. Блокер на момент постановки: `run_loop.py` дергает `claude -p` через subprocess и требует Python — в текущем окружении (VSCode-расширение на этой машине) нет ни `claude` CLI в PATH, ни рабочего Python, так что скрипт нужно будет прогонять с машины/сессии, где `claude` CLI доступен из терминала.
 
+### ARCH-4 — Мелкие нарушения архитектурной дисциплины (по итогам аудита)
+**Priority:** Low
+**Added:** 2026-07-24
+
+Набор мелких находок из полного аудита архитектуры, ни одна из которых не тянет на отдельную задачу поодиночке:
+- `ExportImportSection.tsx` импортирует `MimeType` напрямую из `@/services/interfaces/IFileService`, минуя hooks/context — компонент дотягивается до интерфейса сервиса напрямую. Не новая проблема: тот же паттерн уже есть в `PopupQuickSave.tsx`/`PopupActions.tsx` (импортируют `createModeHandler`/`BookmarkDecisionStatus` напрямую из `@/services/handler/...`).
+- 10 статичных (не по-настоящему динамичных) `style={{...}}` вместо классов CSS Modules: `PopupFooter.tsx:15`, `RulesTab.tsx:63`, `RuleEditor.tsx:77`, `PopupPageCard.tsx:28`, `ConsView.tsx:29-33`, `AliasesSection.tsx:40`, `ConditionGroup.tsx:34`, `ModeCard.tsx:32`, `VariableBlock.tsx:71`, `VariablesSection.tsx:48`.
+- `src/entrypoints/content.ts:4` — забытый `console.log('Hello content.')`, не через `debugLog`.
+- Таблица storage в `CLAUDE.md` документирует только Dexie/IndexedDB, но `ModeSettingsRepository`/`PendingHintRepository` реально используют `wxt/utils/storage` (chrome.storage) — стоит дополнить документацию упоминанием обоих механизмов хранения.
+
+### ARCH-5 — Недостающие юнит-тесты для мелких модулей
+**Priority:** Low
+**Added:** 2026-07-24
+
+- `src/services/FileService.ts` (сервисный класс) не имеет теста в `src/services/__tests__/`, хотя CLAUDE.md требует юнит-тесты для сервисов. Вероятно, пропустили из-за DOM-специфики (`Blob`/`URL.createObjectURL`/`<a download>`), но именно ради мокируемости такого рода кода и существует интерфейс `IFileService`.
+- `src/lib/utils.ts` (`cn()` — обёртка над clsx) и `src/lib/browser-constants/bookmarkRoots.ts` не имеют тестов — оба тривиальны и низкой ценности, но отмечены для полноты.
+
