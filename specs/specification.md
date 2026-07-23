@@ -76,5 +76,6 @@ Every backlog/task ID starts with a category tag (see the entry format in `CLAUD
 | `EXPORT` | Article content extraction and Markdown export, Obsidian integration (Local REST API) |
 | `DEV` | Dev tooling and process — build config, Claude Code skills, specs workflow itself, non-product infrastructure |
 | `TEST` | Test data/fixtures for manual or automated testing — example rule sets, sample bookmark trees, import/export test cases |
+| `INTEGR` | Integrations with external services beyond the Obsidian export flow (`EXPORT`) — e.g. Telegram |
 
 More categories are added as new areas of the project need one.
