@@ -7,7 +7,6 @@ import { useMode } from '@/hooks/useMode';
 import { useTheme } from '@/hooks/useTheme';
 import { PopupHeader } from '@/components/popup/PopupHeader';
 import { PopupModeSelector } from '@/components/popup/PopupModeSelector';
-import { PopupPageCard } from '@/components/popup/PopupPageCard';
 import { PopupActions } from '@/components/popup/PopupActions';
 import { PopupFooter } from '@/components/popup/PopupFooter';
 import { PopupQuickSave } from '@/components/popup/PopupQuickSave';

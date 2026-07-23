@@ -1,0 +1,42 @@
+.confirmColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hintRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.folderIcon {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.pathInput {
+  flex: 1;
+  min-width: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+}
+
+.buttonRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.actionBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btnIcon {
+  flex-shrink: 0;
+}
