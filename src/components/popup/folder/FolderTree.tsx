@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { IconFolder, IconArrowRight } from '@/components/icons';
+import { debugLog } from '@/lib/debug-log';
 import clsx from 'clsx';
 import styles from './FolderTree.module.css';
 
@@ -25,13 +26,17 @@ function parseBookmarkTree(nodes: BookmarkTreeNode[], parentPath = ''): FolderNo
     if (node.url !== undefined) continue; // Skip bookmark links
 
     const isSystemRoot = node.id === '0';
-    // '1' is typically Bookmarks Bar, '2' is Other Bookmarks, '3' is Mobile Bookmarks
-    const isTopLevelContainer = node.parentId === '0' || node.id === '1' || node.id === '2' || node.id === '3';
 
-    let currentPath = parentPath;
-    if (!isSystemRoot && !isTopLevelContainer) {
-      currentPath = parentPath ? `${parentPath}/${node.title}` : node.title;
-    }
+    // Bookmarks Toolbar / Other Bookmarks / Mobile Bookmarks get a real path
+    // segment too (their own title), same as any other folder — otherwise
+    // they'd all collapse to the same empty path and lose which container a
+    // child folder actually sits under (see BookmarkRepository.findRootFolder,
+    // which relies on this to resolve the real container instead of guessing).
+    const currentPath = isSystemRoot
+      ? parentPath
+      : parentPath
+        ? `${parentPath}/${node.title}`
+        : node.title;
 
     const children = node.children ? parseBookmarkTree(node.children, currentPath) : [];
 
@@ -71,7 +76,10 @@ function FolderTreeNode({ node, selectedPath, onSelect }: TreeNodeProps) {
         className={clsx(styles.nodeRow, {
           [styles.selected]: isSelected,
         })}
-        onClick={() => onSelect(node.path)}
+        onClick={() => {
+          debugLog('[quick-save-debug] popup: FolderTree node clicked', { id: node.id, title: node.title, path: node.path });
+          onSelect(node.path);
+        }}
       >
         <span
           className={clsx(styles.caret, {
@@ -83,7 +91,7 @@ function FolderTreeNode({ node, selectedPath, onSelect }: TreeNodeProps) {
           <IconArrowRight size={10} />
         </span>
         <IconFolder size={14} className={styles.folderIcon} />
-        <span className={styles.label}>{node.title || 'Root'}</span>
+        <span className={styles.label}>{node.title}</span>
       </div>
 
       {hasChildren && expanded && (

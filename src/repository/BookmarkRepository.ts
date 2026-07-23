@@ -1,6 +1,8 @@
 import { browser } from 'wxt/browser';
 import type { Browser } from 'wxt/browser';
 import { splitFolderPath } from '../lib/bookmark-folder-utils';
+import { debugLog } from '../lib/debug-log';
+import { BookmarkRootId } from '../lib/browser-constants/bookmarkRoots';
 import type { IBookmarkRepository } from './interfaces/IBookmarkRepository';
 
 type BookmarkTreeNode = Browser.bookmarks.BookmarkTreeNode;
@@ -13,11 +15,13 @@ type BookmarkTreeNode = Browser.bookmarks.BookmarkTreeNode;
  */
 export class BookmarkRepository implements IBookmarkRepository {
   async create(title: string, url: string, targetFolder?: string): Promise<BookmarkTreeNode> {
-    if (!targetFolder) {
-      return browser.bookmarks.create({ title, url });
-    }
+    debugLog('[quick-save-debug] repo.create: called with', { title, url, targetFolder });
 
-    const parentId = await this.resolveFolderPath(targetFolder);
+    // No folder chosen ("root") → Bookmarks Toolbar specifically, not
+    // whatever the browser defaults an unparented bookmarks.create() call to
+    // (Other Bookmarks in Firefox).
+    const parentId = targetFolder ? await this.resolveFolderPath(targetFolder) : await this.resolveToolbarId();
+    debugLog('[quick-save-debug] repo.create: resolved parentId', parentId, 'for targetFolder', targetFolder);
     return browser.bookmarks.create({ title, url, parentId });
   }
 
@@ -33,10 +37,12 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   private async resolveFolderPath(path: string): Promise<string> {
     const segments = splitFolderPath(path);
+    debugLog('[quick-save-debug] repo.resolveFolderPath: segments', segments, 'from path', path);
     let parentId: string | undefined;
 
     for (const segment of segments) {
       parentId = await this.findOrCreateFolder(segment, parentId);
+      debugLog('[quick-save-debug] repo.resolveFolderPath: resolved segment', segment, '-> id', parentId);
     }
 
     if (!parentId) {
@@ -52,11 +58,34 @@ export class BookmarkRepository implements IBookmarkRepository {
       : await this.findRootFolder(title);
 
     if (existing) {
+      debugLog('[quick-save-debug] repo.findOrCreateFolder: found existing', { title, parentId, existingId: existing.id, existingParentId: existing.parentId });
       return existing.id;
     }
 
+    debugLog('[quick-save-debug] repo.findOrCreateFolder: no existing match, creating', { title, parentId });
     const created = await browser.bookmarks.create(parentId ? { title, parentId } : { title });
+    debugLog('[quick-save-debug] repo.findOrCreateFolder: created', created);
     return created.id;
+  }
+
+  // The Bookmarks Toolbar's id isn't the same across browsers — match either
+  // known one; if neither is present (unknown browser), fall back to the
+  // first top-level container as a best effort.
+  private async resolveToolbarId(): Promise<string> {
+    const [root] = await browser.bookmarks.getTree();
+    const containers = root.children ?? [];
+    debugLog('[quick-save-debug] repo.resolveToolbarId: containers', containers.map((c) => ({ id: c.id, title: c.title })));
+
+    const toolbar = containers.find(
+      (node) => node.id === BookmarkRootId.CHROME.TOOLBAR || node.id === BookmarkRootId.FIREFOX.TOOLBAR,
+    );
+    const resolved = toolbar ?? containers[0];
+
+    if (!resolved) {
+      throw new Error('No top-level bookmark container found');
+    }
+
+    return resolved.id;
   }
 
   private async findChildFolder(title: string, parentId: string): Promise<BookmarkTreeNode | undefined> {
@@ -70,11 +99,26 @@ export class BookmarkRepository implements IBookmarkRepository {
   // sit directly under one of the tree's own top-level roots.
   private async findRootFolder(title: string): Promise<BookmarkTreeNode | undefined> {
     const [root] = await browser.bookmarks.getTree();
-    const rootIds = new Set((root.children ?? []).map((node) => node.id));
+    const containers = root.children ?? [];
+
+    // Bookmarks Toolbar / Other Bookmarks / Mobile Bookmarks are fixed
+    // containers that can't be created — bookmarks.create() with no parentId
+    // just lands wherever the browser defaults, not necessarily the container
+    // FolderTree's caller picked. If the title names one of them exactly,
+    // resolve it directly instead of falling through to search+create.
+    const exactContainer = containers.find((node) => node.title === title);
+    if (exactContainer) {
+      debugLog('[quick-save-debug] repo.findRootFolder: exact container match', { title, id: exactContainer.id });
+      return exactContainer;
+    }
+
+    const containerIds = new Set(containers.map((node) => node.id));
     const matches = await browser.bookmarks.search({ title });
 
-    return matches.find(
-      (node) => node.url === undefined && node.parentId !== undefined && rootIds.has(node.parentId),
+    const match = matches.find(
+      (node) => node.url === undefined && node.parentId !== undefined && containerIds.has(node.parentId),
     );
+    debugLog('[quick-save-debug] repo.findRootFolder: no exact container, search fallback', { title, matches, resolved: match });
+    return match;
   }
 }

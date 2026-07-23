@@ -3,6 +3,7 @@ import { browser } from 'wxt/browser';
 import { useServices } from '@/hooks/useServices';
 import { createModeHandler } from '@/services/createModeHandler';
 import { BookmarkDecisionStatus } from '@/services/interfaces/IBookmarkModeHandler';
+import { debugLog } from '@/lib/debug-log';
 import { Mode } from '@/types/mode';
 import type { PageMeta } from '@/types/page-meta';
 
@@ -33,6 +34,7 @@ export function useQuickSave(mode: Mode) {
       const handler = createModeHandler(mode, bookmarkRuleRepository);
       if (handler.status === BookmarkDecisionStatus.PENDING_CONFIRMATION) {
         const decision = await handler.onBookmarkSelected(meta);
+        debugLog('[quick-save-debug] popup: suggested folder from matched rule', decision.targetFolder, decision.matchedRule);
         if (!cancelled) setSuggestedFolder(decision.targetFolder);
       }
     });
@@ -45,6 +47,7 @@ export function useQuickSave(mode: Mode) {
   const save = useCallback(
     async (targetFolder?: string) => {
       if (!tab) return;
+      debugLog('[quick-save-debug] popup: sending save message with targetFolder', targetFolder);
       await quickSaveService.create({ title: tab.title, url: tab.url, mode, targetFolder });
       setSaved(true);
     },

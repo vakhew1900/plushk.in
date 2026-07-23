@@ -7,6 +7,7 @@ import { BookmarkService } from '@/services/BookmarkService';
 import { createModeHandler } from '@/services/createModeHandler';
 import { BookmarkDecisionStatus } from '@/services/interfaces/IBookmarkModeHandler';
 import { PageMetaFiller } from '@/services/PageMetaFiller';
+import { debugLog } from '@/lib/debug-log';
 import { isQuickSaveMessage } from '@/types/quick-save-message';
 import { Mode } from '@/types/mode';
 import type { PageMeta } from '@/types/page-meta';
@@ -53,6 +54,8 @@ export default defineBackground(() => {
     if (!isQuickSaveMessage(message)) return;
 
     return (async () => {
+      debugLog('[quick-save-debug] background: received message', message);
+
       const modeHandler = createModeHandler(message.mode, ruleRepository);
       let targetFolder = message.targetFolder;
 
@@ -60,11 +63,15 @@ export default defineBackground(() => {
         const meta: PageMeta = { url: message.url, domain: new URL(message.url).hostname, title: message.title };
         const decision = await modeHandler.onBookmarkSelected(meta);
         targetFolder = decision.targetFolder;
+        debugLog('[quick-save-debug] background: recomputed targetFolder for PLACED mode', targetFolder);
       }
+
+      debugLog('[quick-save-debug] background: final targetFolder passed to bookmarkRepository.create', targetFolder);
 
       suppressNextCreated = true;
       try {
-        await bookmarkRepository.create(message.title, message.url, targetFolder);
+        const created = await bookmarkRepository.create(message.title, message.url, targetFolder);
+        debugLog('[quick-save-debug] background: bookmark created', created);
       } finally {
         suppressNextCreated = false;
       }
