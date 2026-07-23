@@ -75,5 +75,6 @@ Every backlog/task ID starts with a category tag (see the entry format in `CLAUD
 | `SETTINGS` | Import/export of extension settings (rules, domain aliases, page match groups) as a single file — backup/portability of the auto-sorter's configuration |
 | `EXPORT` | Article content extraction and Markdown export, Obsidian integration (Local REST API) |
 | `DEV` | Dev tooling and process — build config, Claude Code skills, specs workflow itself, non-product infrastructure |
+| `TEST` | Test data/fixtures for manual or automated testing — example rule sets, sample bookmark trees, import/export test cases |
 
 More categories are added as new areas of the project need one.
