@@ -1,4 +1,5 @@
 import { browser } from 'wxt/browser';
+import { debugLog } from '../debug-log';
 import { BrowserTarget } from './browserTarget';
 
 // Chrome exposes a `_favicon` internal endpoint that returns a cached
@@ -26,6 +27,9 @@ export const FaviconUrl = {
 
 /** Resolves a real favicon URL for the current browser, or `undefined` when none is available. */
 export function resolveFaviconUrl(pageUrl: string): string | undefined {
-  if (import.meta.env.BROWSER === BrowserTarget.FIREFOX) return FaviconUrl.FIREFOX;
-  return FaviconUrl.CHROME(pageUrl);
+  debugLog('[favicon-debug] resolveFaviconUrl: pageUrl', pageUrl);
+  const iconUrl =
+    import.meta.env.BROWSER === BrowserTarget.FIREFOX ? FaviconUrl.FIREFOX : FaviconUrl.CHROME(pageUrl);
+  debugLog('[favicon-debug] resolveFaviconUrl: iconUrl', iconUrl);
+  return iconUrl;
 }
