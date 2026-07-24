@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "exportedAt": "2026-07-24T00:00:00.000Z",
+  "rules": [
+    {
+      "id": "test-mail-gmail",
+      "name": "Почта — Gmail",
+      "desc": "Только домен, без фильтрации по заголовку.",
+      "condition": {
+        "type": "terms",
+        "field": "domain",
+        "values": ["gmail.com", "mail.google.com"]
+      },
+      "targetFolder": "Mail/Gmail",
+      "priority": 40,
+      "enabled": true
+    },
+    {
+      "id": "test-mail-mailru",
+      "name": "Почта — Mail.ru",
+      "desc": "Только домен, без фильтрации по заголовку.",
+      "condition": {
+        "type": "terms",
+        "field": "domain",
+        "values": ["mail.ru", "e.mail.ru"]
+      },
+      "targetFolder": "Mail/Mail.ru",
+      "priority": 30,
+      "enabled": true
+    },
+    {
+      "id": "test-mail-yandex",
+      "name": "Почта — Yandex",
+      "desc": "Только домен, без фильтрации по заголовку.",
+      "condition": {
+        "type": "terms",
+        "field": "domain",
+        "values": ["yandex.ru", "mail.yandex.ru", "ya.ru"]
+      },
+      "targetFolder": "Mail/Yandex",
+      "priority": 20,
+      "enabled": true
+    },
+    {
+      "id": "test-mail-yahoo",
+      "name": "Почта — Yahoo",
+      "desc": "Только домен, без фильтрации по заголовку.",
+      "condition": {
+        "type": "terms",
+        "field": "domain",
+        "values": ["yahoo.com", "mail.yahoo.com", "ymail.com"]
+      },
+      "targetFolder": "Mail/Yahoo",
+      "priority": 10,
+      "enabled": true
+    }
+  ],
+  "domainAliases": [
+    {
+      "id": "test-alias-gmail",
+      "name": "Gmail",
+      "domain_names": ["gmail.com", "mail.google.com"]
+    },
+    {
+      "id": "test-alias-mailru",
+      "name": "Mail.ru",
+      "domain_names": ["mail.ru", "e.mail.ru"]
+    },
+    {
+      "id": "test-alias-yandex",
+      "name": "Yandex",
+      "domain_names": ["yandex.ru", "mail.yandex.ru", "ya.ru"]
+    },
+    {
+      "id": "test-alias-yahoo",
+      "name": "Yahoo",
+      "domain_names": ["yahoo.com", "mail.yahoo.com", "ymail.com"]
+    }
+  ],
+  "pageMatchGroups": []
+}

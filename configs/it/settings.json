@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "exportedAt": "2026-07-24T00:00:00.000Z",
+  "rules": [
+    {
+      "id": "test-it-java",
+      "name": "IT-сайты — Java/JavaScript",
+      "desc": "Заголовок содержит слово Java или JavaScript (границы слова \\b, поэтому не ловит 'javadoc' как часть другого слова). Приоритет выше общего IT-правила, чтобы более специфичная папка побеждала.",
+      "condition": {
+        "type": "and",
+        "and": [
+          { "type": "terms", "field": "domain", "values": ["habr.com", "dev.to"] },
+          { "type": "regex", "field": "title", "pattern": "\\b[Jj]ava(?:[Ss]cript)?\\b" }
+        ]
+      },
+      "targetFolder": "IT/Java",
+      "priority": 40,
+      "enabled": true
+    },
+    {
+      "id": "test-it-general",
+      "name": "IT-сайты — общее",
+      "desc": "Заголовок содержит слово IT именно как отдельное слово (\\bIT\\b), а не часть другого слова (напр. 'split'). Паттерн регистрозависим (только заглавные IT) — движок regex-правил не поддерживает флаг case-insensitive, а матчинг строчного 'it' как английского местоимения дал бы слишком много ложных срабатываний.",
+      "condition": {
+        "type": "and",
+        "and": [
+          { "type": "terms", "field": "domain", "values": ["habr.com", "dev.to"] },
+          { "type": "regex", "field": "title", "pattern": "\\bIT\\b" }
+        ]
+      },
+      "targetFolder": "IT/General",
+      "priority": 30,
+      "enabled": true
+    }
+  ],
+  "domainAliases": [
+    {
+      "id": "test-alias-it-sites",
+      "name": "IT-сайты",
+      "domain_names": ["habr.com", "dev.to"]
+    }
+  ],
+  "pageMatchGroups": []
+}
