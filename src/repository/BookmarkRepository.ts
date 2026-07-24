@@ -3,6 +3,7 @@ import type { Browser } from 'wxt/browser';
 import { splitFolderPath } from '../lib/bookmark-folder-utils';
 import { debugLog } from '../lib/debug-log';
 import { BookmarkRootId } from '../lib/browser-constants/bookmarkRoots';
+import type { BookmarkSearchEntry } from '../types/bookmark-search-entry';
 import type { IBookmarkRepository } from './interfaces/IBookmarkRepository';
 
 type BookmarkTreeNode = Browser.bookmarks.BookmarkTreeNode;
@@ -33,6 +34,25 @@ export class BookmarkRepository implements IBookmarkRepository {
   async getByTitle(title: string): Promise<BookmarkTreeNode[]> {
     const results = await browser.bookmarks.search({ title });
     return results.filter((node) => node.title === title && node.url !== undefined);
+  }
+
+  async listAll(): Promise<BookmarkSearchEntry[]> {
+    const [root] = await browser.bookmarks.getTree();
+    return this.collectBookmarks(root.children ?? [], []);
+  }
+
+  private collectBookmarks(nodes: BookmarkTreeNode[], parentPath: string[]): BookmarkSearchEntry[] {
+    const entries: BookmarkSearchEntry[] = [];
+
+    for (const node of nodes) {
+      if (node.url !== undefined) {
+        entries.push({ id: node.id, title: node.title, url: node.url, folderPath: parentPath });
+        continue;
+      }
+      entries.push(...this.collectBookmarks(node.children ?? [], [...parentPath, node.title]));
+    }
+
+    return entries;
   }
 
   private async resolveFolderPath(path: string): Promise<string> {

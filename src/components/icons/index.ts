@@ -11,3 +11,5 @@ export { IconDownload } from './IconDownload';
 export { IconUpload }   from './IconUpload';
 export { IconStar }     from './IconStar';
 export { IconArrowRight } from './IconArrowRight';
+export { IconSearch }   from './IconSearch';
+export { IconLink }     from './IconLink';

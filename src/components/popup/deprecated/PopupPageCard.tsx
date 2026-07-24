@@ -1,5 +1,7 @@
 import { Badge } from '@/components/ui/badge';
-import { IconCheck, IconFolder } from '@/components/icons';
+import { IconCheck } from '@/components/icons';
+import { BookmarkFavicon } from '@/components/bookmark/BookmarkFavicon';
+import { BookmarkFolderPath } from '@/components/bookmark/BookmarkFolderPath';
 import styles from './PopupPageCard.module.css';
 
 /** @deprecated Dropped from SettingsView (App.tsx) — kept for reference, may be revisited later. */
@@ -8,7 +10,7 @@ export function PopupPageCard() {
     <div className={styles.wrap}>
       <div className={styles.card}>
         <div className={styles.siteRow}>
-          <div className={styles.favicon}>r</div>
+          <BookmarkFavicon seed="reddit.com" />
           <div className={styles.siteMeta}>
             <div className={styles.siteTitle}>r/webdev — Show your project</div>
             <div className={styles.siteDomain}>reddit.com · alias: reddit</div>
@@ -24,14 +26,7 @@ export function PopupPageCard() {
             </Badge>
           </div>
 
-          <div className={styles.path}>
-            <IconFolder size={14} fill="var(--muted)" style={{ flexShrink: 0 }} />
-            <span className={styles.pathMuted}>Bookmarks</span>
-            <span className={styles.pathSep}>/</span>
-            <span className={styles.pathMuted}>Соцсети</span>
-            <span className={styles.pathSep}>/</span>
-            <span className={styles.pathAccent}>Reddit</span>
-          </div>
+          <BookmarkFolderPath segments={['Bookmarks', 'Соцсети', 'Reddit']} />
         </div>
       </div>
     </div>

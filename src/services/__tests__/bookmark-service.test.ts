@@ -35,6 +35,7 @@ function makeBookmarkRepository(): IBookmarkRepository & { move: ReturnType<type
     create: vi.fn(async (): Promise<Browser.bookmarks.BookmarkTreeNode> => ({ id: 'new-id', title: '', syncing: false })),
     move: vi.fn(async () => {}),
     getByTitle: vi.fn(async () => []),
+    listAll: vi.fn(async () => []),
   };
 }
 

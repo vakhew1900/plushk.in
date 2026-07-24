@@ -1,0 +1,18 @@
+.wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.input {
+  height: 2.75rem;
+  padding-left: 2.375rem;
+  font-weight: 400;
+}

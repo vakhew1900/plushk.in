@@ -1,0 +1,13 @@
+.path {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.78125rem;
+  font-family: 'JetBrains Mono', monospace;
+  flex-wrap: wrap;
+}
+
+.icon { color: var(--muted); flex-shrink: 0; }
+.sep    { color: var(--faint); }
+.muted  { color: var(--muted); }
+.accent { color: var(--accent); font-weight: 600; }

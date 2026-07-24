@@ -9,6 +9,7 @@
     "section": "General",
     "main": "Home",
     "rules": "Rules",
+    "search": "Search",
     "aliases": "Aliases"
   },
   "modes": {
@@ -61,6 +62,14 @@
   "jsonView": {
     "valid": "Valid JSON · {{count}} conditions",
     "invalid": "JSON syntax error"
+  },
+  "searchTab": {
+    "lead": "Searches by title, URL, and folder among already sorted bookmarks.",
+    "placeholder": "E.g. reddit, design, UI patterns...",
+    "allCount": "All bookmarks: {{count}}",
+    "foundCount": "Found: {{count}}",
+    "noBookmarks": "No sorted bookmarks yet.",
+    "noResults": "Nothing found — try a different query."
   },
   "aliasesTab": {
     "lead": "Domain aliases, extraction variables, and backups."

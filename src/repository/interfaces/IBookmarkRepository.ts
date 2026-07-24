@@ -1,4 +1,5 @@
 import type { Browser } from 'wxt/browser';
+import type { BookmarkSearchEntry } from '../../types/bookmark-search-entry';
 
 export interface IBookmarkRepository {
   /**
@@ -13,4 +14,7 @@ export interface IBookmarkRepository {
 
   /** Finds bookmarks (not folders) whose title matches exactly. */
   getByTitle(title: string): Promise<Browser.bookmarks.BookmarkTreeNode[]>;
+
+  /** Lists every saved bookmark (leaf nodes only) with the folder path it currently lives in. */
+  listAll(): Promise<BookmarkSearchEntry[]>;
 }

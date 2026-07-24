@@ -142,6 +142,46 @@ describe('BookmarkRepository.move', () => {
   });
 });
 
+describe('BookmarkRepository.listAll', () => {
+  it('lists only bookmarks (not folders), each with its ancestor folder path', async () => {
+    const tree: Node[] = [
+      {
+        id: '0',
+        title: '',
+        syncing: false,
+        children: [
+          {
+            id: '1',
+            title: 'Bookmarks bar',
+            syncing: false,
+            children: [
+              { id: 'bm-1', title: 'Root bookmark', url: 'https://root.com', syncing: false },
+              {
+                id: 'folder-social',
+                title: 'Social',
+                syncing: false,
+                children: [
+                  { id: 'bm-2', title: 'Reddit post', url: 'https://reddit.com/post', syncing: false },
+                ],
+              },
+            ],
+          },
+          { id: '2', title: 'Other bookmarks', syncing: false, children: [] },
+        ],
+      },
+    ];
+    bookmarksApi.getTree.mockResolvedValueOnce(tree);
+
+    const repo = new BookmarkRepository();
+    const results = await repo.listAll();
+
+    expect(results).toEqual([
+      { id: 'bm-1', title: 'Root bookmark', url: 'https://root.com', folderPath: ['Bookmarks bar'] },
+      { id: 'bm-2', title: 'Reddit post', url: 'https://reddit.com/post', folderPath: ['Bookmarks bar', 'Social'] },
+    ]);
+  });
+});
+
 describe('BookmarkRepository.getByTitle', () => {
   it('returns only bookmarks (not folders) matching the title exactly', async () => {
     bookmarksApi.search.mockResolvedValueOnce([

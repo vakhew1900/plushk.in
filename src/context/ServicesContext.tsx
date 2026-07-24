@@ -12,9 +12,11 @@ import type { IDomainAliasRepository } from '@/repository/interfaces/IDomainAlia
 import type { IModeSettingsRepository } from '@/repository/interfaces/IModeSettingsRepository';
 import type { IPageMatchGroupRepository } from '@/repository/interfaces/IPageMatchGroupRepository';
 import type { IPendingHintRepository } from '@/repository/interfaces/IPendingHintRepository';
+import { BookmarkSearchService } from '@/services/BookmarkSearchService';
 import { FileService } from '@/services/FileService';
 import { QuickSaveService } from '@/services/QuickSaveService';
 import { SettingsExportImportService } from '@/services/SettingsExportImportService';
+import type { IBookmarkSearchService } from '@/services/interfaces/IBookmarkSearchService';
 import type { IFileService } from '@/services/interfaces/IFileService';
 import type { IQuickSaveService } from '@/services/interfaces/IQuickSaveService';
 import type { ISettingsExportImportService } from '@/services/interfaces/ISettingsExportImportService';
@@ -29,6 +31,7 @@ export interface Services {
   fileService: IFileService;
   quickSaveService: IQuickSaveService;
   settingsExportImportService: ISettingsExportImportService;
+  bookmarkSearchService: IBookmarkSearchService;
 }
 
 export const ServicesContext = createContext<Services | null>(null);
@@ -43,9 +46,10 @@ export function ServicesProvider({ children }: Props) {
     const domainAliasRepository = new DomainAliasRepository();
     const pageMatchGroupRepository = new PageMatchGroupRepository();
     const fileService = new FileService();
+    const bookmarkRepository = new BookmarkRepository();
 
     return {
-      bookmarkRepository: new BookmarkRepository(),
+      bookmarkRepository,
       bookmarkRuleRepository,
       domainAliasRepository,
       modeSettingsRepository: new ModeSettingsRepository(),
@@ -59,6 +63,7 @@ export function ServicesProvider({ children }: Props) {
         pageMatchGroupRepository,
         fileService,
       ),
+      bookmarkSearchService: new BookmarkSearchService(bookmarkRepository),
     };
   }, []);
 

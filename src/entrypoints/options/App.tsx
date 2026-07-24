@@ -10,6 +10,7 @@ import { OptionsSidebar } from "@/components/options/OptionsSidebar";
 import type { Tab } from "@/components/options/OptionsSidebar";
 import { MainTab } from "@/components/options/tabs/MainTab";
 import { RulesTab } from "@/components/options/tabs/RulesTab";
+import { SearchTab } from "@/components/options/tabs/SearchTab";
 import { AliasesTab } from "@/components/options/tabs/AliasesTab";
 import styles from "./App.module.css";
 
@@ -30,6 +31,7 @@ function AppShell() {
         <div className={styles.content}>
           {tab === "main" && <MainTab />}
           {tab === "rules" && <RulesTab rules={rules.items} onSave={rules.save} onRemove={rules.remove} />}
+          {tab === "search" && <SearchTab />}
           {tab === "aliases" && <AliasesTab />}
         </div>
       </div>

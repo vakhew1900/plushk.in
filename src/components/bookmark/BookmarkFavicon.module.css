@@ -1,0 +1,16 @@
+.favicon {
+  width: 2.125rem;
+  height: 2.125rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.red    { background: var(--red-soft);    color: var(--red); }
+.blue   { background: var(--blue-soft);   color: var(--blue); }
+.green  { background: var(--green-soft);  color: var(--green); }
+.accent { background: var(--accent-soft); color: var(--accent); }
