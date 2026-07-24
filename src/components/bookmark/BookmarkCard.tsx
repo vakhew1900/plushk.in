@@ -18,7 +18,7 @@ export function BookmarkCard({ title, url, folderPath, onClick }: Props) {
   return (
     <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
       <div className={styles.topRow}>
-        <BookmarkFavicon seed={domain} />
+        <BookmarkFavicon seed={domain} url={url} />
         <div className={styles.meta}>
           <div className={styles.title}>{title}</div>
           <div className={styles.domain}>{domain}</div>

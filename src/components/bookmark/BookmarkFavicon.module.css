@@ -14,3 +14,9 @@
 .blue   { background: var(--blue-soft);   color: var(--blue); }
 .green  { background: var(--green-soft);  color: var(--green); }
 .accent { background: var(--accent-soft); color: var(--accent); }
+
+.icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  object-fit: contain;
+}
