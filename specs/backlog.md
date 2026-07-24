@@ -51,12 +51,6 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 Реализовать сценарий 6 из `specification.md`: пользователь экспортирует сохранённую страницу — расширение извлекает контент через `@mozilla/readability`, конвертирует в Markdown через `turndown`, опционально отправляет заметку в Obsidian через Local REST API плагин. На момент постановки не реализовано вообще: зависимости `@mozilla/readability`/`turndown` не установлены в `package.json`, сервиса для этого нет. Не решены: UI-точка входа (кнопка на закладке / в popup / в options), формат имени файла и frontmatter заметки, куда физически сохраняется .md-файл при отсутствии Obsidian (просто скачивание через `chrome.downloads`?), настройки подключения к Obsidian REST API (host/port/API key) и где они хранятся. Из non-goal в `specification.md` явно исключено: импорт/экспорт отдельных страниц в Obsidian сверх простого Markdown-экспорта статьи — то есть только «экспортировал → при желании отправил в Obsidian», без обратной синхронизации.
 
-### TEST-1 — Тестовые примеры данных для импорта/экспорта закладок
-**Priority:** Medium
-**Added:** 2026-07-24
-
-Подготовить 2-3 набора тестовых данных правил закладок для ручной/автоматической проверки импорта/экспорта (см. `SETTINGS-1`): правила для почтовых сервисов (напр. Gmail/Yandex/Outlook по доменам), правила для видео (напр. YouTube/Vimeo по домену и тегам/wildcard в заголовке), правило для статей Habr (по домену `habr.com`). Каждый набор — валидный JSON, соответствующий формату `BookmarkRule`/DSL из `CLAUDE.md`, пригодный для использования как фикстура при тестировании экспорта/импорта настроек.
-
 ### AI-1 — AI-правило по описанию на естественном языке
 **Priority:** Medium
 **Added:** 2026-07-24
@@ -101,6 +95,18 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 - `src/services/FileService.ts` (сервисный класс) не имеет теста в `src/services/__tests__/`, хотя CLAUDE.md требует юнит-тесты для сервисов. Вероятно, пропустили из-за DOM-специфики (`Blob`/`URL.createObjectURL`/`<a download>`), но именно ради мокируемости такого рода кода и существует интерфейс `IFileService`.
 - `src/lib/utils.ts` (`cn()` — обёртка над clsx) и `src/lib/browser-constants/bookmarkRoots.ts` не имеют тестов — оба тривиальны и низкой ценности, но отмечены для полноты.
+
+### RULE-5 — Подключить PageExtractorService/PageMatchGroup к реальному flow создания закладки
+**Priority:** Medium
+**Added:** 2026-07-24
+
+`PageExtractorService`/`PageMatchGroup` (`src/services/PageExtractorService.ts`, `src/lib/page-extractor.ts`) — рабочая инфраструктура извлечения `extras` со страницы через CSS/META/XPath-селекторы, но нигде не вызывается в реальном flow. `background.ts` использует только `PageMetaFiller`, который берёт `url`/`domain`/`title` из самого объекта закладки без похода на страницу (см. явный комментарий в `PageMetaFiller.ts`: «seam for a future content-script-based filler»). `content.ts` — заглушка (`matches: ['*://*.google.com/*']`, просто `console.log`). Из-за этого правила, ссылающиеся на `extras.*`-поля (например заполняемые через `PageMatchGroup`), никогда не сработают на живых закладках — `PageMeta.extras` всегда `undefined` в реальной автосортировке. Нужно: content script, вызывающий `PageExtractorService.extract()` на активной вкладке с подходящими `PageMatchGroup`, передача результата в background (`browser.runtime.sendMessage` или аналог) и объединение с базовым `PageMeta` от `PageMetaFiller` до вызова `findMatchingRule`. Обнаружено при подготовке тестовых конфигов `TEST-1` (см. `configs/social-extras/`, где зафиксирован сценарий на будущее). На момент постановки не решено: когда именно запускать извлечение (сразу на `bookmarks.onCreated` — но у content script может не быть доступа к уже закрытой/фоновой вкладке; на активной вкладке в момент сохранения — точнее, но не покрывает закладки, созданные не через текущую вкладку), таймаут/поведение при недоступности content script (страница ещё не загрузилась, а закладка уже создана), какие `PageMatchGroup` из скольких сохранённых применяются для конкретного домена (сейчас `PageMatchGroupRepository` не имеет понятия «для какого домена» — только `alias_name`).
+
+### RULE-6 — Резолвинг DomainAlias в правилах
+**Priority:** Medium
+**Added:** 2026-07-24
+
+`DomainAlias` (`src/types/domain-alias.ts`, вкладка «Алиасы» → `AliasesSection`) сейчас существует только как самостоятельная сущность: хранится, редактируется в UI, участвует в экспорте/импорте (`SETTINGS-1`), но движок правил (`src/lib/visitor/rule-evaluator.ts`) о нём не знает — `RuleNode` (`term`/`terms`/`regex`/`wildcard`) матчит только литеральные значения `PageMeta`. В результате alias, созданный пользователем во вкладке «Алиасы» (например «Gmail» → `gmail.com`, `mail.google.com`), никак не используется при построении условий правил во вкладке «Правила» — списки доменов приходится дублировать вручную в `term`/`terms`, что расходится с CLAUDE.md (сценарий 5 явно описывает alias как способ не перечислять домены по одному в каждом правиле). Обнаружено при подготовке тестовых конфигов `TEST-1` (см. `configs/mail/`, `configs/it/`, где домены в `domainAliases` и в `rules[].condition` продублированы). На момент постановки не решено: формат ссылки на alias в DSL (новый тип условия вроде `{"type": "alias", "field": "domain", "aliasId": "..."}`, либо резолвинг на уровне `RuleEditor`/`ConsView` — alias «разворачивается» в `terms` при сохранении правила, и движок продолжает работать только с литералами); что при удалении/переименовании alias, на который уже ссылаются существующие правила.
 
 ### TEST-2 — Рассмотреть e2e-тестирование расширения
 **Priority:** Low

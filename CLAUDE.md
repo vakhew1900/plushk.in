@@ -152,6 +152,8 @@ export type RuleType = typeof RuleType[keyof typeof RuleType];
 enum RuleType { AND = 'and' }
 ```
 
+  This also covers ad hoc literals, not just formal domain enums: if a string literal has a realistic chance of being compared/used more than once (e.g. a build-target check like `import.meta.env.BROWSER === 'firefox'`), pull it into an `as const` object at its first use — don't wait for the second usage to appear before extracting it. A true one-off literal (used in exactly one place, no plausible reuse) doesn't need this. See `src/lib/browser-constants/` for the pattern.
+
 - **Debug logging: use `debugLog` from `src/lib/debug-log.ts`, never raw `console.log`, for temporary/tracing logs.** It only logs while running under `npm run dev:firefox` (or any `wxt dev` variant — checks `import.meta.env.COMMAND === 'serve'`) and is fully stripped from production output (`npm run build`/`build:firefox`/`zip`) by the minifier, since that check becomes a dead branch once WXT inlines `COMMAND` as `'build'`. Safe to leave tracing calls in place — they never ship.
 
 ## Specs
