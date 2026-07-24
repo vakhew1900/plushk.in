@@ -128,7 +128,7 @@ interface BookmarkRule {
 }
 ```
 
-Fallback: if no rule matches, no specific folder is chosen — the bookmark is created wherever the browser places it by default (same as Off mode).
+Fallback: if no rule matches (Auto mode only), the bookmark is moved into the user-configured `defaultFolder` setting instead of wherever the browser placed it natively. `defaultFolder` is empty by default, which resolves to the Bookmarks Toolbar.
 
 ## Code rules
 

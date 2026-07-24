@@ -27,7 +27,7 @@ The directions below have been discussed but are deliberately out of scope for t
 
 ## User scenarios
 
-1. **Auto-sort ("Auto" mode).** The user saves a page as a bookmark. The extension checks rules in descending priority order; the first rule whose conditions all match decides the folder — the bookmark is moved there immediately. If no rule matches, no specific folder is chosen and the bookmark goes wherever the browser places it by default.
+1. **Auto-sort ("Auto" mode).** The user saves a page as a bookmark. The extension checks rules in descending priority order; the first rule whose conditions all match decides the folder — the bookmark is moved there immediately. If no rule matches, the bookmark is moved into the user-configured default folder instead (empty by default, meaning the Bookmarks Bar).
 2. **"Hint" mode.** The user saves a bookmark; the extension computes the matching folder using the same rules, but shows the result in the popup and lets the user change the folder before it's saved.
 3. **"Off" mode.** The extension doesn't interfere — the bookmark is saved the normal browser way.
 4. **Editing rules.** The user opens the "Rules" tab in settings and creates or edits a rule: sets conditions (domain / title / URL, including regex), combines them via AND / OR, and specifies a target folder and priority.
@@ -43,7 +43,7 @@ The directions below have been discussed but are deliberately out of scope for t
 - A target folder is a `/`-separated path (e.g. `"Social/Reddit"`); intermediate folders are created if they don't exist yet.
 - Rules are checked in descending priority order — **the higher the number, the earlier the rule is checked**.
 - The first rule whose conditions all match wins; the rest are not checked.
-- If no rule matches, no specific folder is chosen — the bookmark is created wherever the browser places it by default (same outcome as Off mode).
+- If no rule matches (Auto mode), the bookmark is moved into a user-configured default folder — a `/`-separated path, empty by default, which resolves to the Bookmarks Bar.
 - Importing bookmarks (`bookmarks.onImportBegan`) pauses rule processing until the import finishes.
 - The extension only **moves** bookmarks (`chrome.bookmarks.move()`) — it never duplicates them.
 - Changing an existing bookmark's title/URL re-triggers rule evaluation (`bookmarks.onChanged`).
@@ -59,7 +59,7 @@ PRIORITY = 50
 Fallback (no rule matched):
 
 ```
-IF nothing matched → no folder chosen, browser default applies
+IF nothing matched → moved to the default folder (Bookmarks Bar unless changed in settings)
 ```
 
 ## Task categories
