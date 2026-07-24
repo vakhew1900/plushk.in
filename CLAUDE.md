@@ -165,6 +165,7 @@ Planning and task tracking live in `specs/`, not in this file:
 | `specs/backlog.md` | Tasks not yet started |
 | `specs/tasks.md` | Tasks currently in progress |
 | `specs/changelog.md` | Finished tasks |
+| `specs/ideas.md` | Unconfirmed, not-yet-scoped ideas — lighter than a task, no ID/priority required |
 
 A task lives in exactly one of `backlog.md` / `tasks.md` / `changelog.md` at a time. When work on a task begins, move it from `backlog.md` to `tasks.md`. When it's finished, move it from `tasks.md` to `changelog.md`, adding a **Completed:** date — don't delete it. (Before this convention, finished tasks were deleted outright and relied on git history alone; that made completed work invisible unless someone went digging through commits, so now the entry itself is kept.)
 

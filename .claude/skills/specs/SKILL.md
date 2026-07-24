@@ -1,6 +1,6 @@
 ---
 name: specs
-description: Maintain the project's specification and task-tracking files in specs/ (specification.md, plan.md, backlog.md, tasks.md, changelog.md), and optionally a deep per-task spec under specs/tasks/<id>/. Use when adding, starting, finishing, removing, or re-prioritizing a task, updating the spec/plan, or writing a detailed specification for a specific task before implementation.
+description: Maintain the project's specification and task-tracking files in specs/ (specification.md, plan.md, backlog.md, tasks.md, changelog.md, ideas.md), and optionally a deep per-task spec under specs/tasks/<id>/. Use when adding, starting, finishing, removing, or re-prioritizing a task, capturing or promoting an idea, updating the spec/plan, or writing a detailed specification for a specific task before implementation.
 ---
 
 # Specs
@@ -15,9 +15,10 @@ Maintain the project's specification and task-tracking files in `specs/`.
 - `specs/backlog.md` — tasks not yet started.
 - `specs/tasks.md` — tasks currently in progress.
 - `specs/changelog.md` — finished tasks, kept for history.
+- `specs/ideas.md` — unconfirmed, not-yet-scoped ideas. Lighter than a task: no ID, no priority, no required fields, just a short heading + description. Add an idea here when it's worth remembering but not yet worth a full backlog entry (e.g. surfaced in passing during unrelated work, or explicitly flagged as "just an idea" by the user). When an idea is picked up, promote it: write a proper `backlog.md` entry per the task entry format, then remove the idea from `ideas.md` — never leave it duplicated in both.
 - `specs/tasks/<id>/` — deep spec for a specific task, if one exists (see below). Gitignored — local only, don't assume it exists after a fresh clone.
 
-Read all five `specs/*.md` files before adding, moving, or removing a task — a task's category, number, and status depend on the current content of more than one of them.
+Read all five `specs/*.md` task-tracking files (`backlog.md`, `tasks.md`, `changelog.md`, `ideas.md`, `specification.md`) before adding, moving, or removing a task — a task's category, number, and status depend on the current content of more than one of them.
 
 ## Rules for managing tasks
 

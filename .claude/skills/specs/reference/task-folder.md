@@ -43,12 +43,12 @@ Supporting files that don't belong in prose: mockups, sample API/config payloads
 
 ## Example
 
-Task `UI-2 — Settings tab "Shelf"` (see `backlog.md`), if promoted to a deep spec at `specs/tasks/UI-2-settings-shelf-tab/`. Written here in English for the template's sake — a real one for this project would be in Russian, matching `backlog.md`:
+Fictional task `WIDGET-4 — Settings tab "Shelf"` (illustrative only — not a real category or ID in this project's `specification.md`), if promoted to a deep spec at `specs/tasks/WIDGET-4-settings-shelf-tab/`. Written here in English for the template's sake — a real one for this project would be in Russian, matching `backlog.md`:
 
 **`description.md`:**
 
 ```markdown
-# UI-2 — Settings tab "Shelf"
+# WIDGET-4 — Settings tab "Shelf"
 
 ## Context
 See `specs/backlog.md` — the "Shelf" non-goal in `specification.md` is now being picked up.
@@ -84,8 +84,8 @@ Adds a separate Settings tab: a search box + a list of saved bookmarks.
 
 | Task | Relation type | Comment |
 |---|---|---|
-| UI-1 | continuation | "Shelf" reuses the same bookmark-card pattern as the UI-1 toast |
-| RULE-3 | depends-on | Needs `IBookmarkRepository.getByTitle`, added in RULE-3 |
+| WIDGET-1 | continuation | "Shelf" reuses the same bookmark-card pattern as the WIDGET-1 toast |
+| WIDGET-2 | depends-on | Needs `IBookmarkRepository.getByTitle`, added in WIDGET-2 |
 
 ## Relation type vocabulary
 (see the table above in this file — the same fixed set used project-wide)
