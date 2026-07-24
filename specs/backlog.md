@@ -21,11 +21,23 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 В Auto-режиме показывать тост-уведомление вида «Вкладка сохранена в папку "Соцсети/Reddit"», которое появляется в правом верхнем углу и само пропадает через ~5 секунд. Нерешённый вопрос на момент проектирования: у service worker'а в MV3 нет DOM, так что вариант либо `chrome.notifications` (системное уведомление ОС — просто, но не кастомизируется под тему проекта и не буквально «в правом верхнем углу окна браузера»), либо инжект UI через content script в активную вкладку (кастомизируется, но нужны host permissions и открытая подходящая вкладка). Выбор — отдельное архитектурное решение при старте задачи.
 
 
-### UI-2 — Вкладка настроек «Полка» (Shelf)
+### SEARCH-2 — Fuzzy-поиск и индексация description/content для вкладки «Поиск»
 **Priority:** Low
-**Added:** 2026-07-16
+**Added:** 2026-07-24
 
-Добавить в настройки отдельную вкладку «Полка» (см. non-goal в `specification.md`): поисковая строка + список сохранённых закладок. На момент постановки задачи не определены: источник данных списка (метаданные из IndexedDB vs. живой `chrome.bookmarks.getTree()`), набор отображаемых полей на карточке закладки, и связь с будущими статусами (read / watched / to read / to watch, тоже non-goal) — по умолчанию задача ограничивается поиском и списком без статусов, если не будет решено иначе при старте.
+Продолжение `SEARCH-1` (см. `tasks.md`): заменить точное вхождение подстроки на fuzzy-matching (например `Fuse.js` или аналог) и включить в индекс `description`/`content` из `PageMeta`. Требует персистентного хранилища метаданных на закладку — сейчас `PageMeta` вычисляется на лету в `PageMetaFiller`/`background.ts` и нигде не сохраняется. На момент постановки не решено: заводить ли отдельную Dexie-таблицу под метаданные конкретно для поиска, или переиспользовать структуру, которую вводит `SEARCH-3` под теги (обе задачи упираются в одну и ту же нехватку — персистентность `PageMeta` по закладке, — так что имеет смысл объединить).
+
+### SEARCH-3 — Теги для закладок: хранение и поиск по тегам
+**Priority:** Medium
+**Added:** 2026-07-24
+
+Упомянуто как non-goal «Tags for bookmarks» в `specification.md`. Часть общего направления «Поиск», не отдельная категория: (1) хранение — тегам закладки пока негде жить: персистентного хранилища метаданных на закладку нет вообще (см. `SEARCH-1`/`SEARCH-2` — `PageMeta` вычисляется на лету и не сохраняется), нужна новая сущность в Dexie; (2) поиск/фильтр по тегам на вкладке «Поиск» (`SEARCH-1`/`SEARCH-2`). Правила автоподбора тегов (заполнение тегов по условиям, а не руками) вынесены в отдельную `RULE-4`, т.к. это логика правил, а не поиска. На момент постановки не решено: заводить ли отдельную Dexie-таблицу `bookmarkTags`, или это часть той же таблицы метаданных, которую вводит `SEARCH-2` под fuzzy-поиск (вероятно стоит объединить).
+
+### RULE-4 — Правила автоподбора тегов для закладок
+**Priority:** Medium
+**Added:** 2026-07-24
+
+Зависит от `SEARCH-3` (там же должно появиться хранилище тегов, которого пока не существует). По аналогии с `BookmarkRule`/DSL из `CLAUDE.md`, но результат оценки условия — не перемещение в папку, а присвоение набора тегов. На момент постановки не решено: формат — расширение `BookmarkRule` (опциональное поле `tags` рядом с `targetFolder`, оценивается тем же движком) или отдельная сущность `TagRule` со своим редактором; применяются ли теговые правила в реальном времени (`bookmarks.onCreated`, как папочные) или пересчётом по требованию/batch.
 
 ### DEV-2 — Доска задач проекта в Obsidian через MCP
 **Priority:** Low
@@ -79,7 +91,7 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 Набор мелких находок из полного аудита архитектуры, ни одна из которых не тянет на отдельную задачу поодиночке:
 - `ExportImportSection.tsx` импортирует `MimeType` напрямую из `@/services/interfaces/IFileService`, минуя hooks/context — компонент дотягивается до интерфейса сервиса напрямую. Не новая проблема: тот же паттерн уже есть в `PopupQuickSave.tsx`/`PopupActions.tsx` (импортируют `createModeHandler`/`BookmarkDecisionStatus` напрямую из `@/services/handler/...`).
-- 10 статичных (не по-настоящему динамичных) `style={{...}}` вместо классов CSS Modules: `PopupFooter.tsx:15`, `RulesTab.tsx:63`, `RuleEditor.tsx:77`, `PopupPageCard.tsx:28`, `ConsView.tsx:29-33`, `AliasesSection.tsx:40`, `ConditionGroup.tsx:34`, `ModeCard.tsx:32`, `VariableBlock.tsx:71`, `VariablesSection.tsx:48`.
+- Статичные (не по-настоящему динамичные) `style={{...}}` вместо классов CSS Modules: `PopupFooter.tsx:15`, `RulesTab.tsx:63`, `RuleEditor.tsx:77`, `ConsView.tsx:29-33`, `AliasesSection.tsx:40`, `ConditionGroup.tsx:34`, `ModeCard.tsx:32`, `VariableBlock.tsx:71`, `VariablesSection.tsx:48`. (`PopupPageCard.tsx:28` already fixed — resolved incidentally while extracting `BookmarkFolderPath`/`BookmarkFavicon` for `SEARCH-1`.)
 - `src/entrypoints/content.ts:4` — забытый `console.log('Hello content.')`, не через `debugLog`.
 - Таблица storage в `CLAUDE.md` документирует только Dexie/IndexedDB, но `ModeSettingsRepository`/`PendingHintRepository` реально используют `wxt/utils/storage` (chrome.storage) — стоит дополнить документацию упоминанием обоих механизмов хранения.
 
@@ -89,4 +101,10 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 - `src/services/FileService.ts` (сервисный класс) не имеет теста в `src/services/__tests__/`, хотя CLAUDE.md требует юнит-тесты для сервисов. Вероятно, пропустили из-за DOM-специфики (`Blob`/`URL.createObjectURL`/`<a download>`), но именно ради мокируемости такого рода кода и существует интерфейс `IFileService`.
 - `src/lib/utils.ts` (`cn()` — обёртка над clsx) и `src/lib/browser-constants/bookmarkRoots.ts` не имеют тестов — оба тривиальны и низкой ценности, но отмечены для полноты.
+
+### TEST-2 — Рассмотреть e2e-тестирование расширения
+**Priority:** Low
+**Added:** 2026-07-24
+
+Сейчас Vitest настроен с `environment: 'node'` (без jsdom/`@testing-library/react`) — тестируются только классы/функции сервисов, репозиториев и `lib/` (см. `ARCH-5`), компоненты и хуки не рендерятся и не тестируются вовсе, это осознанное ограничение (CLAUDE.md: «React components are not tested»). E2e — отдельный уровень: Playwright, управляющий распакованным MV3-расширением в реальном браузере, проверяющий сквозные сценарии через настоящий `chrome.bookmarks` (авто-сортировка при создании закладки, пауза обработки во время `bookmarks.onImportBegan`) — то, что моки `vitest-chrome` не могут подтвердить, так как не гоняют реальный браузер. На момент постановки не нужно для MVP: заведено как задача-идея на будущее, без конкретного плана внедрения (выбор раннера/CI, какие сценарии покрывать в первую очередь — не решено).
 
