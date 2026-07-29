@@ -9,7 +9,7 @@ import { createModeHandler } from '@/services/handler/createModeHandler';
 import { BookmarkDecisionStatus } from '@/services/handler/interfaces/IBookmarkModeHandler';
 import { PageMetaFiller } from '@/services/PageMetaFiller';
 import { debugLog } from '@/lib/debug-log';
-import { isQuickSaveMessage } from '@/types/quick-save-message';
+import { isQuickSaveMessage } from '@/types/messages/quick-save-message';
 import { Mode } from '@/types/mode';
 import type { PageMeta } from '@/types/page-meta';
 
@@ -38,6 +38,12 @@ export default defineBackground(() => {
   // a bookmark the quick-save popup already placed.
   let suppressNextCreated = false;
 
+  // Deprecated (not removed): sorts bookmarks created outside the popup
+  // (native star icon/Ctrl+D, import, sync from another browser/device) —
+  // still the only mechanism that handles those, so it keeps working exactly
+  // as before, on domain/title/url only. It does NOT get `extras` — that
+  // requires a tab reference (`activeTab`), which quick-save alone has. See
+  // RULE-5 in specs/tasks.md; may be revisited later.
   browser.bookmarks.onCreated.addListener(async (_id, bookmark) => {
     if (suppressNextCreated || importing || !bookmark.url) return; // skip folders (no url) and bulk imports
 
@@ -62,7 +68,8 @@ export default defineBackground(() => {
       let targetFolder = message.targetFolder;
 
       if (modeHandler.status === BookmarkDecisionStatus.PLACED) {
-        const meta: PageMeta = { url: message.url, domain: new URL(message.url).hostname, title: message.title };
+        const baseMeta = await pageMetaFiller.fillPageMeta({ url: message.url, title: message.title });
+        const meta: PageMeta = { ...baseMeta, ...message.metaOverlay };
         const decision = await modeHandler.onBookmarkSelected(meta);
         targetFolder = decision.targetFolder ?? (await defaultFolderSettingsRepository.get());
         debugLog('[quick-save-debug] background: recomputed targetFolder for PLACED mode', targetFolder);

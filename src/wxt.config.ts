@@ -12,6 +12,12 @@ export default defineConfig({
       'bookmarks',
       'storage',
       'activeTab',
+      // Lets `PageExtrasService` inject `content.ts` on demand into the
+      // active tab (quick-save flow only) via `browser.scripting.executeScript`.
+      // Paired with `activeTab` — no `<all_urls>`/`host_permissions` needed,
+      // since `content.ts` is registered with `registration: 'runtime'` and
+      // an empty `matches`. See RULE-5 in specs/tasks.md.
+      'scripting',
       ...(env.browser === BrowserTarget.FIREFOX ? [] : ['favicon']),
     ],
   }),

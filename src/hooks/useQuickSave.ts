@@ -13,9 +13,11 @@ interface ActiveTab {
 }
 
 export function useQuickSave(mode: Mode) {
-  const { bookmarkRuleRepository, quickSaveService } = useServices();
+  const { bookmarkRuleRepository, pageMatchGroupRepository, pageMetaFiller, pageExtrasService, quickSaveService } =
+    useServices();
   const [tab, setTab] = useState<ActiveTab | undefined>(undefined);
   const [suggestedFolder, setSuggestedFolder] = useState<string | undefined>(undefined);
+  const [metaOverlay, setMetaOverlay] = useState<Partial<PageMeta> | undefined>(undefined);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -24,12 +26,18 @@ export function useQuickSave(mode: Mode) {
     browser.tabs.query({ active: true, currentWindow: true }).then(async ([activeTab]) => {
       if (cancelled || !activeTab?.url) return;
 
-      const meta: PageMeta = {
-        url: activeTab.url,
-        domain: new URL(activeTab.url).hostname,
-        title: activeTab.title ?? '',
-      };
-      setTab({ title: meta.title, url: meta.url });
+      const baseMeta = await pageMetaFiller.fillPageMeta({ url: activeTab.url, title: activeTab.title ?? '' });
+      setTab({ title: baseMeta.title, url: baseMeta.url });
+
+      // Off mode never recomputes a folder — skip the extraction round-trip entirely.
+      let overlay: Partial<PageMeta> | undefined;
+      if (mode !== Mode.OFF && activeTab.id !== undefined) {
+        const groups = await pageMatchGroupRepository.getAll();
+        overlay = await pageExtrasService.extract(activeTab.id, groups);
+        if (!cancelled) setMetaOverlay(overlay);
+      }
+
+      const meta: PageMeta = { ...baseMeta, ...overlay };
 
       const handler = createModeHandler(mode, bookmarkRuleRepository);
       if (handler.status === BookmarkDecisionStatus.PENDING_CONFIRMATION) {
@@ -42,16 +50,16 @@ export function useQuickSave(mode: Mode) {
     return () => {
       cancelled = true;
     };
-  }, [mode, bookmarkRuleRepository]);
+  }, [mode, bookmarkRuleRepository, pageMatchGroupRepository, pageMetaFiller, pageExtrasService]);
 
   const save = useCallback(
     async (targetFolder?: string) => {
       if (!tab) return;
       debugLog('[quick-save-debug] popup: sending save message with targetFolder', targetFolder);
-      await quickSaveService.create({ title: tab.title, url: tab.url, mode, targetFolder });
+      await quickSaveService.create({ title: tab.title, url: tab.url, mode, targetFolder, metaOverlay });
       setSaved(true);
     },
-    [tab, mode, quickSaveService],
+    [tab, mode, metaOverlay, quickSaveService],
   );
 
   return { tab, suggestedFolder, saved, save };

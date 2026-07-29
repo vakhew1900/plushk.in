@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
-import { QuickSaveMessageType } from '../types/quick-save-message';
-import type { QuickSaveMessage } from '../types/quick-save-message';
+import { QuickSaveMessageType } from '../types/messages/quick-save-message';
+import type { QuickSaveMessage } from '../types/messages/quick-save-message';
 import type { IQuickSaveService, QuickSaveInput } from './interfaces/IQuickSaveService';
 
 export class QuickSaveService implements IQuickSaveService {

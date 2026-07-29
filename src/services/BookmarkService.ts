@@ -22,7 +22,7 @@ export class BookmarkService implements IBookmarkService {
   ) {}
 
   async handleBookmarkCreated(bookmark: Browser.bookmarks.BookmarkTreeNode): Promise<BookmarkDecision> {
-    const meta = await this.pageMetaFiller.fillPageMeta(bookmark);
+    const meta = await this.pageMetaFiller.fillPageMeta({ url: bookmark.url, title: bookmark.title });
     const decision = await this.modeHandler.onBookmarkSelected(meta);
 
     if (decision.status === BookmarkDecisionStatus.PLACED) {

@@ -136,7 +136,7 @@ describe('BookmarkService.handleBookmarkCreated', () => {
 
     await service.handleBookmarkCreated(bookmark);
 
-    expect(filler.fillPageMeta).toHaveBeenCalledWith(bookmark);
+    expect(filler.fillPageMeta).toHaveBeenCalledWith({ url: bookmark.url, title: bookmark.title });
     expect(onBookmarkSelectedSpy).toHaveBeenCalledWith(meta);
   });
 });

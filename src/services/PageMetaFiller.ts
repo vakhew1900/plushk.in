@@ -1,19 +1,19 @@
-import type { Browser } from 'wxt/browser';
 import type { PageMeta } from '../types/page-meta';
-import type { IPageMetaFiller } from './interfaces/IPageMetaFiller';
+import type { IPageMetaFiller, PageMetaFillerInput } from './interfaces/IPageMetaFiller';
 
 /**
- * Minimal `PageMeta` straight from the `bookmarks.onCreated` event — no page
- * content. This is the seam for a future content-script-based filler that
- * enriches description/tags/content; callers only depend on `IPageMetaFiller`.
+ * Base `url`/`domain`/`title` only — cheap and DOM-free, safe to call from
+ * any context (`onCreated`, quick-save). Shared by every `PageMeta`
+ * construction site instead of each building it inline. Extras/DOM
+ * enrichment is a separate, optional layer on top (`IPageExtrasService`),
+ * only usable where a tab is available (quick-save/popup) — see RULE-5.
  */
 export class PageMetaFiller implements IPageMetaFiller {
-  async fillPageMeta(bookmark: Browser.bookmarks.BookmarkTreeNode): Promise<PageMeta> {
-    const url = bookmark.url ?? '';
+  async fillPageMeta({ url = '', title }: PageMetaFillerInput): Promise<PageMeta> {
     return {
       url,
       domain: url ? new URL(url).hostname : '',
-      title: bookmark.title,
+      title,
     };
   }
 }

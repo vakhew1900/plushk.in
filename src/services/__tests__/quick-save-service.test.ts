@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Mode } from '../../types/mode';
-import { QuickSaveMessageType } from '../../types/quick-save-message';
+import { QuickSaveMessageType } from '../../types/messages/quick-save-message';
 import { QuickSaveService } from '../QuickSaveService';
 
 const runtimeApi = vi.hoisted(() => ({

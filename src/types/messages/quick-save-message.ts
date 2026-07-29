@@ -1,4 +1,5 @@
-import type { Mode } from './mode';
+import type { Mode } from '../mode';
+import type { PageMeta } from '../page-meta';
 
 export const QuickSaveMessageType = { CREATE: 'quickSave/create' } as const;
 export type QuickSaveMessageType = typeof QuickSaveMessageType[keyof typeof QuickSaveMessageType];
@@ -12,6 +13,11 @@ export interface QuickSaveMessage {
   // in the background, the only context that can safely suppress its own
   // bookmarks.onCreated re-processing).
   targetFolder?: string;
+  // Extraction result from `IPageExtrasService.extract()`, already computed in
+  // the popup (only context with `activeTab`/tabId). Laid on top of the
+  // background's own base `PageMeta` for the Auto-mode recompute below,
+  // instead of re-extracting. See RULE-5.
+  metaOverlay?: Partial<PageMeta>;
 }
 
 export function isQuickSaveMessage(message: unknown): message is QuickSaveMessage {

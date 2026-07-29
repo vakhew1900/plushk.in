@@ -1,6 +1,10 @@
-import type { Browser } from 'wxt/browser';
 import type { PageMeta } from '../../types/page-meta';
 
+export interface PageMetaFillerInput {
+  url?: string;
+  title: string;
+}
+
 export interface IPageMetaFiller {
-  fillPageMeta(bookmark: Browser.bookmarks.BookmarkTreeNode): Promise<PageMeta>;
+  fillPageMeta(input: PageMetaFillerInput): Promise<PageMeta>;
 }

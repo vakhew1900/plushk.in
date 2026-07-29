@@ -1,10 +1,12 @@
 import type { Mode } from '../../types/mode';
+import type { PageMeta } from '../../types/page-meta';
 
 export interface QuickSaveInput {
   title: string;
   url: string;
   mode: Mode;
   targetFolder?: string;
+  metaOverlay?: Partial<PageMeta>;
 }
 
 /**

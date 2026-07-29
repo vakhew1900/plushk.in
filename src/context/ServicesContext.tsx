@@ -16,10 +16,14 @@ import type { IPageMatchGroupRepository } from '@/repository/interfaces/IPageMat
 import type { IPendingHintRepository } from '@/repository/interfaces/IPendingHintRepository';
 import { BookmarkSearchService } from '@/services/BookmarkSearchService';
 import { FileService } from '@/services/FileService';
+import { PageExtrasService } from '@/services/PageExtrasService';
+import { PageMetaFiller } from '@/services/PageMetaFiller';
 import { QuickSaveService } from '@/services/QuickSaveService';
 import { SettingsExportImportService } from '@/services/SettingsExportImportService';
 import type { IBookmarkSearchService } from '@/services/interfaces/IBookmarkSearchService';
 import type { IFileService } from '@/services/interfaces/IFileService';
+import type { IPageExtrasService } from '@/services/interfaces/IPageExtrasService';
+import type { IPageMetaFiller } from '@/services/interfaces/IPageMetaFiller';
 import type { IQuickSaveService } from '@/services/interfaces/IQuickSaveService';
 import type { ISettingsExportImportService } from '@/services/interfaces/ISettingsExportImportService';
 
@@ -32,6 +36,8 @@ export interface Services {
   pageMatchGroupRepository: IPageMatchGroupRepository;
   pendingHintRepository: IPendingHintRepository;
   fileService: IFileService;
+  pageMetaFiller: IPageMetaFiller;
+  pageExtrasService: IPageExtrasService;
   quickSaveService: IQuickSaveService;
   settingsExportImportService: ISettingsExportImportService;
   bookmarkSearchService: IBookmarkSearchService;
@@ -60,6 +66,8 @@ export function ServicesProvider({ children }: Props) {
       pageMatchGroupRepository,
       pendingHintRepository: new PendingHintRepository(),
       fileService,
+      pageMetaFiller: new PageMetaFiller(),
+      pageExtrasService: new PageExtrasService(),
       quickSaveService: new QuickSaveService(),
       settingsExportImportService: new SettingsExportImportService(
         bookmarkRuleRepository,
