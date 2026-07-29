@@ -127,6 +127,42 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 Сейчас `BookmarkRule` (`src/types/`) — плоский список, без понятия родитель/потомок; `RulesTab`/`RuleEditor` показывают и оценивают правила одно за другим по `priority`. По мере роста числа правил часть из них естественно являются уточнениями/подправилами других (например общее правило на домен `youtube.com`, а внутри — более специфичные по тегам/заголовку) — хранить и редактировать такие связки удобнее как дерево, а не одним общим плоским списком, отсортированным по приоритету. На момент постановки не решено: формат хранения иерархии (новое поле `parentId?: string` на `BookmarkRule` + сборка дерева на чтении, либо вложенная структура прямо в Dexie); как это соотносится с существующим порядком оценки по `priority` — приоритет остаётся глобальным (плоским) при том, что показ в UI становится деревом, или приоритет становится локальным среди siblings одного родителя, а порядок между ветками дерева определяется отдельно; наследует ли подправило условие родителя неявным AND (тогда `condition` подправила матчит только в дополнение к условию родителя) или условия остаются полностью независимыми и иерархия — только группировка/UI-удобство без изменения семантики оценки; как это влияет на `targetFolder` — подпапка подправила становится относительной к `targetFolder` родителя (аналогично `RULE-8`, токенизации папки) или остаётся независимой абсолютной строкой; нужна ли миграция существующих плоских правил в дерево при внедрении. Требует изменений в `RuleEngine`/`rule-evaluator.ts` (порядок и семантика оценки), в UI (`RulesTab` — дерево вместо списка, drag&drop переноса между родителями) и в `IBookmarkRuleRepository`.
 
+### ARCH-6 — Единая регистрация сервисов через ServicesContext вместо ручной сборки в двух местах
+**Priority:** Medium
+**Added:** 2026-07-29
+
+`BookmarkService` и `PageMetaFiller` нигде не зарегистрированы в `src/context/ServicesContext.tsx` — их вручную пересобирают в `src/entrypoints/background.ts` (конструктор в `onCreated`-обработчике и в quick-save ветке) и в `src/hooks/useQuickSave.ts` (создаёт `createModeHandler` сам, минуя DI). Получаются два параллельных механизма сборки зависимостей вместо одного. Обнаружено при архитектурном аудите по запросу пользователя. На момент постановки не решено: как дать service worker'у (где React недоступен) доступ к той же фабрике, что использует `ServicesContext` — общая функция-фабрика `createServices()`, вызываемая и из `ServicesContext`, и напрямую из `background.ts`, либо какой-то другой способ расшарить сборку. Не относится сюда: подключение `PageExtractorService` к реальному flow — это уже скоуп `RULE-5` (in progress, `tasks.md`).
+
+### ARCH-7 — Generic-базовый класс для CRUD-бойлерплейта репозиториев
+**Priority:** Low
+**Added:** 2026-07-29
+
+`BookmarkRuleRepository`, `DomainAliasRepository`, `PageMatchGroupRepository` (`src/repository/`) почти построчно дублируют `getAll/getById/save/remove` через Dexie — отличаются только именем таблицы. `ModeSettingsRepository`/`DefaultFolderSettingsRepository` аналогично дублируют обёртку `storage.defineItem().get()/.set()`. Обнаружено при архитектурном аудите. Ввести generic-базовый класс `DexieRepository<T, K>` (Template Method) для Dexie-репозиториев и `StorageItemRepository<T>` для repository поверх `wxt/utils/storage`; специфичную логику (например `toStored`/`fromStored` Map↔object в `PageMatchGroupRepository`) оставить в наследниках. На момент постановки не решено: точная сигнатура базового класса (что оставить абстрактным — имя таблицы/ключ, что общим).
+
+### ARCH-8 — Недостающие юнит-тесты для репозиториев
+**Priority:** Low
+**Added:** 2026-07-29
+
+`BookmarkRuleRepository`, `DomainAliasRepository`, `PageMatchGroupRepository` (`src/repository/`) не имеют тестов в `src/repository/__tests__/`, в отличие от `BookmarkRepository`, `DefaultFolderSettingsRepository`, `ModeSettingsRepository`, `PendingHintRepository`. Продолжение той же находки, что и `ARCH-5` (там — недостающие тесты для мелких модулей `lib`/`services`), но для слоя репозиториев — заведено отдельно, т.к. другой слой и другой объём работы. Требование юнит-тестов для классов — из CLAUDE.md.
+
+### ARCH-9 — Заменить ручные JSON type guard'ы на zod
+**Priority:** Low
+**Added:** 2026-07-29
+
+`isRuleNode()` (`src/lib/visitor/rule-evaluator.ts`) и `isSettingsExport()` (`src/lib/settings-export-mapping.ts`) — написанные вручную runtime type guard'ы для JSON, приходящего из хранилища/импорта файла. `zod` уже резолвится транзитивно (через тулинг `wxt`/`vitest`), но не используется напрямую нигде в `src/`. Добавить как прямую зависимость и описать `RuleNode` и форму settings-export как zod discriminated union со схемами, тип выводить через `z.infer`, убрав ручную валидацию. Обнаружено при архитектурном аудите.
+
+### ARCH-10 — Нарушения слоистости: компоненты/хуки обращаются к browser.* напрямую
+**Priority:** Medium
+**Added:** 2026-07-29
+
+По CLAUDE.md порядок слоёв — `components → hooks → context → services → repository → chrome.*/IndexedDB`. Найдены прямые обращения в обход слоёв: `src/hooks/useQuickSave.ts` вызывает `browser.tabs.query` напрямую и сам собирает `createModeHandler` (см. также `ARCH-6` — тот же файл, другая грань той же проблемы); `src/components/popup/folder/FolderTree.tsx` вызывает `browser.bookmarks.getTree()` прямо в `useEffect`, при этом обход дерева уже реализован в `BookmarkRepository` (`collectBookmarks`/`findRootFolder`) — то есть логика ещё и задублирована; `src/components/options/tabs/SearchTab.tsx` и `src/components/popup/shell/PopupFooter.tsx` вызывают `browser.tabs.create(...)` напрямую (менее критично — не бизнес-логика, просто открытие URL, но формально тоже нарушение). Обнаружено при архитектурном аудите. На момент постановки не решено: заводить ли в `IBookmarkRepository` метод вроде `getFolderTree()` для `FolderTree.tsx`, и делать ли для тривиальных `browser.tabs.create` вызовов отдельный сервис или оставить как явное, задокументированное исключение из правила.
+
+### ARCH-11 — Вынести координацию onCreated-события из background.ts в отдельный обработчик
+**Priority:** Low
+**Added:** 2026-07-29
+
+`src/entrypoints/background.ts` пересоздаёт `BookmarkService` на каждое событие `onCreated` вместо сборки один раз при старте воркера, и содержит нетривиальную логику подавления «эхо»-события (флаг, выставляемый перед quick-save созданием закладки, и проверка этого флага в начале `onCreated` — введено в `RULE-3`) прямо в теле листенера, а не в отдельном классе-обработчике. Обнаружено при архитектурном аудите. Не относится сюда: дублирование построения `PageMeta` в трёх местах — это уже в скоупе `RULE-5` (in progress), которая явно планирует переиспользовать `PageMetaFiller.fillPageMeta()` во всех точках вместо инлайн-копий. На момент постановки не решено: точный интерфейс выносимого обработчика (например `BookmarkEventHandler` с методом `handleCreated`) и нужно ли выносить туда же остальные листенеры (`onChanged`/`onRemoved`/`onImportBegan`) для консистентности, или ограничиться только `onCreated`.
+
 ### TEST-2 — Рассмотреть e2e-тестирование расширения
 **Priority:** Low
 **Added:** 2026-07-24
