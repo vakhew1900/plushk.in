@@ -26,8 +26,8 @@ export class BookmarkRepository implements IBookmarkRepository {
     return browser.bookmarks.create({ title, url, parentId });
   }
 
-  async move(id: string, targetFolder: string): Promise<void> {
-    const parentId = await this.resolveFolderPath(targetFolder);
+  async move(id: string, targetFolder?: string): Promise<void> {
+    const parentId = targetFolder ? await this.resolveFolderPath(targetFolder) : await this.resolveToolbarId();
     await browser.bookmarks.move(id, { parentId });
   }
 

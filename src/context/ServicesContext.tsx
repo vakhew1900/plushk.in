@@ -2,12 +2,14 @@ import { createContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { BookmarkRepository } from '@/repository/BookmarkRepository';
 import { BookmarkRuleRepository } from '@/repository/BookmarkRuleRepository';
+import { DefaultFolderSettingsRepository } from '@/repository/DefaultFolderSettingsRepository';
 import { DomainAliasRepository } from '@/repository/DomainAliasRepository';
 import { ModeSettingsRepository } from '@/repository/ModeSettingsRepository';
 import { PageMatchGroupRepository } from '@/repository/PageMatchGroupRepository';
 import { PendingHintRepository } from '@/repository/PendingHintRepository';
 import type { IBookmarkRepository } from '@/repository/interfaces/IBookmarkRepository';
 import type { IBookmarkRuleRepository } from '@/repository/interfaces/IBookmarkRuleRepository';
+import type { IDefaultFolderSettingsRepository } from '@/repository/interfaces/IDefaultFolderSettingsRepository';
 import type { IDomainAliasRepository } from '@/repository/interfaces/IDomainAliasRepository';
 import type { IModeSettingsRepository } from '@/repository/interfaces/IModeSettingsRepository';
 import type { IPageMatchGroupRepository } from '@/repository/interfaces/IPageMatchGroupRepository';
@@ -24,6 +26,7 @@ import type { ISettingsExportImportService } from '@/services/interfaces/ISettin
 export interface Services {
   bookmarkRepository: IBookmarkRepository;
   bookmarkRuleRepository: IBookmarkRuleRepository;
+  defaultFolderSettingsRepository: IDefaultFolderSettingsRepository;
   domainAliasRepository: IDomainAliasRepository;
   modeSettingsRepository: IModeSettingsRepository;
   pageMatchGroupRepository: IPageMatchGroupRepository;
@@ -51,6 +54,7 @@ export function ServicesProvider({ children }: Props) {
     return {
       bookmarkRepository,
       bookmarkRuleRepository,
+      defaultFolderSettingsRepository: new DefaultFolderSettingsRepository(),
       domainAliasRepository,
       modeSettingsRepository: new ModeSettingsRepository(),
       pageMatchGroupRepository,

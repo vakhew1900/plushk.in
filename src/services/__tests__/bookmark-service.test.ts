@@ -4,6 +4,7 @@ import type { PageMeta } from '../../types/page-meta';
 import type { BookmarkDecision, IBookmarkModeHandler } from '../handler/interfaces/IBookmarkModeHandler';
 import { BookmarkDecisionStatus } from '../handler/interfaces/IBookmarkModeHandler';
 import type { IBookmarkRepository } from '../../repository/interfaces/IBookmarkRepository';
+import type { IDefaultFolderSettingsRepository } from '../../repository/interfaces/IDefaultFolderSettingsRepository';
 import type { IPageMetaFiller } from '../interfaces/IPageMetaFiller';
 import { BookmarkService } from '../BookmarkService';
 
@@ -43,6 +44,15 @@ function makePageMetaFiller(): IPageMetaFiller {
   return { fillPageMeta: vi.fn(async () => meta) };
 }
 
+function makeDefaultFolderSettingsRepository(
+  defaultFolder = '',
+): IDefaultFolderSettingsRepository & { get: ReturnType<typeof vi.fn> } {
+  return {
+    get: vi.fn(async () => defaultFolder),
+    set: vi.fn(async () => {}),
+  };
+}
+
 describe('BookmarkService.handleBookmarkCreated', () => {
   it('moves the bookmark into the decided folder when placed', async () => {
     const repo = makeBookmarkRepository();
@@ -50,6 +60,7 @@ describe('BookmarkService.handleBookmarkCreated', () => {
       new FakeModeHandler({ status: BookmarkDecisionStatus.PLACED, targetFolder: 'Videos' }),
       repo,
       makePageMetaFiller(),
+      makeDefaultFolderSettingsRepository(),
     );
 
     const decision = await service.handleBookmarkCreated(bookmark);
@@ -58,17 +69,34 @@ describe('BookmarkService.handleBookmarkCreated', () => {
     expect(decision.targetFolder).toBe('Videos');
   });
 
-  it('does not move the bookmark when placed without a target folder', async () => {
+  it('moves the bookmark into the configured default folder when placed without a matched folder', async () => {
+    const repo = makeBookmarkRepository();
+    const defaultFolderRepo = makeDefaultFolderSettingsRepository('Reading/Later');
+    const service = new BookmarkService(
+      new FakeModeHandler({ status: BookmarkDecisionStatus.PLACED, targetFolder: undefined }),
+      repo,
+      makePageMetaFiller(),
+      defaultFolderRepo,
+    );
+
+    await service.handleBookmarkCreated(bookmark);
+
+    expect(defaultFolderRepo.get).toHaveBeenCalled();
+    expect(repo.move).toHaveBeenCalledWith('bm-1', 'Reading/Later');
+  });
+
+  it('moves the bookmark with an empty folder (Bookmarks Toolbar) when placed without a matched folder and no default folder is configured', async () => {
     const repo = makeBookmarkRepository();
     const service = new BookmarkService(
       new FakeModeHandler({ status: BookmarkDecisionStatus.PLACED, targetFolder: undefined }),
       repo,
       makePageMetaFiller(),
+      makeDefaultFolderSettingsRepository(''),
     );
 
     await service.handleBookmarkCreated(bookmark);
 
-    expect(repo.move).not.toHaveBeenCalled();
+    expect(repo.move).toHaveBeenCalledWith('bm-1', '');
   });
 
   it('does not move the bookmark when only pending confirmation', async () => {
@@ -77,6 +105,7 @@ describe('BookmarkService.handleBookmarkCreated', () => {
       new FakeModeHandler({ status: BookmarkDecisionStatus.PENDING_CONFIRMATION, targetFolder: 'Videos' }),
       repo,
       makePageMetaFiller(),
+      makeDefaultFolderSettingsRepository(),
     );
 
     await service.handleBookmarkCreated(bookmark);
@@ -90,6 +119,7 @@ describe('BookmarkService.handleBookmarkCreated', () => {
       new FakeModeHandler({ status: BookmarkDecisionStatus.NOT_HANDLED }),
       repo,
       makePageMetaFiller(),
+      makeDefaultFolderSettingsRepository(),
     );
 
     await service.handleBookmarkCreated(bookmark);
@@ -102,7 +132,7 @@ describe('BookmarkService.handleBookmarkCreated', () => {
     const filler = makePageMetaFiller();
     const modeHandler = new FakeModeHandler({ status: BookmarkDecisionStatus.NOT_HANDLED });
     const onBookmarkSelectedSpy = vi.spyOn(modeHandler, 'onBookmarkSelected');
-    const service = new BookmarkService(modeHandler, repo, filler);
+    const service = new BookmarkService(modeHandler, repo, filler, makeDefaultFolderSettingsRepository());
 
     await service.handleBookmarkCreated(bookmark);
 

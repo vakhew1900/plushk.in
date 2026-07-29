@@ -3,7 +3,7 @@
     "modeSectionTitle": "Operating mode",
     "condition": "Condition",
     "noMatchFallback": "no match →",
-    "browserDefault": "browser default"
+    "bookmarksBar": "Bookmarks Bar"
   },
   "nav": {
     "section": "General",
@@ -98,6 +98,11 @@
     "importButton": "Import",
     "exportError": "Couldn't save the export file.",
     "importError": "Couldn't import the file — check its format."
+  },
+  "defaultFolderSection": {
+    "title": "Default folder",
+    "desc": "Where Auto mode saves a bookmark when no rule matches. Leave empty for the Bookmarks Bar.",
+    "placeholder": "Bookmarks Bar"
   },
   "themeSection": {
     "title": "Theme",

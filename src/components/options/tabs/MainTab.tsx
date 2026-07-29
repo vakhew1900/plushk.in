@@ -1,9 +1,11 @@
+import { useDefaultFolder } from '@/hooks/useDefaultFolder';
 import { useMode } from '@/hooks/useMode';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Mode } from '@/types/mode';
 import { TabHeader } from '@/components/options/TabHeader';
 import { ModeCard } from './main/ModeCard';
 import { ActivityItem } from './main/ActivityItem';
+import { DefaultFolderSection } from './main/DefaultFolderSection';
 import { ThemeSection } from './main/ThemeSection';
 import { ExportImportSection } from './main/ExportImportSection';
 import styles from './MainTab.module.css';
@@ -23,6 +25,7 @@ const ACTIVITY = [
 
 export function MainTab() {
   const { mode, setMode } = useMode();
+  const { defaultFolder } = useDefaultFolder();
   const { translate: t } = useTranslation();
   return (
     <div>
@@ -38,10 +41,12 @@ export function MainTab() {
             desc={t(`modes.${key}.desc`)}
             selected={mode === key}
             onSelect={() => setMode(key)}
+            fallbackFolder={key === Mode.AUTO ? defaultFolder : undefined}
           />
         ))}
       </div>
 
+      <DefaultFolderSection />
       <ThemeSection />
       <ExportImportSection />
 

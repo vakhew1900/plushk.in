@@ -10,10 +10,11 @@ interface Props {
   desc: string;
   selected: boolean;
   showFallback?: boolean;
+  fallbackFolder?: string;
   onSelect: () => void;
 }
 
-export function ModeCard({ label, tag, desc, selected, showFallback, onSelect }: Props) {
+export function ModeCard({ label, tag, desc, selected, showFallback, fallbackFolder, onSelect }: Props) {
   const { translate: t } = useTranslation();
   return (
     <button onClick={onSelect} className={clsx(styles.card, selected && styles.selected)}>
@@ -30,7 +31,7 @@ export function ModeCard({ label, tag, desc, selected, showFallback, onSelect }:
         {showFallback && (
           <span className={styles.fallback}>
             <IconFolder size={13} fill="var(--faint)" style={{ flexShrink: 0 }} />
-            {t('common.noMatchFallback')} <span className={styles.fallbackText}>{t('common.browserDefault')}</span>
+            {t('common.noMatchFallback')} <span className={styles.fallbackText}>{fallbackFolder || t('common.bookmarksBar')}</span>
           </span>
         )}
       </span>

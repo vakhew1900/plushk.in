@@ -1,8 +1,9 @@
 import { storage } from 'wxt/utils/storage';
+import { StorageKey } from '../lib/storage-keys';
 import type { PendingBookmarkHint } from '../types/pending-hint';
 import type { IPendingHintRepository } from './interfaces/IPendingHintRepository';
 
-const pendingHintItem = storage.defineItem<PendingBookmarkHint | null>('local:pendingHint', { fallback: null });
+const pendingHintItem = storage.defineItem<PendingBookmarkHint | null>(StorageKey.PENDING_HINT, { fallback: null });
 
 export class PendingHintRepository implements IPendingHintRepository {
   async get(): Promise<PendingBookmarkHint | undefined> {

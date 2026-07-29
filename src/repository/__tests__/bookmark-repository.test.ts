@@ -140,6 +140,24 @@ describe('BookmarkRepository.move', () => {
 
     expect(bookmarksApi.move).toHaveBeenCalledWith('bm-1', { parentId: 'folder-videos' });
   });
+
+  it('moves to the Bookmarks Toolbar when no target folder is given', async () => {
+    bookmarksApi.getTree.mockResolvedValueOnce(rootTree);
+
+    const repo = new BookmarkRepository();
+    await repo.move('bm-1');
+
+    expect(bookmarksApi.move).toHaveBeenCalledWith('bm-1', { parentId: '1' });
+  });
+
+  it('moves to the Bookmarks Toolbar when the target folder is an empty string', async () => {
+    bookmarksApi.getTree.mockResolvedValueOnce(rootTree);
+
+    const repo = new BookmarkRepository();
+    await repo.move('bm-1', '');
+
+    expect(bookmarksApi.move).toHaveBeenCalledWith('bm-1', { parentId: '1' });
+  });
 });
 
 describe('BookmarkRepository.listAll', () => {

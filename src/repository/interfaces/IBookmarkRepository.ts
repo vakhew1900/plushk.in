@@ -9,8 +9,12 @@ export interface IBookmarkRepository {
    */
   create(title: string, url: string, targetFolder?: string): Promise<Browser.bookmarks.BookmarkTreeNode>;
 
-  /** Moves an existing bookmark into `targetFolder`, resolving the path first. */
-  move(id: string, targetFolder: string): Promise<void>;
+  /**
+   * Moves an existing bookmark. If `targetFolder` is given, resolves it to a
+   * real `parentId` (creating any missing path segments) first; otherwise
+   * moves it to the Bookmarks Toolbar.
+   */
+  move(id: string, targetFolder?: string): Promise<void>;
 
   /** Finds bookmarks (not folders) whose title matches exactly. */
   getByTitle(title: string): Promise<Browser.bookmarks.BookmarkTreeNode[]>;

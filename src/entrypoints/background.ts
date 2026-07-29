@@ -1,6 +1,7 @@
 import { browser } from 'wxt/browser';
 import { BookmarkRepository } from '@/repository/BookmarkRepository';
 import { BookmarkRuleRepository } from '@/repository/BookmarkRuleRepository';
+import { DefaultFolderSettingsRepository } from '@/repository/DefaultFolderSettingsRepository';
 import { ModeSettingsRepository } from '@/repository/ModeSettingsRepository';
 import { PendingHintRepository } from '@/repository/PendingHintRepository';
 import { BookmarkService } from '@/services/BookmarkService';
@@ -16,6 +17,7 @@ export default defineBackground(() => {
   const ruleRepository = new BookmarkRuleRepository();
   const bookmarkRepository = new BookmarkRepository();
   const modeSettingsRepository = new ModeSettingsRepository();
+  const defaultFolderSettingsRepository = new DefaultFolderSettingsRepository();
   const pendingHintRepository = new PendingHintRepository();
   const pageMetaFiller = new PageMetaFiller();
 
@@ -41,7 +43,7 @@ export default defineBackground(() => {
 
     const mode = await modeSettingsRepository.get();
     const modeHandler = createModeHandler(mode, ruleRepository);
-    const bookmarkService = new BookmarkService(modeHandler, bookmarkRepository, pageMetaFiller);
+    const bookmarkService = new BookmarkService(modeHandler, bookmarkRepository, pageMetaFiller, defaultFolderSettingsRepository);
 
     const decision = await bookmarkService.handleBookmarkCreated(bookmark);
 
@@ -62,7 +64,7 @@ export default defineBackground(() => {
       if (modeHandler.status === BookmarkDecisionStatus.PLACED) {
         const meta: PageMeta = { url: message.url, domain: new URL(message.url).hostname, title: message.title };
         const decision = await modeHandler.onBookmarkSelected(meta);
-        targetFolder = decision.targetFolder;
+        targetFolder = decision.targetFolder ?? (await defaultFolderSettingsRepository.get());
         debugLog('[quick-save-debug] background: recomputed targetFolder for PLACED mode', targetFolder);
       }
 
