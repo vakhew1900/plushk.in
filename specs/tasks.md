@@ -23,3 +23,9 @@ Tasks currently in progress. Moved here from `backlog.md` when work starts.
 
 Фактическое создание закладки идёт через сообщение в `background.ts` (а не напрямую из popup), чтобы иметь общий с уже существующим слушателем `bookmarks.onCreated` контекст выполнения: перед вызовом `IBookmarkRepository.create()` выставляется синхронный флаг подавления, проверяемый в начале `onCreated` — это исключает повторную обработку/двойное перемещение только что созданной закладки. Для чтения `url`/`title` активной вкладки из popup нужно разрешение `activeTab` (не `tabs` — не нужен широкий доступ).
 
+### RULE-5 — Подключить PageExtractorService/PageMatchGroup к реальному flow создания закладки
+**Priority:** Medium
+**Added:** 2026-07-24
+
+`PageExtractorService`/`PageMatchGroup` (`src/services/PageExtractorService.ts`, `src/lib/page-extractor.ts`) — рабочая инфраструктура извлечения `extras` со страницы через CSS/META/XPath-селекторы, но нигде не вызывается в реальном flow. Подключается только к quick-save-flow (`RULE-3`), через `activeTab` + программную инъекцию `content.ts` (не статический `<all_urls>` матч) — нативный `bookmarks.onCreated` не меняется и помечается комментарием как deprecated (логика продолжает работать без extras, отключать её не стали — единственный механизм, сортирующий закладки, созданные не через popup). Заодно общий `PageMetaFiller.fillPageMeta({url, title})` переиспользуется во всех точках построения `PageMeta` (onCreated + обе quick-save точки) вместо трёх инлайн-копий. Глубокая спецификация: `specs/tasks/RULE-5-page-extractor-quick-save/`.
+
