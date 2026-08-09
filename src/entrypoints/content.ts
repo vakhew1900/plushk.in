@@ -16,13 +16,13 @@ export default defineContentScript({
     browser.runtime.onMessage.addListener((message: unknown) => {
       if (!isPageExtractRequestMessage(message)) return;
 
-      return (() => {
+      return (async () => {
         const extractor = new PageExtractorService();
         const merged: Partial<PageMeta> = {};
         for (const group of message.groups) {
           Object.assign(merged, extractor.extract(group));
         }
-        return Promise.resolve(merged);
+        return merged;
       })();
     });
   },
