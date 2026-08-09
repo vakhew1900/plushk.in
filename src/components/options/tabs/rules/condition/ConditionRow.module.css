@@ -1,2 +1,15 @@
-.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.op  { font-size: 12px; color: var(--muted); }
+.row { display: flex; flex-direction: column; gap: 0.2rem; }
+
+.main { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.op   { font-size: 0.75rem; color: var(--muted); }
+
+.removeBtn {
+  margin-left: auto;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--faint);
+  transition: color 0.15s;
+}
+.removeBtn:hover { color: var(--red); }
+
+.error { font-size: 0.7rem; color: var(--red); }

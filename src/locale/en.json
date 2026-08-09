@@ -39,21 +39,41 @@
     "targetFolderLabel": "Target folder",
     "priorityLabel": "Priority",
     "conditionTitle": "Condition",
+    "visualViewTab": "Builder",
+    "jsonViewTab": "JSON",
     "testButton": "Test on current page",
     "saveButton": "Save"
   },
   "conditionGroup": {
-    "andBadge": "AND",
+    "andLabel": "AND",
     "andDesc": "all conditions match",
-    "addCondition": "Condition"
+    "orLabel": "OR",
+    "orDesc": "any condition matches",
+    "notLabel": "NOT",
+    "notDesc": "no condition matches",
+    "addGroup": "Nested group",
+    "emptyError": "Add at least one condition"
   },
   "conditionRow": {
-    "notBadge": "NOT"
+    "fieldPlaceholder": "field",
+    "removeCondition": "Remove condition",
+    "addValue": "value",
+    "removeValue": "Remove value",
+    "errorFieldRequired": "field is required",
+    "errorValueRequired": "value is required",
+    "errorValuesRequired": "at least one value is required",
+    "errorPatternRequired": "pattern is required"
   },
-  "consView": {
-    "orBadge": "OR",
-    "orDesc": "any group matches",
-    "addGroup": "OR group"
+  "leafType": {
+    "term": "=",
+    "terms": "contains",
+    "regex": "matches regex",
+    "wildcard": "matches pattern",
+    "addMenuPlaceholder": "+ condition",
+    "addTerm": "Value (=)",
+    "addTerms": "One of a list",
+    "addRegex": "Regular expression",
+    "addWildcard": "Wildcard (* ?)"
   },
   "jsonView": {
     "valid": "Valid JSON · {{count}} conditions",

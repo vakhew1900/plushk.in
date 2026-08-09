@@ -39,21 +39,41 @@
     "targetFolderLabel": "Целевая папка",
     "priorityLabel": "Приоритет",
     "conditionTitle": "Условие",
+    "visualViewTab": "Конструктор",
+    "jsonViewTab": "JSON",
     "testButton": "Тест на текущей странице",
     "saveButton": "Сохранить"
   },
   "conditionGroup": {
-    "andBadge": "И · AND",
+    "andLabel": "И · AND",
     "andDesc": "выполнены все условия",
-    "addCondition": "Условие"
+    "orLabel": "ИЛИ · OR",
+    "orDesc": "выполняется любое из условий",
+    "notLabel": "НЕ · NOT",
+    "notDesc": "не выполняется ни одно из условий",
+    "addGroup": "Вложенная группа",
+    "emptyError": "Добавьте хотя бы одно условие"
   },
   "conditionRow": {
-    "notBadge": "НЕ"
+    "fieldPlaceholder": "поле",
+    "removeCondition": "Удалить условие",
+    "addValue": "значение",
+    "removeValue": "Удалить значение",
+    "errorFieldRequired": "укажите поле",
+    "errorValueRequired": "укажите значение",
+    "errorValuesRequired": "укажите хотя бы одно значение",
+    "errorPatternRequired": "укажите паттерн"
   },
-  "consView": {
-    "orBadge": "ИЛИ · OR",
-    "orDesc": "срабатывает любая из групп",
-    "addGroup": "Группа ИЛИ"
+  "leafType": {
+    "term": "=",
+    "terms": "содержит",
+    "regex": "regex",
+    "wildcard": "wildcard",
+    "addMenuPlaceholder": "+ условие",
+    "addTerm": "Значение (=)",
+    "addTerms": "Один из списка",
+    "addRegex": "Regex",
+    "addWildcard": "Wildcard (* ?)"
   },
   "jsonView": {
     "valid": "Валидный JSON · {{count}} условий",

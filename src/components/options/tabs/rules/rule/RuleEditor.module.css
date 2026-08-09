@@ -20,7 +20,7 @@
 }
 .condTitle { font-size: 13px; font-weight: 700; color: var(--text); }
 
-.body { padding: 16px 18px; }
+.body { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
 
 .editorFooter {
   display: flex;

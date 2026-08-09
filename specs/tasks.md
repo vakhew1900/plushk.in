@@ -2,6 +2,12 @@
 
 Tasks currently in progress. Moved here from `backlog.md` when work starts.
 
+### RULE-1 — Реализация ConsView
+**Priority:** Low
+**Added:** 2026-07-06
+
+Подключить визуальный конструктор условий к `RuleEditor` как полноценное рекурсивное зеркало `RuleNode` (группы AND/OR/NOT на любой глубине, переключатель типа группы на месте, все 4 типа листьев — `term`/`terms`/`regex`/`wildcard` — с полем-автокомплитом по `PageMetaField`), а не ограниченную плоскую OR-групп-из-AND форму, которую изначально хардкодил прототип `ConsView`/`ConditionGroup`/`ConditionRow`. Двусторонняя синхронизация с `JsonView`: правка в любом из двух представлений обновляет другое. Глубокая спецификация и протокол интервью — `specs/tasks/RULE-1-consview-visual-builder/`.
+
 ### ARCH-12 — Инвалидация локального стейта хуков при внешней записи в репозиторий (subscribe/notify)
 
 **Priority:** Medium
