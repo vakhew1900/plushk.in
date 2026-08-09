@@ -2,7 +2,7 @@ import { browser } from 'wxt/browser';
 import type { Browser } from 'wxt/browser';
 import { splitFolderPath } from '../lib/bookmark-folder-utils';
 import { debugLog } from '../lib/debug-log';
-import { BookmarkRootId } from '../lib/browser-constants/bookmarkRoots';
+import { BookmarkRootId, isFixedContainerId } from '../lib/browser-constants/bookmarkRoots';
 import type { BookmarkSearchEntry } from '../types/bookmark-search-entry';
 import type { FolderNode } from '../types/folder-node';
 import type { IBookmarkRepository } from './interfaces/IBookmarkRepository';
@@ -15,19 +15,24 @@ function parseFolderTree(nodes: BookmarkTreeNode[], parentPath = ''): FolderNode
     if (node.url !== undefined) continue; // Skip bookmark links
 
     const isSystemRoot = node.id === '0';
+    const isFixedContainer = isFixedContainerId(node.id);
 
-    // Bookmarks Toolbar / Other Bookmarks / Mobile Bookmarks get a real path
-    // segment too (their own title), same as any other folder — otherwise
-    // they'd all collapse to the same empty path and lose which container a
-    // child folder actually sits under (see findRootFolder below, which
-    // relies on this to resolve the real container instead of guessing).
+    // The container's own path is still its title (needed so selecting it
+    // directly, or an empty `''` targetFolder resolved to the Toolbar, round-
+    // trips through findRootFolder's exact-container-title match below) — but
+    // its children's paths reset to the container-agnostic convention that
+    // `BookmarkRule.targetFolder`/`resolveFolderPath` already use ("Social/Reddit",
+    // never "Bookmarks bar/Social/Reddit"). Without this reset, a path picked by
+    // clicking the tree and a path written into a rule meant the same folder in
+    // two different, incompatible string formats.
     const currentPath = isSystemRoot
       ? parentPath
       : parentPath
         ? `${parentPath}/${node.title}`
         : node.title;
+    const childPath = isFixedContainer ? '' : currentPath;
 
-    const children = node.children ? parseFolderTree(node.children, currentPath) : [];
+    const children = node.children ? parseFolderTree(node.children, childPath) : [];
 
     if (isSystemRoot) {
       return children;

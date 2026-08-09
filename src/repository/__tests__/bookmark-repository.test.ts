@@ -201,7 +201,7 @@ describe('BookmarkRepository.listAll', () => {
 });
 
 describe('BookmarkRepository.getFolderTree', () => {
-  it('returns only folders (no bookmark leaves), each carrying its full `/`-separated path', async () => {
+  it('returns only folders (no bookmark leaves); a container\'s own path is its title, but its descendants reset to the container-agnostic convention `BookmarkRule.targetFolder` already uses', async () => {
     const tree: Node[] = [
       {
         id: '0',
@@ -240,9 +240,9 @@ describe('BookmarkRepository.getFolderTree', () => {
           {
             id: 'folder-social',
             title: 'Social',
-            path: 'Bookmarks bar/Social',
+            path: 'Social',
             children: [
-              { id: 'folder-reddit', title: 'Reddit', path: 'Bookmarks bar/Social/Reddit', children: [] },
+              { id: 'folder-reddit', title: 'Reddit', path: 'Social/Reddit', children: [] },
             ],
           },
         ],

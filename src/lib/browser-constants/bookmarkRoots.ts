@@ -18,3 +18,13 @@ export const BookmarkRootId = {
 
 type BrowserBookmarkRootIds = typeof BookmarkRootId[keyof typeof BookmarkRootId];
 export type BookmarkRootId = BrowserBookmarkRootIds[keyof BrowserBookmarkRootIds];
+
+const FIXED_CONTAINER_IDS: readonly string[] = [
+  ...Object.values(BookmarkRootId.CHROME),
+  ...Object.values(BookmarkRootId.FIREFOX),
+];
+
+/** Is `id` one of the browser's fixed top-level containers (Toolbar/Other/Mobile/Menu)? */
+export function isFixedContainerId(id: string): boolean {
+  return FIXED_CONTAINER_IDS.includes(id);
+}
