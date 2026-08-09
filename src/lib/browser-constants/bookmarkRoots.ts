@@ -28,3 +28,8 @@ const FIXED_CONTAINER_IDS: readonly string[] = [
 export function isFixedContainerId(id: string): boolean {
   return FIXED_CONTAINER_IDS.includes(id);
 }
+
+/** Is `id` specifically the Bookmarks Toolbar container, in either browser's id scheme? */
+export function isToolbarId(id: string): boolean {
+  return id === BookmarkRootId.CHROME.TOOLBAR || id === BookmarkRootId.FIREFOX.TOOLBAR;
+}

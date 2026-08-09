@@ -1,4 +1,4 @@
-import { BookmarkRootId } from './browser-constants/bookmarkRoots';
+import { isToolbarId } from './browser-constants/bookmarkRoots';
 import type { FolderNode } from '../types/folder-node';
 
 /**
@@ -34,9 +34,7 @@ export function collectAncestorIds(nodes: FolderNode[], targetPath: string): Set
 // in Firefox — see BookmarkRootId) — resolve the actual Toolbar node instead
 // of guessing an id, the same way BookmarkRepository.resolveToolbarId() does.
 export function resolveToolbarPath(topLevel: FolderNode[]): string | undefined {
-  return topLevel.find(
-    (node) => node.id === BookmarkRootId.CHROME.TOOLBAR || node.id === BookmarkRootId.FIREFOX.TOOLBAR,
-  )?.path;
+  return topLevel.find((node) => isToolbarId(node.id))?.path;
 }
 
 function findNodeByPath(nodes: FolderNode[], path: string): FolderNode | undefined {
@@ -80,8 +78,10 @@ function replaceNode(nodes: FolderNode[], id: string, update: (node: FolderNode)
  *
  * Finds the longest existing prefix of `targetPath` anywhere in the tree
  * (not assuming one segment per tree level — see collectAncestorIds) and
- * appends the remaining segments under it; if not even the first segment
- * exists, appends a new top-level pending branch.
+ * appends the remaining segments under it. If not even the first segment
+ * exists anywhere, nests the new pending chain under the Bookmarks Toolbar —
+ * mirroring BookmarkRepository.findOrCreateFolder, which defaults a brand-new
+ * root-level folder there instead of leaving it unparented.
  */
 export function withPendingPath(tree: FolderNode[], targetPath: string): FolderNode[] {
   if (!targetPath) return tree;
@@ -104,7 +104,17 @@ export function withPendingPath(tree: FolderNode[], targetPath: string): FolderN
   if (remaining.length === 0) return tree; // full path already exists
 
   if (!matchedNode) {
-    return [...tree, buildPendingChain(segments, '')];
+    const toolbar = tree.find((node) => isToolbarId(node.id));
+    if (!toolbar) return [...tree, buildPendingChain(segments, '')];
+
+    // Nested structurally under the Toolbar (for correct expand/collapse
+    // grouping in the UI), but the path itself stays container-agnostic —
+    // same convention as any other folder already under the Toolbar (see
+    // BookmarkRepository.parseFolderTree's path-reset on container descent).
+    return replaceNode(tree, toolbar.id, (node) => ({
+      ...node,
+      children: [...node.children, buildPendingChain(segments, '')],
+    }));
   }
 
   const matchedPath = matchedNode.path;

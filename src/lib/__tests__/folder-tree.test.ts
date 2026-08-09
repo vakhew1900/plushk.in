@@ -90,14 +90,20 @@ describe('withPendingPath', () => {
     });
   });
 
-  it('appends a whole pending chain under an existing container when both trailing segments are missing', () => {
+  it('nests a whole pending chain under the Toolbar when neither trailing segment exists anywhere', () => {
     const result = withPendingPath(tree, 'Learning/Videos');
-    // Neither "Learning" nor "Learning/Videos" exists anywhere in the tree,
-    // so this is a brand new top-level pending branch, not nested under
-    // "Bookmarks bar" — matching how BookmarkRepository would actually create
-    // it (browser-default placement, not necessarily the Toolbar).
-    expect(result).toHaveLength(3);
-    expect(result[2]).toEqual({
+    // Neither "Learning" nor "Learning/Videos" exists anywhere in the tree.
+    // BookmarkRepository.findOrCreateFolder defaults a brand-new root-level
+    // folder to the Bookmarks Toolbar (not an unparented browser default) —
+    // the preview here nests it the same way, structurally under '1'
+    // ("Bookmarks bar"), instead of floating as an independent top-level
+    // branch. The path itself stays container-agnostic ("Learning/Videos",
+    // not "Bookmarks bar/Learning/Videos") — same convention as "Social"
+    // above, which is also nested under the Toolbar.
+    expect(result).toHaveLength(2);
+    const bookmarksBar = result[0];
+    expect(bookmarksBar.children).toHaveLength(2);
+    expect(bookmarksBar.children[1]).toEqual({
       id: 'pending:Learning',
       title: 'Learning',
       path: 'Learning',
@@ -108,10 +114,11 @@ describe('withPendingPath', () => {
     });
   });
 
-  it('appends a new top-level pending chain when even the first segment does not exist', () => {
-    const result = withPendingPath(tree, 'Reading/Later');
-    expect(result).toHaveLength(3);
-    expect(result[2]).toEqual({
+  it('falls back to a new top-level pending chain when no Toolbar container is present', () => {
+    const noToolbar: FolderNode[] = [node({ id: '2', title: 'Other bookmarks', path: 'Other bookmarks' })];
+    const result = withPendingPath(noToolbar, 'Reading/Later');
+    expect(result).toHaveLength(2);
+    expect(result[1]).toEqual({
       id: 'pending:Reading',
       title: 'Reading',
       path: 'Reading',

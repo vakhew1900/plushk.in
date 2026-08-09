@@ -78,6 +78,20 @@ describe('BookmarkRepository.create', () => {
     expect(bookmarksApi.create).toHaveBeenCalledWith({ title: 'Bar', url: 'https://bar.com', parentId: 'folder-videos' });
   });
 
+  it('prefers a same-named folder under the Toolbar over one under another container', async () => {
+    bookmarksApi.getTree.mockResolvedValueOnce(rootTree);
+    bookmarksApi.search.mockResolvedValueOnce([
+      { id: 'stray-social', title: 'Social', parentId: '2', syncing: false }, // leftover under Other bookmarks
+      { id: 'toolbar-social', title: 'Social', parentId: '1', syncing: false }, // the "real" one under the Toolbar
+    ]);
+    bookmarksApi.create.mockResolvedValueOnce({ id: 'bm-8', title: 'Post', url: 'https://reddit.com/post', syncing: false });
+
+    const repo = new BookmarkRepository();
+    await repo.create('Post', 'https://reddit.com/post', 'Social');
+
+    expect(bookmarksApi.create).toHaveBeenCalledWith({ title: 'Post', url: 'https://reddit.com/post', parentId: 'toolbar-social' });
+  });
+
   it('resolves a top-level container by exact title without searching or creating', async () => {
     bookmarksApi.getTree.mockResolvedValueOnce(rootTree);
     bookmarksApi.create.mockResolvedValueOnce({ id: 'bm-4', title: 'Baz', url: 'https://baz.com', syncing: false });
@@ -108,9 +122,10 @@ describe('BookmarkRepository.create', () => {
     });
   });
 
-  it('creates missing folders segment by segment for a nested path', async () => {
-    bookmarksApi.getTree.mockResolvedValueOnce(rootTree);
+  it('creates missing folders segment by segment for a nested path, defaulting a brand-new root folder to the Toolbar', async () => {
+    bookmarksApi.getTree.mockResolvedValueOnce(rootTree); // findRootFolder("Social")
     bookmarksApi.search.mockResolvedValueOnce([]); // no "Social" folder yet
+    bookmarksApi.getTree.mockResolvedValueOnce(rootTree); // resolveToolbarId() fallback parent for the new "Social" folder
     bookmarksApi.create.mockResolvedValueOnce({ id: 'social-id', title: 'Social', syncing: false }); // creates "Social"
     bookmarksApi.getChildren.mockResolvedValueOnce([]); // no "Reddit" under Social
     bookmarksApi.create.mockResolvedValueOnce({ id: 'reddit-id', title: 'Reddit', syncing: false }); // creates "Reddit"
@@ -119,7 +134,7 @@ describe('BookmarkRepository.create', () => {
     const repo = new BookmarkRepository();
     await repo.create('Post', 'https://reddit.com/post', 'Social/Reddit');
 
-    expect(bookmarksApi.create).toHaveBeenNthCalledWith(1, { title: 'Social' });
+    expect(bookmarksApi.create).toHaveBeenNthCalledWith(1, { title: 'Social', parentId: '1' });
     expect(bookmarksApi.getChildren).toHaveBeenCalledWith('social-id');
     expect(bookmarksApi.create).toHaveBeenNthCalledWith(2, { title: 'Reddit', parentId: 'social-id' });
     expect(bookmarksApi.create).toHaveBeenNthCalledWith(3, {
@@ -127,6 +142,19 @@ describe('BookmarkRepository.create', () => {
       url: 'https://reddit.com/post',
       parentId: 'reddit-id',
     });
+  });
+
+  it('creates a brand-new single-segment root folder under the Toolbar, not unparented', async () => {
+    bookmarksApi.getTree.mockResolvedValueOnce(rootTree); // findRootFolder("Learning")
+    bookmarksApi.search.mockResolvedValueOnce([]); // no "Learning" folder yet
+    bookmarksApi.getTree.mockResolvedValueOnce(rootTree); // resolveToolbarId() fallback parent
+    bookmarksApi.create.mockResolvedValueOnce({ id: 'learning-id', title: 'Learning', syncing: false });
+    bookmarksApi.create.mockResolvedValueOnce({ id: 'bm-7', title: 'Course', url: 'https://course.com', syncing: false });
+
+    const repo = new BookmarkRepository();
+    await repo.create('Course', 'https://course.com', 'Learning');
+
+    expect(bookmarksApi.create).toHaveBeenNthCalledWith(1, { title: 'Learning', parentId: '1' });
   });
 });
 

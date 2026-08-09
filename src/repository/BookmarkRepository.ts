@@ -2,7 +2,7 @@ import { browser } from 'wxt/browser';
 import type { Browser } from 'wxt/browser';
 import { splitFolderPath } from '../lib/bookmark-folder-utils';
 import { debugLog } from '../lib/debug-log';
-import { BookmarkRootId, isFixedContainerId } from '../lib/browser-constants/bookmarkRoots';
+import { isFixedContainerId, isToolbarId } from '../lib/browser-constants/bookmarkRoots';
 import type { BookmarkSearchEntry } from '../types/bookmark-search-entry';
 import type { FolderNode } from '../types/folder-node';
 import type { IBookmarkRepository } from './interfaces/IBookmarkRepository';
@@ -127,8 +127,14 @@ export class BookmarkRepository implements IBookmarkRepository {
       return existing.id;
     }
 
-    debugLog('[quick-save-debug] repo.findOrCreateFolder: no existing match, creating', { title, parentId });
-    const created = await browser.bookmarks.create(parentId ? { title, parentId } : { title });
+    // A brand-new root-level folder (first path segment, no existing match
+    // found anywhere) has no natural parent to nest under — default it to
+    // the Bookmarks Toolbar instead of an unparented create(), which Chrome
+    // resolves to "Other Bookmarks", not the Toolbar, silently filing rule-
+    // created folders somewhere the user never chose.
+    const effectiveParentId = parentId ?? (await this.resolveToolbarId());
+    debugLog('[quick-save-debug] repo.findOrCreateFolder: no existing match, creating', { title, parentId: effectiveParentId });
+    const created = await browser.bookmarks.create({ title, parentId: effectiveParentId });
     debugLog('[quick-save-debug] repo.findOrCreateFolder: created', created);
     return created.id;
   }
@@ -141,9 +147,7 @@ export class BookmarkRepository implements IBookmarkRepository {
     const containers = root.children ?? [];
     debugLog('[quick-save-debug] repo.resolveToolbarId: containers', containers.map((c) => ({ id: c.id, title: c.title })));
 
-    const toolbar = containers.find(
-      (node) => node.id === BookmarkRootId.CHROME.TOOLBAR || node.id === BookmarkRootId.FIREFOX.TOOLBAR,
-    );
+    const toolbar = containers.find((node) => isToolbarId(node.id));
     const resolved = toolbar ?? containers[0];
 
     if (!resolved) {
@@ -177,13 +181,28 @@ export class BookmarkRepository implements IBookmarkRepository {
       return exactContainer;
     }
 
-    const containerIds = new Set(containers.map((node) => node.id));
     const matches = await browser.bookmarks.search({ title });
+    const folderMatches = matches.filter((node) => node.url === undefined && node.parentId !== undefined);
 
-    const match = matches.find(
-      (node) => node.url === undefined && node.parentId !== undefined && containerIds.has(node.parentId),
-    );
-    debugLog('[quick-save-debug] repo.findRootFolder: no exact container, search fallback', { title, matches, resolved: match });
-    return match;
+    // If the same-named folder exists directly under more than one container
+    // (e.g. a stray "Social" left over under Other Bookmarks from earlier
+    // testing/browsing, alongside a fresh one under the Toolbar), prefer the
+    // Toolbar's — that's where findOrCreateFolder now defaults brand-new
+    // folders to, so this keeps an existing match consistent with that.
+    const orderedContainers = [...containers].sort((a, b) => {
+      if (isToolbarId(a.id) === isToolbarId(b.id)) return 0;
+      return isToolbarId(a.id) ? -1 : 1;
+    });
+
+    for (const container of orderedContainers) {
+      const match = folderMatches.find((node) => node.parentId === container.id);
+      if (match) {
+        debugLog('[quick-save-debug] repo.findRootFolder: search fallback matched under container', { title, containerId: container.id, resolved: match });
+        return match;
+      }
+    }
+
+    debugLog('[quick-save-debug] repo.findRootFolder: no exact container, no search match', { title, matches });
+    return undefined;
   }
 }

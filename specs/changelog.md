@@ -60,3 +60,18 @@ Finished tasks, moved here from `tasks.md` when completed. Kept for history — 
 
 Заведена Kanban-доска `projects/plusk.in/mvp kanban.md` в личном vault пользователя (плагин Obsidian Kanban), подключённая через `obsidian-local-rest-api`'s MCP-сервер (сконфигурирован проектно-локально, вне git — см. `~/.claude.json`). Три колонки маппятся 1:1 на `specs/backlog.md`/`tasks.md`/`changelog.md`; карточка — `<ID> — <короткое название> (<priority>)`, чекбокс отмечен только в Done. Оба вопроса, не решённых на момент постановки, закрыты: единственный источник правды — файлы `specs/*.md`, доска — read-mostly отражение (не наоборот); MCP-сервер — `obsidian-local-rest-api` (встроенный MCP-эндпоинт плагина), Kanban-плагин — стандартный `obsidian-kanban` (mgmeyers), доска живёт в личном vault пользователя (`projects/plusk.in/`), не в отдельном vault под это. `specs`-скилл (`.claude/skills/specs/SKILL.md`, правило 9) обновлён: любое add/move/remove задачи теперь обязано зеркалиться на доску тем же тулом-вызовом, что редактирует `specs/*.md` — с явным фоллбэком (пропустить и предупредить пользователя), если MCP-сервер `obsidian` недоступен.
 
+### DEV-5 — Настроен ESLint (flat config) с проверкой архитектурных слоёв
+**Priority:** Medium
+**Added:** 2026-08-09
+**Completed:** 2026-08-09
+
+В проекте не было вообще никакого линтера — только `tsc --noEmit`. Настроен ESLint 10 (`src/eslint.config.js`, flat config) поверх `typescript-eslint` (`recommendedTypeChecked`), `eslint-plugin-react-hooks` и `eslint-plugin-boundaries`; добавлены npm-скрипты `lint`/`lint:fix`.
+
+`boundaries/dependencies` формализует и проверяет порядок слоёв из CLAUDE.md (`components → hooks → context → services → repository → db`) как явный граф зависимостей — раньше это держалось только на дисциплине и code review. Отдельные правила привязаны к уже сформулированным в CLAUDE.md конвенциям: `@typescript-eslint/no-explicit-any` (запрет `any`), `no-restricted-syntax` на `TSEnumDeclaration` (запрет `enum` в пользу `as const`-объектов), `no-restricted-imports` держит `dexie` только внутри `repository/`/`db/`, `no-console` (кроме `lib/debug-log.ts`), `@typescript-eslint/consistent-type-imports`.
+
+Осознанные отклонения от rule-пресетов по умолчанию, оба — по явному решению пользователя в диалоге: `@typescript-eslint/require-await` выключен глобально (`async` документирует контракт метода как часть интерфейса, а не наличие `await` именно сегодня — иначе сигнатура металась бы туда-обратно при мелких правках реализации); `@typescript-eslint/no-misused-promises` настроен с `checksVoidReturn: { attributes: false }` — промис-возвращающий обработчик в JSX-пропе (`onClick`/`onSave` и т.п.) не требует `void`-обёртки, это стандартный в проекте fire-and-forget паттерн, а не забытый `await`; проверка остаётся включённой для остальных позиций (аргументы функций, переменные).
+
+Заодно поправлены ~40 уже существовавших нарушений (floating/misused promises через `void`, лишние type assertion, `no-unsafe-assignment`) в ~20 файлах — без изменения поведения; тесты (140/140) проходят.
+
+Сознательно не тронуто: 5 срабатываний `react-hooks/set-state-in-effect` (`FolderTree.tsx` ×2, `RulesTab.tsx`, `PopupQuickSave.tsx`, `useBookmarkSearch.ts`) — это не механическая правка синтаксиса, а реальный архитектурный паттерн (`setState` синхронно внутри эффекта), плюс часть файлов была под активной правкой пользователя в той же сессии. Оставлены как открытые находки линтера, не задача — пользователь решит, заводить ли отдельный backlog-пункт.
+
