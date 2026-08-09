@@ -3,7 +3,6 @@
 // scattered inline literals across repository files.
 export const StorageKey = {
   MODE: 'local:mode',
-  PENDING_HINT: 'local:pendingHint',
   DEFAULT_FOLDER: 'local:defaultFolder',
 } as const;
 export type StorageKey = typeof StorageKey[keyof typeof StorageKey];

@@ -4,9 +4,44 @@ import { splitFolderPath } from '../lib/bookmark-folder-utils';
 import { debugLog } from '../lib/debug-log';
 import { BookmarkRootId } from '../lib/browser-constants/bookmarkRoots';
 import type { BookmarkSearchEntry } from '../types/bookmark-search-entry';
+import type { FolderNode } from '../types/folder-node';
 import type { IBookmarkRepository } from './interfaces/IBookmarkRepository';
 
 type BookmarkTreeNode = Browser.bookmarks.BookmarkTreeNode;
+
+function parseFolderTree(nodes: BookmarkTreeNode[], parentPath = ''): FolderNode[] {
+  const folders: FolderNode[] = [];
+  for (const node of nodes) {
+    if (node.url !== undefined) continue; // Skip bookmark links
+
+    const isSystemRoot = node.id === '0';
+
+    // Bookmarks Toolbar / Other Bookmarks / Mobile Bookmarks get a real path
+    // segment too (their own title), same as any other folder — otherwise
+    // they'd all collapse to the same empty path and lose which container a
+    // child folder actually sits under (see findRootFolder below, which
+    // relies on this to resolve the real container instead of guessing).
+    const currentPath = isSystemRoot
+      ? parentPath
+      : parentPath
+        ? `${parentPath}/${node.title}`
+        : node.title;
+
+    const children = node.children ? parseFolderTree(node.children, currentPath) : [];
+
+    if (isSystemRoot) {
+      return children;
+    }
+
+    folders.push({
+      id: node.id,
+      title: node.title,
+      path: currentPath,
+      children,
+    });
+  }
+  return folders;
+}
 
 /**
  * Gateway over `browser.bookmarks`. `chrome.bookmarks` only knows folders by
@@ -39,6 +74,11 @@ export class BookmarkRepository implements IBookmarkRepository {
   async listAll(): Promise<BookmarkSearchEntry[]> {
     const [root] = await browser.bookmarks.getTree();
     return this.collectBookmarks(root.children ?? [], []);
+  }
+
+  async getFolderTree(): Promise<FolderNode[]> {
+    const tree = await browser.bookmarks.getTree();
+    return parseFolderTree(tree);
   }
 
   private collectBookmarks(nodes: BookmarkTreeNode[], parentPath: string[]): BookmarkSearchEntry[] {

@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { IconFolder } from '@/components/icons';
-import { FolderTree } from '@/components/popup/folder/FolderTree';
+import { FolderTree } from '@/components/bookmark/folder-tree/FolderTree';
 import { useDefaultFolder } from '@/hooks/useDefaultFolder';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './DefaultFolderSection.module.css';

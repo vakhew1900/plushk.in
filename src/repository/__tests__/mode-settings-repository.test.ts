@@ -23,14 +23,14 @@ beforeEach(() => {
 });
 
 describe('ModeSettingsRepository', () => {
-  it('falls back to Auto when nothing was ever set', async () => {
+  it('falls back to On when nothing was ever set', async () => {
     const repo = new ModeSettingsRepository();
-    expect(await repo.get()).toBe(Mode.AUTO);
+    expect(await repo.get()).toBe(Mode.ON);
   });
 
   it('round-trips a mode written with set()', async () => {
     const repo = new ModeSettingsRepository();
-    await repo.set(Mode.HINT);
-    expect(await repo.get()).toBe(Mode.HINT);
+    await repo.set(Mode.OFF);
+    expect(await repo.get()).toBe(Mode.OFF);
   });
 });

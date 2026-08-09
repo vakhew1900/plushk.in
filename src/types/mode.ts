@@ -1,6 +1,5 @@
 export const Mode = {
-  AUTO: "auto",
-  HINT: "hint",
+  ON: "on",
   OFF: "off",
 } as const;
 

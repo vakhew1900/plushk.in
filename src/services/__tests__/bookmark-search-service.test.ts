@@ -15,6 +15,7 @@ function fakeRepository(): IBookmarkRepository {
     move: async () => { throw new Error('not implemented'); },
     getByTitle: async () => { throw new Error('not implemented'); },
     listAll: async () => entries,
+    getFolderTree: async () => { throw new Error('not implemented'); },
   };
 }
 

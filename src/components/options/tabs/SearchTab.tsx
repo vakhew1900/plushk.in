@@ -3,8 +3,8 @@ import { TabHeader } from '@/components/options/TabHeader';
 import { useBookmarkSearch } from '@/hooks/useBookmarkSearch';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
-import { SearchBar } from './search/SearchBar';
-import { SearchResultsList } from './search/SearchResultsList';
+import { SearchBar } from '@/components/bookmark/search/SearchBar';
+import { SearchResultsList } from '@/components/bookmark/search/SearchResultsList';
 import styles from './SearchTab.module.css';
 
 export function SearchTab() {

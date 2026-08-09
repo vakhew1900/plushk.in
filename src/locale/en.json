@@ -13,15 +13,10 @@
     "aliases": "Aliases"
   },
   "modes": {
-    "auto": {
-      "label": "Auto",
+    "on": {
+      "label": "On",
       "tag": "default",
-      "desc": "Matches a rule — files it right away. If nothing matches, falls back to the default behavior."
-    },
-    "hint": {
-      "label": "Hint",
-      "tag": "with confirmation",
-      "desc": "Shows where the bookmark will go and lets you change the folder before saving."
+      "desc": "Quick-save from the popup shows the matching rule's folder — pick a different one if needed, then save."
     },
     "off": {
       "label": "Off",
@@ -101,7 +96,7 @@
   },
   "defaultFolderSection": {
     "title": "Default folder",
-    "desc": "Where Auto mode saves a bookmark when no rule matches. Leave empty for the Bookmarks Bar.",
+    "desc": "Where quick-save pre-selects a bookmark when no rule matches. Leave empty for the Bookmarks Bar.",
     "placeholder": "Bookmarks Bar"
   },
   "themeSection": {
@@ -117,20 +112,18 @@
     "appName": "plushk.in",
     "appSub": "Bookmarks",
     "settingsButton": "Settings",
-    "hintConfirm": {
+    "header": {
+      "openSearch": "Search",
+      "backToQuickSave": "Back to quick save"
+    },
+    "folderPicker": {
       "pathPlaceholder": "Folder/Subfolder",
-      "confirm": "Save",
-      "cancel": "Cancel"
+      "save": "Save"
     },
     "quickSave": {
       "title": "Quick save",
-      "openSettings": "Mode settings",
-      "save": "Save",
       "saved": "Saved",
       "offNote": "Quick save is off — \"Off\" mode doesn't touch bookmarks."
-    },
-    "settings": {
-      "back": "Back"
     }
   }
 }

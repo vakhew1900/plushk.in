@@ -4,7 +4,7 @@ import { Mode } from '@/types/mode';
 
 export function useMode() {
   const { modeSettingsRepository } = useServices();
-  const [mode, setModeState] = useState<Mode>(Mode.AUTO);
+  const [mode, setModeState] = useState<Mode>(Mode.ON);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

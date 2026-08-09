@@ -1,5 +1,6 @@
 import type { Browser } from 'wxt/browser';
 import type { BookmarkSearchEntry } from '../../types/bookmark-search-entry';
+import type { FolderNode } from '../../types/folder-node';
 
 export interface IBookmarkRepository {
   /**
@@ -21,4 +22,7 @@ export interface IBookmarkRepository {
 
   /** Lists every saved bookmark (leaf nodes only) with the folder path it currently lives in. */
   listAll(): Promise<BookmarkSearchEntry[]>;
+
+  /** The folder-only tree (no bookmark leaves), each node carrying its full `/`-separated path. */
+  getFolderTree(): Promise<FolderNode[]>;
 }

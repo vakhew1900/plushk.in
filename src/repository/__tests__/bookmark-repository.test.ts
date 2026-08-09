@@ -200,6 +200,58 @@ describe('BookmarkRepository.listAll', () => {
   });
 });
 
+describe('BookmarkRepository.getFolderTree', () => {
+  it('returns only folders (no bookmark leaves), each carrying its full `/`-separated path', async () => {
+    const tree: Node[] = [
+      {
+        id: '0',
+        title: '',
+        syncing: false,
+        children: [
+          {
+            id: '1',
+            title: 'Bookmarks bar',
+            syncing: false,
+            children: [
+              { id: 'bm-1', title: 'Root bookmark', url: 'https://root.com', syncing: false },
+              {
+                id: 'folder-social',
+                title: 'Social',
+                syncing: false,
+                children: [{ id: 'folder-reddit', title: 'Reddit', syncing: false, children: [] }],
+              },
+            ],
+          },
+          { id: '2', title: 'Other bookmarks', syncing: false, children: [] },
+        ],
+      },
+    ];
+    bookmarksApi.getTree.mockResolvedValueOnce(tree);
+
+    const repo = new BookmarkRepository();
+    const result = await repo.getFolderTree();
+
+    expect(result).toEqual([
+      {
+        id: '1',
+        title: 'Bookmarks bar',
+        path: 'Bookmarks bar',
+        children: [
+          {
+            id: 'folder-social',
+            title: 'Social',
+            path: 'Bookmarks bar/Social',
+            children: [
+              { id: 'folder-reddit', title: 'Reddit', path: 'Bookmarks bar/Social/Reddit', children: [] },
+            ],
+          },
+        ],
+      },
+      { id: '2', title: 'Other bookmarks', path: 'Other bookmarks', children: [] },
+    ]);
+  });
+});
+
 describe('BookmarkRepository.getByTitle', () => {
   it('returns only bookmarks (not folders) matching the title exactly', async () => {
     bookmarksApi.search.mockResolvedValueOnce([

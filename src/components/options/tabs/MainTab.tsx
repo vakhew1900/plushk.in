@@ -11,8 +11,7 @@ import { ExportImportSection } from './main/ExportImportSection';
 import styles from './MainTab.module.css';
 
 const MODES = [
-  { key: Mode.AUTO, showFallback: true },
-  { key: Mode.HINT },
+  { key: Mode.ON, showFallback: true },
   { key: Mode.OFF },
 ] as const;
 
@@ -41,7 +40,7 @@ export function MainTab() {
             desc={t(`modes.${key}.desc`)}
             selected={mode === key}
             onSelect={() => setMode(key)}
-            fallbackFolder={key === Mode.AUTO ? defaultFolder : undefined}
+            fallbackFolder={key === Mode.ON ? defaultFolder : undefined}
           />
         ))}
       </div>
