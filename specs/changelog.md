@@ -9,6 +9,13 @@ Finished tasks, moved here from `tasks.md` when completed. Kept for history — 
 
 `AutoModeHandler`/`HintModeHandler`/`OffModeHandler` (`services/*ModeHandler.ts`) сейчас только *решают*, куда должна попасть закладка (`BookmarkDecision`), но не выполняют сам `chrome.bookmarks.create`/`move`. Нужно: интерфейс-шлюз над `chrome.bookmarks` (create/move + find-or-create по `/`-разделённому пути в `targetFolder`, т.к. API работает с `parentId`, а не с именем/путём — сегменты пути резолвятся/создаются по одному, `chrome.bookmarks` не создаёт вложенные папки одним вызовом), мокирование в тестах через `vitest-chrome`. `AutoModeHandler` должен реально размещать закладку сам (включая случай `targetFolder: undefined` — тогда просто не резолвить путь и создавать без `parentId`, дефолтное поведение браузера); `OffModeHandler` — не вызывать шлюз вовсе.
 
+### RULE-9 — Добавить `alias` в `PageMeta`
+**Priority:** Medium
+**Added:** 2026-07-24
+**Completed:** 2026-08-09
+
+`PageMeta` (`src/types/page-meta.ts`) получило необязательное поле `alias?: string`, заполняемое в `PageMetaFiller.fillPageMeta()` поиском `DomainAlias`, чей `domain_names` содержит `meta.domain` (через новую зависимость от `IDomainAliasRepository`, инжектируемую в `ServicesContext.tsx`); при отсутствии совпадения `alias` остаётся `undefined`. Единственная точка построения `PageMeta` — `PageMetaFiller`, вызываемая из `useQuickSave.ts` (второе место, упомянутое в исходной формулировке задачи — ручная сборка в `background.ts` — устарело из-за `UI-4`, того кода больше нет). Даёт `RULE-6` готовый путь резолвинга без нового DSL-узла — существующие `term`/`terms` могут матчить `field: "alias"` как обычное поле через `getMetaField`, например `{"term": {"alias": "Gmail"}}` вместо перечисления `gmail.com`/`mail.google.com` по отдельности.
+
 ### ARCH-2 — Единая точка входа для проверки Mode вместо разрозненных проверок
 **Priority:** High
 **Added:** 2026-07-17
@@ -74,4 +81,34 @@ Finished tasks, moved here from `tasks.md` when completed. Kept for history — 
 Заодно поправлены ~40 уже существовавших нарушений (floating/misused promises через `void`, лишние type assertion, `no-unsafe-assignment`) в ~20 файлах — без изменения поведения; тесты (140/140) проходят.
 
 Сознательно не тронуто: 5 срабатываний `react-hooks/set-state-in-effect` (`FolderTree.tsx` ×2, `RulesTab.tsx`, `PopupQuickSave.tsx`, `useBookmarkSearch.ts`) — это не механическая правка синтаксиса, а реальный архитектурный паттерн (`setState` синхронно внутри эффекта), плюс часть файлов была под активной правкой пользователя в той же сессии. Оставлены как открытые находки линтера, не задача — пользователь решит, заводить ли отдельный backlog-пункт.
+
+### UI-4 — Бинарный режим ON/OFF и переработка попапа (дерево вместо экрана режимов, поиск вместо второго экрана)
+**Priority:** Medium
+**Added:** 2026-08-09
+**Completed:** 2026-08-09
+
+Реализовано полностью. `Mode` сведён к `ON`/`OFF` (`src/types/mode.ts`). Экран 1 попапа (`PopupQuickSave.tsx`) сразу показывает дерево папок (`FolderTree`) с предложенным путём и кнопкой «Сохранить», без промежуточного экрана и без кнопки «Отмена» — `QuickSaveView` (`lib/quick-save-view.ts`) содержит только `SAVED`/`OFF`/`SAVE`, `CONFIRM`/`confirming`-стейт не существует (закрывает `UI-3`). Экран 2 — поиск (`PopupSearch.tsx`, переиспользует `useBookmarkSearch`/`BookmarkSearchService`, тот же движок что и вкладка «Поиск» в настройках, `SEARCH-1`). Переключатель `ON`/`OFF` — `Switch` в `PopupHeader`, общий для обоих экранов вместе со стрелкой переключения экрана.
+
+Нативная автосортировка убрана целиком: `background.ts` не содержит листенеров `bookmarks.onCreated`/`onImportBegan`/`onChanged` (сведён к пустому `defineBackground(() => {})`). Вся иерархия `IBookmarkModeHandler`/`AutoModeHandler`/`HintModeHandler`/`OffModeHandler`/`BookmarkDecisionStatus`/`createModeHandler`/`BookmarkService` удалена — единственный потребитель, попап, резолвит папку напрямую через `QuickSaveFolderResolver` (`useQuickSave.ts`). Механизм сообщения popup→background для quick-save и весь pending-hint код (`PendingHintRepository`/`usePendingHint`/`PopupActions`/`PopupHintConfirm`) удалены — `useQuickSave.ts` вызывает `IBookmarkRepository.create()` напрямую. Поглощает `UI-2` (цепочка `Mode→Status→View` перестала существовать вместе с типами) и часть `ARCH-10` про `FolderTree.tsx`. Автосортировка нативных закладок остаётся отложенной идеей, см. `specs/ideas.md`.
+
+### RULE-3 — Своё действие расширения для создания закладки (обход нативного попапа браузера)
+**Priority:** Medium
+**Added:** 2026-07-08
+**Completed:** 2026-08-09
+
+Изначальный план (сообщение popup→`background.ts` с синхронным флагом подавления эха `onCreated`) заменён более простым решением в ходе `UI-4`: раз нативная автосортировка убрана целиком, подавлять эхо больше не от чего. `useQuickSave.ts` создаёт закладку напрямую через `IBookmarkRepository.create()` — пользователь сохраняет страницу мимо системной звёздочки/Ctrl+D, а нативный попап браузера не мешает, т.к. попап расширения — единственная точка сохранения. Двухэкранный UI (быстрое сохранение / поиск) реализован как часть `UI-4`, а не отдельным селектором режима, как задумывалось изначально.
+
+### RULE-5 — Подключить PageExtractorService/PageMatchGroup к реальному flow создания закладки
+**Priority:** Medium
+**Added:** 2026-07-24
+**Completed:** 2026-08-09
+
+`useQuickSave.ts` резолвит `PageMeta` в два шага: `PageMetaFiller.fillPageMeta()` даёт базовые поля сразу при открытии попапа, затем (если `Mode !== OFF`) `PageExtrasService.extract()` инжектит `content.ts` в активную вкладку через `browser.scripting.executeScript` (scoped `activeTab`) и накладывает извлечённые `extras` поверх базового `PageMeta` перед вызовом `QuickSaveFolderResolver.resolve()`. Изначальный план «пометить нативный `onCreated` как deprecated, но не отключать» снят сам собой — нативной автосортировки после `UI-4` больше нет вообще. Ручная проверка по `specs/verification.md` (секция RULE) — не отмечена, стоит прогнать перед релизом.
+
+### SEARCH-1 — Вкладка «Поиск»: простой поиск по уже отсортированным закладкам
+**Priority:** Low
+**Added:** 2026-07-08
+**Completed:** 2026-08-09
+
+Реализовано в двух местах на одном движке: вкладка «Поиск» в настройках (`SearchTab.tsx`) и экран 2 попапа (`PopupSearch.tsx`, добавлен в `UI-4`). Общий хук `useBookmarkSearch` → `IBookmarkSearchService`/`BookmarkSearchService` — точное вхождение подстроки (без учёта регистра) по `title`/`url`/`folderPath` через `IBookmarkRepository.listAll()` (живое дерево `browser.bookmarks`, не персистентные метаданные — их не существует). `description`/fuzzy-поиск остаются отдельной `SEARCH-2`.
 

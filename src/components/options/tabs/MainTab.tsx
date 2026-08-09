@@ -48,11 +48,6 @@ export function MainTab() {
       <DefaultFolderSection />
       <ThemeSection />
       <ExportImportSection />
-
-      <h2 className={styles.h2}>{t('mainTab.recentActivity')}</h2>
-      <div className={styles.activityWrap}>
-        {ACTIVITY.map((a, i) => <ActivityItem key={i} {...a} />)}
-      </div>
     </div>
   );
 }

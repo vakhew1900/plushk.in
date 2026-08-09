@@ -1,6 +1,7 @@
 export const PageMetaField = {
   URL: "url",
   DOMAIN: "domain",
+  ALIAS: "alias",
   TITLE: "title",
   DESCRIPTION: "description",
   AUTHOR: "author",
@@ -19,6 +20,7 @@ export type PageMetaField = (typeof PageMetaField)[keyof typeof PageMetaField];
 export interface PageMeta {
   url: string;
   domain: string;
+  alias?: string;
   title: string;
   description?: string;
   author?: string;

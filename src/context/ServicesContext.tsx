@@ -64,7 +64,7 @@ export function ServicesProvider({ children }: Props) {
       modeSettingsRepository: new ModeSettingsRepository(),
       pageMatchGroupRepository,
       fileService,
-      pageMetaFiller: new PageMetaFiller(),
+      pageMetaFiller: new PageMetaFiller(domainAliasRepository),
       pageExtrasService: new PageExtrasService(),
       quickSaveFolderResolver: new QuickSaveFolderResolver(bookmarkRuleRepository, defaultFolderSettingsRepository),
       settingsExportImportService: new SettingsExportImportService(
