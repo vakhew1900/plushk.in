@@ -112,3 +112,10 @@ Finished tasks, moved here from `tasks.md` when completed. Kept for history — 
 
 Реализовано в двух местах на одном движке: вкладка «Поиск» в настройках (`SearchTab.tsx`) и экран 2 попапа (`PopupSearch.tsx`, добавлен в `UI-4`). Общий хук `useBookmarkSearch` → `IBookmarkSearchService`/`BookmarkSearchService` — точное вхождение подстроки (без учёта регистра) по `title`/`url`/`folderPath` через `IBookmarkRepository.listAll()` (живое дерево `browser.bookmarks`, не персистентные метаданные — их не существует). `description`/fuzzy-поиск остаются отдельной `SEARCH-2`.
 
+### ARCH-13 — FolderTree захардкожен на Chrome-id корневых папок, игнорирует Firefox
+**Priority:** Medium
+**Added:** 2026-08-09
+**Completed:** 2026-08-09
+
+Исправлено (обнаружено попутно при проверке готовности MVP — код уже не содержал жалующегося на находку паттерна). `FolderTree.tsx` больше не хардкодит `DEFAULT_EXPANDED_IDS = ['1', '2', '3']` — вместо литеральных Chrome-id корневых контейнеров дерево при первом рендере разворачивает все top-level узлы, реально пришедшие из `useFolderTree()`/`IBookmarkRepository.getFolderTree()` (`useEffect`, добавляющий `node.id` каждого корневого узла живого дерева в `expandedIds`). Работает одинаково в Chrome (числовые id) и Firefox (GUID-подобные `toolbar_____`/`unfiled_____`/`mobile______`) без завязки на конкретные литералы — по сути та же best-effort идея, что и `resolveToolbarId`, но через сами данные дерева, а не константу `BookmarkRootId`.
+

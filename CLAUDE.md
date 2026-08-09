@@ -166,10 +166,13 @@ Planning and task tracking live in `specs/`, not in this file:
 | `specs/backlog.md` | Tasks not yet started |
 | `specs/tasks.md` | Tasks currently in progress |
 | `specs/changelog.md` | Finished tasks |
+| `specs/cancelled.md` | Tasks that won't be done — superseded, obsolete, or explicitly out of scope |
 | `specs/ideas.md` | Unconfirmed, not-yet-scoped ideas — lighter than a task, no ID/priority required |
 | `specs/verification.md` | Manual correctness checklist — things to verify by hand in the running extension, grouped by task category |
 
-A task lives in exactly one of `backlog.md` / `tasks.md` / `changelog.md` at a time. When work on a task begins, move it from `backlog.md` to `tasks.md`. When it's finished, move it from `tasks.md` to `changelog.md`, adding a **Completed:** date — don't delete it. (Before this convention, finished tasks were deleted outright and relied on git history alone; that made completed work invisible unless someone went digging through commits, so now the entry itself is kept.)
+A task lives in exactly one of `backlog.md` / `tasks.md` / `changelog.md` / `cancelled.md` at a time. When work on a task begins, move it from `backlog.md` to `tasks.md`. When it's finished, move it from `tasks.md` to `changelog.md`, adding a **Completed:** date — don't delete it. (Before this convention, finished tasks were deleted outright and relied on git history alone; that made completed work invisible unless someone went digging through commits, so now the entry itself is kept.)
+
+**Cancelling a task.** When a task becomes obsolete — superseded by what another task ended up implementing, the scenario it was designed for stops existing, or it's explicitly decided out of scope — move it from `backlog.md` or `tasks.md` to `cancelled.md` instead of deleting it, adding **Cancelled:**/**Reason:** fields (see below). Same reasoning as `changelog.md`: the entry (and why it died) stays discoverable instead of silently vanishing. Don't cancel a task just because it looks stale or low-priority — cancel it because the described work genuinely doesn't need doing; if unsure, ask rather than deciding unilaterally.
 
 **Surface candidate tasks as you go.** If, while doing unrelated work, you notice a piece of work that could reasonably be split out and tracked on its own, flag it to the user and ask whether it should become a separate `backlog.md` entry. Do not add it yourself without asking, and do not silently fold it into the task at hand.
 
@@ -201,6 +204,13 @@ Example entry:
 | Field | Description |
 |---|---|
 | Completed | Date the task was finished (`YYYY-MM-DD`) |
+
+`cancelled.md` entries have the same four fields plus two more, added when the task is moved there:
+
+| Field | Description |
+|---|---|
+| Cancelled | Date the task was cancelled (`YYYY-MM-DD`) |
+| Reason | Why — what superseded it, what changed, or why it's out of scope |
 
 ### Chat naming
 

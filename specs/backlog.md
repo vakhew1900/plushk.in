@@ -14,13 +14,6 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 Сейчас используется голый React Context (`LocaleContext`, `ThemeContext`, `ServicesContext`) + по хуку на сущность. Если количество контекстов и cross-компонентных состояний вырастет, стоит рассмотреть более общее решение (Redux, Zustand и т.п.) вместо ручного прокидывания и точечных хуков.
 
-### UI-1 — Всплывающее уведомление о перемещении закладки в Auto-режиме
-**Priority:** Low
-**Added:** 2026-07-08
-
-В Auto-режиме показывать тост-уведомление вида «Вкладка сохранена в папку "Соцсети/Reddit"», которое появляется в правом верхнем углу и само пропадает через ~5 секунд. Нерешённый вопрос на момент проектирования: у service worker'а в MV3 нет DOM, так что вариант либо `chrome.notifications` (системное уведомление ОС — просто, но не кастомизируется под тему проекта и не буквально «в правом верхнем углу окна браузера»), либо инжект UI через content script в активную вкладку (кастомизируется, но нужны host permissions и открытая подходящая вкладка). Выбор — отдельное архитектурное решение при старте задачи.
-
-
 ### SEARCH-2 — Fuzzy-поиск и индексация description/content для вкладки «Поиск»
 **Priority:** Low
 **Added:** 2026-07-24
@@ -49,7 +42,7 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 **Priority:** Medium
 **Added:** 2026-07-24
 
-Пользователь формулирует условие правила на естественном языке (например, «видео-туториалы про React») вместо ручной сборки JSON DSL через `ConsView`/`JsonView`. На момент постановки не решено: превращает ли AI такое описание в статичное дерево `RuleNode` один раз (дальше правило редактируется и оценивается как обычное, без AI на каждый bookmark), или условие остаётся «AI-типом» правила и оценивается LLM-вызовом при каждой новой закладке в Auto-режиме (расход/задержка при большом потоке закладок); какой провайдер/API используется и где хранятся ключи; попадает ли это в существующий `RuleType`(`and`/`or`/`not`/`term`/`terms`/`regex`/`wildcard`) как новый вариант или живёт отдельным полем `BookmarkRule`.
+Пользователь формулирует условие правила на естественном языке (например, «видео-туториалы про React») вместо ручной сборки JSON DSL через `ConsView`/`JsonView`. На момент постановки не решено: превращает ли AI такое описание в статичное дерево `RuleNode` один раз (дальше правило редактируется и оценивается как обычное, без AI на каждый bookmark), или условие остаётся «AI-типом» правила и оценивается LLM-вызовом при каждом quick-save в режиме `ON` (расход/задержка при большом потоке закладок); какой провайдер/API используется и где хранятся ключи; попадает ли это в существующий `RuleType`(`and`/`or`/`not`/`term`/`terms`/`regex`/`wildcard`) как новый вариант или живёт отдельным полем `BookmarkRule`.
 
 ### INTEGR-1 — Telegram-интеграция
 **Priority:** Low
@@ -83,11 +76,10 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 **Priority:** Low
 **Added:** 2026-07-24
 
-Набор мелких находок из полного аудита архитектуры, ни одна из которых не тянет на отдельную задачу поодиночке:
-- `ExportImportSection.tsx` импортирует `MimeType` напрямую из `@/services/interfaces/IFileService`, минуя hooks/context — компонент дотягивается до интерфейса сервиса напрямую. Не новая проблема: тот же паттерн уже есть в `PopupQuickSave.tsx`/`PopupActions.tsx` (импортируют `createModeHandler`/`BookmarkDecisionStatus` напрямую из `@/services/handler/...`).
-- Статичные (не по-настоящему динамичные) `style={{...}}` вместо классов CSS Modules: `PopupFooter.tsx:15`, `RulesTab.tsx:63`, `RuleEditor.tsx:77`, `ConsView.tsx:29-33`, `AliasesSection.tsx:40`, `ConditionGroup.tsx:34`, `ModeCard.tsx:32`, `VariableBlock.tsx:71`, `VariablesSection.tsx:48`. (`PopupPageCard.tsx:28` already fixed — resolved incidentally while extracting `BookmarkFolderPath`/`BookmarkFavicon` for `SEARCH-1`.)
-- `src/entrypoints/content.ts:4` — забытый `console.log('Hello content.')`, не через `debugLog`.
-- Таблица storage в `CLAUDE.md` документирует только Dexie/IndexedDB, но `ModeSettingsRepository`/`PendingHintRepository` реально используют `wxt/utils/storage` (chrome.storage) — стоит дополнить документацию упоминанием обоих механизмов хранения.
+Набор мелких находок из полного аудита архитектуры, ни одна из которых не тянет на отдельную задачу поодиночке. Два пункта из первоначального списка сняты как решённые попутно другими задачами: `src/entrypoints/content.ts:4` (`console.log('Hello content.')`, не через `debugLog`) — файл переписан в `RULE-5`/`UI-4`, лишнего лога больше нет; упоминание `PendingHintRepository` в пункте про storage — репозиторий удалён целиком в `UI-4`.
+- `ExportImportSection.tsx` импортирует `MimeType` напрямую из `@/services/interfaces/IFileService`, минуя hooks/context — компонент дотягивается до интерфейса сервиса напрямую. Всё ещё так.
+- Статичные (не по-настоящему динамичные) `style={{...}}` вместо классов CSS Modules — актуальные места (номера строк могли сдвинуться после правок в других задачах, проверить перед фиксом): `PopupFooter.tsx`, `RulesTab.tsx`, `RuleEditor.tsx`, `ConsView.tsx`, `AliasesSection.tsx`, `ConditionGroup.tsx`, `ModeCard.tsx`, `VariableBlock.tsx`, `VariablesSection.tsx`. (`PopupPageCard.tsx:28` already fixed — resolved incidentally while extracting `BookmarkFolderPath`/`BookmarkFavicon` for `SEARCH-1`.)
+- Таблица storage в `CLAUDE.md` документирует только Dexie/IndexedDB, но `ModeSettingsRepository` реально использует `wxt/utils/storage` (chrome.storage) — стоит дополнить документацию упоминанием обоих механизмов хранения.
 - `key={i}` (индекс массива вместо стабильного id) в `ConditionGroup.tsx:32` (`conds.map`) и `ConsView.tsx:25` (`groups.map`) — пока безобидно, т.к. add/remove в этих списках ещё не подключены к `RuleEditor` (`RULE-1`), но как только появятся реальные обработчики, удаление строки из середины будет путать identity соседних строк у React (фокус/локальный стейт полей). Поправить на стабильный id, когда `RULE-1` дойдёт до реализации.
 
 ### ARCH-5 — Недостающие юнит-тесты для мелких модулей
@@ -96,12 +88,6 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 - `src/services/FileService.ts` (сервисный класс) не имеет теста в `src/services/__tests__/`, хотя CLAUDE.md требует юнит-тесты для сервисов. Вероятно, пропустили из-за DOM-специфики (`Blob`/`URL.createObjectURL`/`<a download>`), но именно ради мокируемости такого рода кода и существует интерфейс `IFileService`.
 - `src/lib/utils.ts` (`cn()` — обёртка над clsx) и `src/lib/browser-constants/bookmarkRoots.ts` не имеют тестов — оба тривиальны и низкой ценности, но отмечены для полноты.
-
-### RULE-6 — Резолвинг DomainAlias в правилах
-**Priority:** Medium
-**Added:** 2026-07-24
-
-`DomainAlias` (`src/types/domain-alias.ts`, вкладка «Алиасы» → `AliasesSection`) сейчас существует только как самостоятельная сущность: хранится, редактируется в UI, участвует в экспорте/импорте (`SETTINGS-1`), но движок правил (`src/lib/visitor/rule-evaluator.ts`) о нём не знает — `RuleNode` (`term`/`terms`/`regex`/`wildcard`) матчит только литеральные значения `PageMeta`. В результате alias, созданный пользователем во вкладке «Алиасы» (например «Gmail» → `gmail.com`, `mail.google.com`), никак не используется при построении условий правил во вкладке «Правила» — списки доменов приходится дублировать вручную в `term`/`terms`, что расходится с CLAUDE.md (сценарий 5 явно описывает alias как способ не перечислять домены по одному в каждом правиле). Обнаружено при подготовке тестовых конфигов `TEST-1` (см. `configs/mail/`, `configs/it/`, где домены в `domainAliases` и в `rules[].condition` продублированы). На момент постановки не решено: формат ссылки на alias в DSL (новый тип условия вроде `{"type": "alias", "field": "domain", "aliasId": "..."}`, либо резолвинг на уровне `RuleEditor`/`ConsView` — alias «разворачивается» в `terms` при сохранении правила, и движок продолжает работать только с литералами); что при удалении/переименовании alias, на который уже ссылаются существующие правила. Обнаружен более простой вариант резолвинга при постановке `RULE-9`: если `alias` станет обычным полем `PageMeta`, существующие `term`/`terms` смогут матчить его как `field: "alias"` без нового DSL-узла — стоит рассмотреть этот путь в первую очередь, когда работа над задачей начнётся.
 
 ### RULE-8 — Токенизация `targetFolder`: `$$field$$`-подстановки из `PageMeta` + служебные токены
 **Priority:** Medium
@@ -116,12 +102,6 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 Сейчас `BookmarkRule` (`src/types/`) — плоский список, без понятия родитель/потомок; `RulesTab`/`RuleEditor` показывают и оценивают правила одно за другим по `priority`. По мере роста числа правил часть из них естественно являются уточнениями/подправилами других (например общее правило на домен `youtube.com`, а внутри — более специфичные по тегам/заголовку) — хранить и редактировать такие связки удобнее как дерево, а не одним общим плоским списком, отсортированным по приоритету. На момент постановки не решено: формат хранения иерархии (новое поле `parentId?: string` на `BookmarkRule` + сборка дерева на чтении, либо вложенная структура прямо в Dexie); как это соотносится с существующим порядком оценки по `priority` — приоритет остаётся глобальным (плоским) при том, что показ в UI становится деревом, или приоритет становится локальным среди siblings одного родителя, а порядок между ветками дерева определяется отдельно; наследует ли подправило условие родителя неявным AND (тогда `condition` подправила матчит только в дополнение к условию родителя) или условия остаются полностью независимыми и иерархия — только группировка/UI-удобство без изменения семантики оценки; как это влияет на `targetFolder` — подпапка подправила становится относительной к `targetFolder` родителя (аналогично `RULE-8`, токенизации папки) или остаётся независимой абсолютной строкой; нужна ли миграция существующих плоских правил в дерево при внедрении. Требует изменений в `RuleEngine`/`rule-evaluator.ts` (порядок и семантика оценки), в UI (`RulesTab` — дерево вместо списка, drag&drop переноса между родителями) и в `IBookmarkRuleRepository`.
 
-### ARCH-6 — Единая регистрация сервисов через ServicesContext вместо ручной сборки в двух местах
-**Priority:** Medium
-**Added:** 2026-07-29
-
-`BookmarkService` и `PageMetaFiller` нигде не зарегистрированы в `src/context/ServicesContext.tsx` — их вручную пересобирают в `src/entrypoints/background.ts` (конструктор в `onCreated`-обработчике и в quick-save ветке) и в `src/hooks/useQuickSave.ts` (создаёт `createModeHandler` сам, минуя DI). Получаются два параллельных механизма сборки зависимостей вместо одного. Обнаружено при архитектурном аудите по запросу пользователя. На момент постановки не решено: как дать service worker'у (где React недоступен) доступ к той же фабрике, что использует `ServicesContext` — общая функция-фабрика `createServices()`, вызываемая и из `ServicesContext`, и напрямую из `background.ts`, либо какой-то другой способ расшарить сборку. Не относится сюда: подключение `PageExtractorService` к реальному flow — это уже скоуп `RULE-5` (in progress, `tasks.md`).
-
 ### ARCH-7 — Generic-базовый класс для CRUD-бойлерплейта репозиториев
 **Priority:** Low
 **Added:** 2026-07-29
@@ -132,7 +112,7 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 **Priority:** Low
 **Added:** 2026-07-29
 
-`BookmarkRuleRepository`, `DomainAliasRepository`, `PageMatchGroupRepository` (`src/repository/`) не имеют тестов в `src/repository/__tests__/`, в отличие от `BookmarkRepository`, `DefaultFolderSettingsRepository`, `ModeSettingsRepository`, `PendingHintRepository`. Продолжение той же находки, что и `ARCH-5` (там — недостающие тесты для мелких модулей `lib`/`services`), но для слоя репозиториев — заведено отдельно, т.к. другой слой и другой объём работы. Требование юнит-тестов для классов — из CLAUDE.md.
+`BookmarkRuleRepository`, `DomainAliasRepository`, `PageMatchGroupRepository` (`src/repository/`) не имеют тестов в `src/repository/__tests__/`, в отличие от `BookmarkRepository`, `DefaultFolderSettingsRepository`, `ModeSettingsRepository`. Продолжение той же находки, что и `ARCH-5` (там — недостающие тесты для мелких модулей `lib`/`services`), но для слоя репозиториев — заведено отдельно, т.к. другой слой и другой объём работы. Требование юнит-тестов для классов — из CLAUDE.md.
 
 ### ARCH-9 — Заменить ручные JSON type guard'ы на zod
 **Priority:** Low
@@ -144,31 +124,9 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 **Priority:** Medium
 **Added:** 2026-07-29
 
-По CLAUDE.md порядок слоёв — `components → hooks → context → services → repository → chrome.*/IndexedDB`. Найдены прямые обращения в обход слоёв: `src/hooks/useQuickSave.ts` вызывает `browser.tabs.query` напрямую и сам собирает `createModeHandler` (см. также `ARCH-6` — тот же файл, другая грань той же проблемы); `src/components/popup/folder/FolderTree.tsx` вызывает `browser.bookmarks.getTree()` прямо в `useEffect`, при этом обход дерева уже реализован в `BookmarkRepository` (`collectBookmarks`/`findRootFolder`) — то есть логика ещё и задублирована; `src/components/options/tabs/SearchTab.tsx` и `src/components/popup/shell/PopupFooter.tsx` вызывают `browser.tabs.create(...)` напрямую (менее критично — не бизнес-логика, просто открытие URL, но формально тоже нарушение). Обнаружено при архитектурном аудите. На момент постановки не решено: заводить ли в `IBookmarkRepository` метод вроде `getFolderTree()` для `FolderTree.tsx`, и делать ли для тривиальных `browser.tabs.create` вызовов отдельный сервис или оставить как явное, задокументированное исключение из правила.
+По CLAUDE.md порядок слоёв — `components → hooks → context → services → repository → chrome.*/IndexedDB`. Найдены прямые обращения в обход слоёв: `src/hooks/useQuickSave.ts` вызывает `browser.tabs.query` напрямую; `src/components/options/tabs/SearchTab.tsx` и `src/components/popup/shell/PopupFooter.tsx` вызывают `browser.tabs.create(...)` напрямую (менее критично — не бизнес-логика, просто открытие URL, но формально тоже нарушение). Обнаружено при архитектурном аудите. На момент постановки не решено: делать ли для тривиальных `browser.tabs.create`/`browser.tabs.query` вызовов отдельный сервис или оставить как явное, задокументированное исключение из правила.
 
-**Частично поглощена `UI-4`** (`tasks.md`): часть про `FolderTree.tsx` решена там — метод `getFolderTree()` заводится в `IBookmarkRepository`, потребляется через новый хук `useFolderTree()`. Часть про `browser.tabs.create` в `SearchTab`/`PopupFooter` остаётся здесь, вне объёма `UI-4`.
-
-### ARCH-11 — Вынести координацию onCreated-события из background.ts в отдельный обработчик
-**Priority:** Low
-**Added:** 2026-07-29
-
-`src/entrypoints/background.ts` пересоздаёт `BookmarkService` на каждое событие `onCreated` вместо сборки один раз при старте воркера, и содержит нетривиальную логику подавления «эхо»-события (флаг, выставляемый перед quick-save созданием закладки, и проверка этого флага в начале `onCreated` — введено в `RULE-3`) прямо в теле листенера, а не в отдельном классе-обработчике. Обнаружено при архитектурном аудите. Не относится сюда: дублирование построения `PageMeta` в трёх местах — это уже в скоупе `RULE-5` (in progress), которая явно планирует переиспользовать `PageMetaFiller.fillPageMeta()` во всех точках вместо инлайн-копий. На момент постановки не решено: точный интерфейс выносимого обработчика (например `BookmarkEventHandler` с методом `handleCreated`) и нужно ли выносить туда же остальные листенеры (`onChanged`/`onRemoved`/`onImportBegan`) для консистентности, или ограничиться только `onCreated`.
-
-### UI-2 — Задокументировать цепочку Mode → BookmarkDecisionStatus → QuickSaveView
-**Priority:** Low
-**Added:** 2026-07-30
-
-При разборе констант, связанных с режимом подсказки (`Mode.HINT`) и результатом её обработки, оказалось, что значение проходит через три отдельных enum'а на трёх архитектурных слоях: `Mode` (`src/types/mode.ts`, настройка) → `BookmarkDecisionStatus` (`src/services/handler/interfaces/IBookmarkModeHandler.ts`, решение хэндлера по конкретной закладке) → `QuickSaveView` (`src/lib/quick-save-view.ts`, производное UI-состояние, дополнительно зависящее от локальных `saved`/`confirming`). Слои разделены осознанно и соответствуют требованию CLAUDE.md о порядке `components → hooks → context → services → repository`, поэтому схлопывать их не нужно — но проследить путь значения через три файла без подсказки со стороны неочевидно. Добавить короткий комментарий (например, рядом с `BookmarkDecisionStatus` в `IBookmarkModeHandler.ts` и/или `QuickSaveView` в `quick-save-view.ts`), поясняющий, что значение приходит из предыдущего слоя и на кого влияет дальше. Без изменения кода/поведения — только документация.
-
-**Поглощена `UI-4`** (`tasks.md`): переход на бинарный `Mode` схлопывает цепочку до тривиального 1:1 `Mode↔BookmarkDecisionStatus` — документировать становится нечего, задача закрывается без отдельной реализации.
-
-### UI-3 — Убрать промежуточный экран в Hint-режиме: сразу показывать путь и кнопку сохранения
-**Priority:** Medium
-**Added:** 2026-07-30
-
-Сейчас в Hint-режиме popup быстрого сохранения (`PopupQuickSave.tsx`) сохранение идёт в два шага: сначала обычная кнопка «Сохранить» (`QuickSaveView.SAVE`), и только по клику на неё раскрывается путь до папки с деревом и кнопками «Отмена»/«Подтвердить» (`QuickSaveView.CONFIRM`, `ConfirmFolderView`) — переключение между экранами идёт через локальный стейт `confirming`, см. `getQuickSaveView()` (`src/lib/quick-save-view.ts`). Предложение: убрать первый шаг — при открытии popup в Hint-режиме сразу показывать путь до папки (предзаполненный предложением от `HintModeHandler`, как сейчас) и кнопку сохранения, без промежуточного клика; предполагаемая причина — так проще для пользователя. Не решено на момент постановки: что происходит с кнопкой «Отмена» в `ConfirmFolderView`, если промежуточного экрана больше нет (сейчас она откатывает `confirming` обратно к `false`, то есть к первому экрану) — закрывать popup, сбрасывать путь к предложенному значению, или убрать кнопку вовсе; нужно ли при этом убрать `QuickSaveView.CONFIRM`/`confirming`-стейт целиком, схлопнув в один view для статуса `PENDING_CONFIRMATION`.
-
-**Поглощена `UI-4`** (`tasks.md`): открытый вопрос закрыт — кнопки «Отмена» не будет вовсе (закрытие попапа — неявная отмена), `QuickSaveView.CONFIRM`/`confirming` убираются целиком.
+**Частично поглощена `UI-4`** (`changelog.md`): часть про `FolderTree.tsx` (вызывал `browser.bookmarks.getTree()` напрямую, задублировав обход дерева из `BookmarkRepository`) решена там — метод `getFolderTree()` заводится в `IBookmarkRepository`, потребляется через новый хук `useFolderTree()`. Часть про `createModeHandler` в `useQuickSave.ts` (упоминалась вместе с `ARCH-6`) снята — `createModeHandler`/иерархия `ModeHandler` удалены целиком в `UI-4`, `ARCH-6` отменена (`cancelled.md`) как решённая тем же путём. Остаётся: `browser.tabs.query` в `useQuickSave.ts`, `browser.tabs.create` в `SearchTab`/`PopupFooter`.
 
 ### TEST-2 — Рассмотреть e2e-тестирование расширения
 **Priority:** Low
@@ -188,13 +146,6 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 **Предложенное направление** (обсуждено с пользователем, не финализировано): прослойка на уровне контракта репозитория, а не Dexie — добавить в `IBookmarkRuleRepository`/`IDomainAliasRepository`/`IPageMatchGroupRepository` метод `subscribe(listener: () => void): () => void`; реализация — небольшой переиспользуемый `ChangeNotifier` (`src/lib/`, Set слушателей), которым композицией владеет каждый репозиторий; `save()`/`remove()` вызывают `notify()` после успешной записи. Хуки подписываются на `repository.subscribe(refetch)` в `useEffect`. Любая будущая реализация репозитория (не только Dexie) обязана вызывать тот же `notify()` в своих `save`/`remove` — контракт не завязан на конкретное хранилище.
 
 На момент постановки не решено: 1) нужно ли схлопывать множественные `notify()` за один цикл импорта (сейчас каждый `save()` в цикле дёрнет всех подписчиков по отдельности — корректно, но, возможно, расточительно для больших импортов); 2) нужен ли тот же механизм для `ModeSettingsRepository`/`DefaultFolderSettingsRepository` (сейчас не подтверждённая пользователем проблема — они не пишутся извне из `SettingsExportImportService`, так что бага именно с ними не наблюдалось); 3) стоит ли объединить эту работу с `ARCH-7` (generic `DexieRepository<T,K>` базовый класс) — `ChangeNotifier`-композиция могла бы жить прямо в этом общем базовом классе вместо дублирования в трёх репозиториях по отдельности; 4) более радикальная альтернатива — полноценный шаред data-layer/стейт-менеджер (см. `ARCH-1`) вместо точечного subscribe/notify — не выбрана как избыточная для текущего объёма данных, но стоит пересмотреть, если подобных случаев рассинхронизации станет больше.
-
-### ARCH-13 — FolderTree захардкожен на Chrome-id корневых папок, игнорирует Firefox
-
-**Priority:** Medium
-**Added:** 2026-08-09
-
-`DEFAULT_EXPANDED_IDS = ['1', '2', '3']` в `src/components/bookmark/folder-tree/FolderTree.tsx:12` — литеральные Chrome-id корневых контейнеров (Toolbar/Other/Mobile), используемые для авторазворачивания дерева при первом рендере. Проект уже решает именно эту проблему кросс-браузерности через `BookmarkRootId` (`src/lib/browser-constants/bookmarkRoots.ts`, отдельные `CHROME`/`FIREFOX` группы) — `BookmarkRepository.ts` (`resolveToolbarId`) использует константу для обоих браузеров, а `FolderTree.tsx` — нет. На Firefox (`firefox-mv2`) реальные id корней — `toolbar_____`/`unfiled_____`/`mobile______` и т.п., ни один не совпадает с `'1'/'2'/'3'`, поэтому дерево при первом открытии остаётся полностью свёрнутым — комментарий в коде («Root containers... start expanded regardless of selection») не выполняется. Обнаружено при архитектурном аудите по запросу пользователя. Исправление: заменить литералы на `Object.values(BookmarkRootId.CHROME).concat(Object.values(BookmarkRootId.FIREFOX))` (или аналог) — та же логика best-effort, что уже применена в `resolveToolbarId`.
 
 ### ARCH-14 — useBookmarkRules не пересортировывает список по priority после локального save()
 
