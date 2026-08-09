@@ -59,46 +59,75 @@ export default tseslint.config(
       // Layer order is a load-bearing architecture decision (see CLAUDE.md
       // "Layer order (top-down only)") — enforce it instead of relying on
       // review to catch a stray import.
-      'boundaries/element-types': [
+      'boundaries/dependencies': [
         'error',
         {
           default: 'disallow',
-          rules: [
+          policies: [
             {
-              from: ElementType.ENTRYPOINTS,
-              allow: [
-                ElementType.ENTRYPOINTS,
-                ElementType.COMPONENTS,
-                ElementType.HOOKS,
-                ElementType.CONTEXT,
-                ElementType.SERVICES,
-                ElementType.LIB,
-                ElementType.TYPES,
-              ],
+              from: { element: { type: ElementType.ENTRYPOINTS } },
+              allow: {
+                to: {
+                  element: {
+                    types: {
+                      anyOf: [
+                        ElementType.ENTRYPOINTS,
+                        ElementType.COMPONENTS,
+                        ElementType.HOOKS,
+                        ElementType.CONTEXT,
+                        ElementType.SERVICES,
+                        ElementType.LIB,
+                        ElementType.TYPES,
+                      ],
+                    },
+                  },
+                },
+              },
             },
             {
-              from: ElementType.COMPONENTS,
-              allow: [ElementType.COMPONENTS, ElementType.HOOKS, ElementType.CONTEXT, ElementType.LIB, ElementType.TYPES],
+              from: { element: { type: ElementType.COMPONENTS } },
+              allow: {
+                to: {
+                  element: {
+                    types: { anyOf: [ElementType.COMPONENTS, ElementType.HOOKS, ElementType.CONTEXT, ElementType.LIB, ElementType.TYPES] },
+                  },
+                },
+              },
             },
             {
-              from: ElementType.HOOKS,
-              allow: [ElementType.HOOKS, ElementType.CONTEXT, ElementType.LIB, ElementType.TYPES],
+              from: { element: { type: ElementType.HOOKS } },
+              allow: { to: { element: { types: { anyOf: [ElementType.HOOKS, ElementType.CONTEXT, ElementType.LIB, ElementType.TYPES] } } } },
             },
             {
-              from: ElementType.CONTEXT,
-              allow: [ElementType.CONTEXT, ElementType.SERVICES, ElementType.REPOSITORY, ElementType.LIB, ElementType.TYPES],
+              from: { element: { type: ElementType.CONTEXT } },
+              allow: {
+                to: {
+                  element: {
+                    types: { anyOf: [ElementType.CONTEXT, ElementType.SERVICES, ElementType.REPOSITORY, ElementType.LIB, ElementType.TYPES] },
+                  },
+                },
+              },
             },
             {
-              from: ElementType.SERVICES,
-              allow: [ElementType.SERVICES, ElementType.REPOSITORY, ElementType.LIB, ElementType.TYPES],
+              from: { element: { type: ElementType.SERVICES } },
+              allow: { to: { element: { types: { anyOf: [ElementType.SERVICES, ElementType.REPOSITORY, ElementType.LIB, ElementType.TYPES] } } } },
             },
             {
-              from: ElementType.REPOSITORY,
-              allow: [ElementType.REPOSITORY, ElementType.DB, ElementType.LIB, ElementType.TYPES],
+              from: { element: { type: ElementType.REPOSITORY } },
+              allow: { to: { element: { types: { anyOf: [ElementType.REPOSITORY, ElementType.DB, ElementType.LIB, ElementType.TYPES] } } } },
             },
-            { from: ElementType.DB, allow: [ElementType.DB, ElementType.LIB, ElementType.TYPES] },
-            { from: ElementType.LIB, allow: [ElementType.LIB, ElementType.TYPES] },
-            { from: ElementType.TYPES, allow: [ElementType.TYPES] },
+            {
+              from: { element: { type: ElementType.DB } },
+              allow: { to: { element: { types: { anyOf: [ElementType.DB, ElementType.LIB, ElementType.TYPES] } } } },
+            },
+            {
+              from: { element: { type: ElementType.LIB } },
+              allow: { to: { element: { types: { anyOf: [ElementType.LIB, ElementType.TYPES] } } } },
+            },
+            {
+              from: { element: { type: ElementType.TYPES } },
+              allow: { to: { element: { type: ElementType.TYPES } } },
+            },
           ],
         },
       ],
