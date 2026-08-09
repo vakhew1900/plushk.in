@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IconFolder, IconArrowRight } from '@/components/icons';
 import { debugLog } from '@/lib/debug-log';
 import { useFolderTree } from '@/hooks/useFolderTree';
@@ -6,25 +6,43 @@ import type { FolderNode } from '@/types/folder-node';
 import clsx from 'clsx';
 import styles from './FolderTree.module.css';
 
+// Root containers (Bookmarks Toolbar/Other/Mobile) start expanded regardless
+// of selection — collapsing straight to an empty tree on first render would
+// hide the very folders users pick from most often.
+const DEFAULT_EXPANDED_IDS = ['1', '2', '3'];
+
+function collectAncestorIds(nodes: FolderNode[], targetPath: string, ids: Set<string>): void {
+  if (!targetPath) return;
+  for (const node of nodes) {
+    if (targetPath === node.path || targetPath.startsWith(`${node.path}/`)) {
+      ids.add(node.id);
+      collectAncestorIds(node.children, targetPath, ids);
+    }
+  }
+}
+
 interface TreeNodeProps {
   node: FolderNode;
   selectedPath: string;
+  expandedIds: Set<string>;
+  onToggle: (id: string) => void;
   onSelect: (path: string) => void;
 }
 
-function FolderTreeNode({ node, selectedPath, onSelect }: TreeNodeProps) {
-  const [expanded, setExpanded] = useState(node.id === '1' || node.id === '2' || node.id === '3');
+function FolderTreeNode({ node, selectedPath, expandedIds, onToggle, onSelect }: TreeNodeProps) {
   const hasChildren = node.children.length > 0;
   const isSelected = selectedPath === node.path && node.path !== '';
+  const expanded = expandedIds.has(node.id);
 
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setExpanded(!expanded);
+    onToggle(node.id);
   };
 
   return (
     <div className={styles.treeNode}>
       <div
+        data-selected={isSelected || undefined}
         className={clsx(styles.nodeRow, {
           [styles.selected]: isSelected,
         })}
@@ -53,6 +71,8 @@ function FolderTreeNode({ node, selectedPath, onSelect }: TreeNodeProps) {
               key={child.id}
               node={child}
               selectedPath={selectedPath}
+              expandedIds={expandedIds}
+              onToggle={onToggle}
               onSelect={onSelect}
             />
           ))}
@@ -69,14 +89,55 @@ interface FolderTreeProps {
 
 export function FolderTree({ selectedPath, onSelect }: FolderTreeProps) {
   const tree = useFolderTree();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set(DEFAULT_EXPANDED_IDS));
+
+  // Reveal the full path to whatever is selected/suggested — a folder buried
+  // three levels deep is useless to confirm if the tree never opens far
+  // enough to show it. Only ever adds ids: a user's manual collapse elsewhere
+  // in the tree is left alone.
+  useEffect(() => {
+    const ancestorIds = new Set<string>();
+    collectAncestorIds(tree, selectedPath, ancestorIds);
+    if (ancestorIds.size === 0) return;
+
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      let changed = false;
+      for (const id of ancestorIds) {
+        if (!next.has(id)) {
+          next.add(id);
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [tree, selectedPath]);
+
+  // Runs after the expansion above has actually rendered, so the selected
+  // node exists in the DOM to scroll to.
+  useEffect(() => {
+    containerRef.current?.querySelector('[data-selected]')?.scrollIntoView({ block: 'nearest' });
+  }, [expandedIds, selectedPath]);
+
+  const toggle = (id: string) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   return (
-    <div className={styles.treeContainer}>
+    <div className={styles.treeContainer} ref={containerRef}>
       {tree.map((node) => (
         <FolderTreeNode
           key={node.id}
           node={node}
           selectedPath={selectedPath}
+          expandedIds={expandedIds}
+          onToggle={toggle}
           onSelect={onSelect}
         />
       ))}

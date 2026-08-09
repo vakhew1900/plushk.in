@@ -1,4 +1,4 @@
-import { BookmarkCard } from '@/components/bookmark/BookmarkCard';
+import type { ReactNode } from 'react';
 import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
 import { SearchEmptyState } from './SearchEmptyState';
 import styles from './SearchResultsList.module.css';
@@ -7,10 +7,10 @@ interface Props {
   entries: BookmarkSearchEntry[];
   countLabel: string;
   emptyMessage: string;
-  onOpen: (entry: BookmarkSearchEntry) => void;
+  renderEntry: (entry: BookmarkSearchEntry) => ReactNode;
 }
 
-export function SearchResultsList({ entries, countLabel, emptyMessage, onOpen }: Props) {
+export function SearchResultsList({ entries, countLabel, emptyMessage, renderEntry }: Props) {
   return (
     <div className={styles.wrap}>
       <div className={styles.count}>{countLabel}</div>
@@ -20,13 +20,7 @@ export function SearchResultsList({ entries, countLabel, emptyMessage, onOpen }:
       ) : (
         <div className={styles.list}>
           {entries.map((entry) => (
-            <BookmarkCard
-              key={entry.id}
-              title={entry.title}
-              url={entry.url}
-              folderPath={entry.folderPath}
-              onClick={() => onOpen(entry)}
-            />
+            <div key={entry.id}>{renderEntry(entry)}</div>
           ))}
         </div>
       )}

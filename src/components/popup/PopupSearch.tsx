@@ -1,5 +1,6 @@
 import { browser } from 'wxt/browser';
 import { IconSearch } from '@/components/icons';
+import { CompactBookmarkCard } from '@/components/bookmark/CompactBookmarkCard';
 import { SearchBar } from '@/components/bookmark/search/SearchBar';
 import { SearchResultsList } from '@/components/bookmark/search/SearchResultsList';
 import { useBookmarkSearch } from '@/hooks/useBookmarkSearch';
@@ -39,7 +40,9 @@ export function PopupSearch() {
               entries={results}
               countLabel={countLabel}
               emptyMessage={emptyMessage}
-              onOpen={openBookmark}
+              renderEntry={(entry) => (
+                <CompactBookmarkCard title={entry.title} url={entry.url} onClick={() => openBookmark(entry)} />
+              )}
             />
           </div>
         )}

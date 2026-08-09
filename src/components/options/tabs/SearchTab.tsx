@@ -1,5 +1,6 @@
 import { browser } from 'wxt/browser';
 import { TabHeader } from '@/components/options/TabHeader';
+import { BookmarkCard } from '@/components/bookmark/BookmarkCard';
 import { useBookmarkSearch } from '@/hooks/useBookmarkSearch';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
@@ -32,7 +33,14 @@ export function SearchTab() {
           entries={results}
           countLabel={countLabel}
           emptyMessage={emptyMessage}
-          onOpen={openBookmark}
+          renderEntry={(entry) => (
+            <BookmarkCard
+              title={entry.title}
+              url={entry.url}
+              folderPath={entry.folderPath}
+              onClick={() => openBookmark(entry)}
+            />
+          )}
         />
       )}
     </div>
