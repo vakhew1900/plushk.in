@@ -50,14 +50,13 @@ Data-access gateways (Dexie or `browser.*` APIs) are a separate layer from servi
 
 ### Service Worker (`src/entrypoints/background.ts`)
 
+Rule matching and folder resolution happen **only** in the extension's own popup quick-save flow (`components/popup/` → `hooks/useQuickSave.ts` → `IBookmarkRepository.create()`, called directly — no message round-trip through the service worker). Bookmarks created or edited the native way (star icon, Ctrl+D, import, sync from another device) are **not** touched — no rule evaluation, no move. This is a deliberate choice (see `UI-4` in `specs/tasks.md`), not a gap: auto-sorting native saves is a deferred idea, see `specs/ideas.md`.
+
 | Event | Action |
 |---|---|
-| `bookmarks.onCreated` | Apply rules → `chrome.bookmarks.move()` |
-| `bookmarks.onImportBegan` | Pause processing until import finishes |
-| `bookmarks.onChanged` | Re-evaluate rules if title/URL changed |
-| `bookmarks.onRemoved` | Remove metadata from IndexedDB |
+| `bookmarks.onRemoved` | Remove metadata from IndexedDB (not yet implemented) |
 
-The extension only **moves** bookmarks via `chrome.bookmarks.move()` — never duplicates them.
+`bookmarks.onCreated`/`onImportBegan`/`onChanged` are intentionally not handled — see above. The extension only **creates** bookmarks directly in the resolved target folder — it never moves or duplicates bookmarks it didn't itself just create.
 
 ### Rule system
 
