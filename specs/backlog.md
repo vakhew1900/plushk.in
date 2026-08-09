@@ -39,12 +39,6 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 Зависит от `SEARCH-3` (там же должно появиться хранилище тегов, которого пока не существует). По аналогии с `BookmarkRule`/DSL из `CLAUDE.md`, но результат оценки условия — не перемещение в папку, а присвоение набора тегов. На момент постановки не решено: формат — расширение `BookmarkRule` (опциональное поле `tags` рядом с `targetFolder`, оценивается тем же движком) или отдельная сущность `TagRule` со своим редактором; применяются ли теговые правила в реальном времени (`bookmarks.onCreated`, как папочные) или пересчётом по требованию/batch.
 
-### DEV-2 — Доска задач проекта в Obsidian через MCP
-**Priority:** Low
-**Added:** 2026-07-23
-
-Это про сам процесс разработки этого расширения, а не про продуктовую фичу — не путать с `EXPORT-1` (там расширение экспортирует сохранённые пользователем страницы в Obsidian-хранилище). Здесь: завести отдельную визуальную доску (Kanban-плагин или аналог) в Obsidian, отражающую задачи из `specs/backlog.md` / `tasks.md` / `changelog.md`, и подключить к ней MCP-сервер (напр. `mcp-obsidian` / встроенный MCP в `obsidian-local-rest-api`), чтобы Claude мог перекладывать карточки между колонками для наглядности — в дополнение к прямому редактированию `specs/*.md`, которое уже работает через `specs`-скилл и MCP не требует. На момент постановки не решено: как доска синхронизируется с `specs/*.md` (единственный источник правды — файлы, доска лишь их отражение, или наоборот), какой конкретно MCP-сервер и Kanban-плагин выбрать, отдельный vault под это или личный vault пользователя.
-
 ### EXPORT-1 — Экспорт статьи в Markdown + интеграция с Obsidian
 **Priority:** High
 **Added:** 2026-07-23
@@ -157,6 +151,8 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 По CLAUDE.md порядок слоёв — `components → hooks → context → services → repository → chrome.*/IndexedDB`. Найдены прямые обращения в обход слоёв: `src/hooks/useQuickSave.ts` вызывает `browser.tabs.query` напрямую и сам собирает `createModeHandler` (см. также `ARCH-6` — тот же файл, другая грань той же проблемы); `src/components/popup/folder/FolderTree.tsx` вызывает `browser.bookmarks.getTree()` прямо в `useEffect`, при этом обход дерева уже реализован в `BookmarkRepository` (`collectBookmarks`/`findRootFolder`) — то есть логика ещё и задублирована; `src/components/options/tabs/SearchTab.tsx` и `src/components/popup/shell/PopupFooter.tsx` вызывают `browser.tabs.create(...)` напрямую (менее критично — не бизнес-логика, просто открытие URL, но формально тоже нарушение). Обнаружено при архитектурном аудите. На момент постановки не решено: заводить ли в `IBookmarkRepository` метод вроде `getFolderTree()` для `FolderTree.tsx`, и делать ли для тривиальных `browser.tabs.create` вызовов отдельный сервис или оставить как явное, задокументированное исключение из правила.
 
+**Частично поглощена `UI-4`** (`tasks.md`): часть про `FolderTree.tsx` решена там — метод `getFolderTree()` заводится в `IBookmarkRepository`, потребляется через новый хук `useFolderTree()`. Часть про `browser.tabs.create` в `SearchTab`/`PopupFooter` остаётся здесь, вне объёма `UI-4`.
+
 ### ARCH-11 — Вынести координацию onCreated-события из background.ts в отдельный обработчик
 **Priority:** Low
 **Added:** 2026-07-29
@@ -169,11 +165,15 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 При разборе констант, связанных с режимом подсказки (`Mode.HINT`) и результатом её обработки, оказалось, что значение проходит через три отдельных enum'а на трёх архитектурных слоях: `Mode` (`src/types/mode.ts`, настройка) → `BookmarkDecisionStatus` (`src/services/handler/interfaces/IBookmarkModeHandler.ts`, решение хэндлера по конкретной закладке) → `QuickSaveView` (`src/lib/quick-save-view.ts`, производное UI-состояние, дополнительно зависящее от локальных `saved`/`confirming`). Слои разделены осознанно и соответствуют требованию CLAUDE.md о порядке `components → hooks → context → services → repository`, поэтому схлопывать их не нужно — но проследить путь значения через три файла без подсказки со стороны неочевидно. Добавить короткий комментарий (например, рядом с `BookmarkDecisionStatus` в `IBookmarkModeHandler.ts` и/или `QuickSaveView` в `quick-save-view.ts`), поясняющий, что значение приходит из предыдущего слоя и на кого влияет дальше. Без изменения кода/поведения — только документация.
 
+**Поглощена `UI-4`** (`tasks.md`): переход на бинарный `Mode` схлопывает цепочку до тривиального 1:1 `Mode↔BookmarkDecisionStatus` — документировать становится нечего, задача закрывается без отдельной реализации.
+
 ### UI-3 — Убрать промежуточный экран в Hint-режиме: сразу показывать путь и кнопку сохранения
 **Priority:** Medium
 **Added:** 2026-07-30
 
 Сейчас в Hint-режиме popup быстрого сохранения (`PopupQuickSave.tsx`) сохранение идёт в два шага: сначала обычная кнопка «Сохранить» (`QuickSaveView.SAVE`), и только по клику на неё раскрывается путь до папки с деревом и кнопками «Отмена»/«Подтвердить» (`QuickSaveView.CONFIRM`, `ConfirmFolderView`) — переключение между экранами идёт через локальный стейт `confirming`, см. `getQuickSaveView()` (`src/lib/quick-save-view.ts`). Предложение: убрать первый шаг — при открытии popup в Hint-режиме сразу показывать путь до папки (предзаполненный предложением от `HintModeHandler`, как сейчас) и кнопку сохранения, без промежуточного клика; предполагаемая причина — так проще для пользователя. Не решено на момент постановки: что происходит с кнопкой «Отмена» в `ConfirmFolderView`, если промежуточного экрана больше нет (сейчас она откатывает `confirming` обратно к `false`, то есть к первому экрану) — закрывать popup, сбрасывать путь к предложенному значению, или убрать кнопку вовсе; нужно ли при этом убрать `QuickSaveView.CONFIRM`/`confirming`-стейт целиком, схлопнув в один view для статуса `PENDING_CONFIRMATION`.
+
+**Поглощена `UI-4`** (`tasks.md`): открытый вопрос закрыт — кнопки «Отмена» не будет вовсе (закрытие попапа — неявная отмена), `QuickSaveView.CONFIRM`/`confirming` убираются целиком.
 
 ### TEST-2 — Рассмотреть e2e-тестирование расширения
 **Priority:** Low

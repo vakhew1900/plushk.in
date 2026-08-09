@@ -27,15 +27,16 @@ The directions below have been discussed but are deliberately out of scope for t
 
 ## User scenarios
 
-1. **Auto-sort ("Auto" mode).** The user saves a page as a bookmark. The extension checks rules in descending priority order; the first rule whose conditions all match decides the folder — the bookmark is moved there immediately. If no rule matches, the bookmark is moved into the user-configured default folder instead (empty by default, meaning the Bookmarks Bar).
-2. **"Hint" mode.** The user saves a bookmark; the extension computes the matching folder using the same rules, but shows the result in the popup and lets the user change the folder before it's saved.
-3. **"Off" mode.** The extension doesn't interfere — the bookmark is saved the normal browser way.
-4. **Editing rules.** The user opens the "Rules" tab in settings and creates or edits a rule: sets conditions (domain / title / URL, including regex), combines them via AND / OR, and specifies a target folder and priority.
-5. **Domain aliases.** The user groups multiple domains (e.g. regional mirrors of the same site) under one alias, so it can be used in rules instead of listing every domain individually.
-6. **Exporting an article to Markdown / Obsidian.** The user exports a saved page; the extension extracts the content (Readability + Turndown) and optionally sends the note to Obsidian via the Local REST API.
-7. **Editing an existing bookmark.** The user edits a bookmark's title or URL in the browser; the extension re-evaluates the rules and moves it to a different folder if needed.
-8. **Removing a bookmark.** The user deletes a bookmark; the extension removes the associated metadata from IndexedDB.
-9. **Importing bookmarks.** The user imports a batch of bookmarks (e.g. from another browser); the extension pauses rule processing during the import instead of sorting them one by one.
+1. **"On" mode.** A single toggle, no separate Auto/Hint split (see `UI-4` in `specs/tasks.md` for the migration from the old three-mode model). Behavior depends on how the bookmark is created:
+   - Saved natively (star icon / Ctrl+D / import / sync): the extension checks rules in descending priority order; the first rule whose conditions all match decides the folder — the bookmark is moved there immediately, no confirmation. If no rule matches, it's moved into the user-configured default folder instead (empty by default, meaning the Bookmarks Bar).
+   - Saved via the extension's own popup (quick-save, bypassing the native star): the popup immediately shows a folder tree with the matching rule's folder pre-selected (same rule logic as above), the user can pick a different folder before confirming, and a single "Save" button creates the bookmark directly in the chosen folder.
+2. **"Off" mode.** The extension doesn't interfere — the bookmark is saved the normal browser way, no rule evaluation at all.
+3. **Editing rules.** The user opens the "Rules" tab in settings and creates or edits a rule: sets conditions (domain / title / URL, including regex), combines them via AND / OR, and specifies a target folder and priority.
+4. **Domain aliases.** The user groups multiple domains (e.g. regional mirrors of the same site) under one alias, so it can be used in rules instead of listing every domain individually.
+5. **Exporting an article to Markdown / Obsidian.** The user exports a saved page; the extension extracts the content (Readability + Turndown) and optionally sends the note to Obsidian via the Local REST API.
+6. **Editing an existing bookmark.** The user edits a bookmark's title or URL in the browser; the extension re-evaluates the rules and moves it to a different folder if needed.
+7. **Removing a bookmark.** The user deletes a bookmark; the extension removes the associated metadata from IndexedDB.
+8. **Importing bookmarks.** The user imports a batch of bookmarks (e.g. from another browser); the extension pauses rule processing during the import instead of sorting them one by one.
 
 ## Business rules
 
@@ -43,7 +44,7 @@ The directions below have been discussed but are deliberately out of scope for t
 - A target folder is a `/`-separated path (e.g. `"Social/Reddit"`); intermediate folders are created if they don't exist yet.
 - Rules are checked in descending priority order — **the higher the number, the earlier the rule is checked**.
 - The first rule whose conditions all match wins; the rest are not checked.
-- If no rule matches (Auto mode), the bookmark is moved into a user-configured default folder — a `/`-separated path, empty by default, which resolves to the Bookmarks Bar.
+- If no rule matches (On mode, native creation), the bookmark is moved into a user-configured default folder — a `/`-separated path, empty by default, which resolves to the Bookmarks Bar.
 - Importing bookmarks (`bookmarks.onImportBegan`) pauses rule processing until the import finishes.
 - The extension only **moves** bookmarks (`chrome.bookmarks.move()`) — it never duplicates them.
 - Changing an existing bookmark's title/URL re-triggers rule evaluation (`bookmarks.onChanged`).

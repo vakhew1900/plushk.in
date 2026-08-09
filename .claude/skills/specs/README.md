@@ -21,5 +21,6 @@ Maintains the specification and task-tracking files in `specs/`: `specification.
 4. A finished task moves to `changelog.md` with a **Completed** field (`YYYY-MM-DD`), never deleted.
 5. Before any change to tasks, read all five `specs/*.md` files — status and numbering depend on more than one of them at once.
 6. A deep spec (`specs/tasks/<id>/`) isn't for every task — only when it's complex/ambiguous enough. Before writing it, the agent must interview the user first, not draft it from its own assumptions.
+7. Every add/move/remove is mirrored the same turn onto the Obsidian Kanban board (`projects/plusk.in/mvp kanban.md`) via the `obsidian` MCP server — the board is a reflection of the files, never the other way around.
 
 Details and exact wording — see [SKILL.md](SKILL.md); the deep-spec template — see [reference/task-folder.md](reference/task-folder.md).
