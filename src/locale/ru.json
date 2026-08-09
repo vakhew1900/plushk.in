@@ -3,7 +3,8 @@
     "modeSectionTitle": "Режим работы",
     "condition": "Условие",
     "noMatchFallback": "нет совпадений →",
-    "bookmarksBar": "Панель закладок"
+    "bookmarksBar": "Панель закладок",
+    "folderWillBeCreated": "будет создана"
   },
   "nav": {
     "section": "Основное",

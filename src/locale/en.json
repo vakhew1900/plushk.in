@@ -3,7 +3,8 @@
     "modeSectionTitle": "Operating mode",
     "condition": "Condition",
     "noMatchFallback": "no match →",
-    "bookmarksBar": "Bookmarks Bar"
+    "bookmarksBar": "Bookmarks Bar",
+    "folderWillBeCreated": "will be created"
   },
   "nav": {
     "section": "General",
