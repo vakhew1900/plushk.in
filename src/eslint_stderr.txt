@@ -1,9 +1,0 @@
-[boundaries][warning]: Rule name "boundaries/element-types" is deprecated. Use "boundaries/dependencies" instead.
-  More info: https://www.jsboundaries.dev/docs/releases/migration-guides/v5-to-v6/#rule-element-types-renamed-to-dependencies
-
-[boundaries][warning]: [boundaries/element-types] The 'rules' option is deprecated.
-  Please use 'policies' instead. More info: https://www.jsboundaries.dev/docs/releases/migration-guides/v6-to-v7/#rules-option-renamed-to-policies
-
-[boundaries][warning]: [boundaries/element-types] Detected legacy selector syntax in 9 rule(s) at indices: 0, 1, 2, 3, 4, 5, 6, 7, 8.
-  Consider migrating to object-based selectors. More info: https://www.jsboundaries.dev/docs/releases/migration-guides/v5-to-v6/
-
