@@ -13,7 +13,7 @@ export function useBookmarkSearch() {
     let cancelled = false;
     setLoading(true);
 
-    bookmarkSearchService.search(query).then((entries) => {
+    void bookmarkSearchService.search(query).then((entries) => {
       if (cancelled) return;
       setResults(entries);
       if (!query.trim()) setTotalCount(entries.length);

@@ -39,7 +39,7 @@ export function MainTab() {
             tag={t(`modes.${key}.tag`)}
             desc={t(`modes.${key}.desc`)}
             selected={mode === key}
-            onSelect={() => setMode(key)}
+            onSelect={() => void setMode(key)}
             fallbackFolder={key === Mode.ON ? defaultFolder : undefined}
           />
         ))}

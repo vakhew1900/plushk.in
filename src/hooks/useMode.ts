@@ -9,7 +9,7 @@ export function useMode() {
 
   useEffect(() => {
     let cancelled = false;
-    modeSettingsRepository
+    void modeSettingsRepository
       .get()
       .then((value) => {
         if (!cancelled) setModeState(value);

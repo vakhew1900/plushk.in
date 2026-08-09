@@ -5,7 +5,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import styles from './PopupFooter.module.css';
 
 function openSettings() {
-  browser.tabs.create({ url: browser.runtime.getURL('/options.html') });
+  void browser.tabs.create({ url: browser.runtime.getURL('/options.html') });
 }
 
 export function PopupFooter() {

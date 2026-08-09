@@ -9,7 +9,7 @@ export function usePageMatchGroups() {
 
   useEffect(() => {
     let cancelled = false;
-    pageMatchGroupRepository
+    void pageMatchGroupRepository
       .getAll()
       .then((groups) => {
         if (!cancelled) setItems(groups);

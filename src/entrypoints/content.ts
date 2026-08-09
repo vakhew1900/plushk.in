@@ -12,16 +12,17 @@ export default defineContentScript({
   matches: [],
   registration: 'runtime',
   main() {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- returning a Promise here is intentional: it's how browser.runtime.onMessage delivers an async response (see OnMessageListenerAsync in the webextension-polyfill types).
     browser.runtime.onMessage.addListener((message: unknown) => {
       if (!isPageExtractRequestMessage(message)) return;
 
-      return (async () => {
+      return (() => {
         const extractor = new PageExtractorService();
         const merged: Partial<PageMeta> = {};
         for (const group of message.groups) {
           Object.assign(merged, extractor.extract(group));
         }
-        return merged;
+        return Promise.resolve(merged);
       })();
     });
   },

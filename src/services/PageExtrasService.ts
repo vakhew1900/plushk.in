@@ -18,11 +18,11 @@ export class PageExtrasService implements IPageExtrasService {
 
     try {
       await browser.scripting.executeScript({ target: { tabId }, files: [CONTENT_SCRIPT_PATH] });
-      const response = await Promise.race([
+      const response = (await Promise.race([
         browser.tabs.sendMessage(tabId, { type: PageExtractMessageType.REQUEST, groups }),
         timeout(EXTRACTION_TIMEOUT_MS),
-      ]);
-      return response as Partial<PageMeta> | undefined;
+      ])) as Partial<PageMeta> | undefined;
+      return response;
     } catch (err) {
       debugLog('[page-extras] extraction failed, falling back to base meta', err);
       return undefined;

@@ -9,7 +9,7 @@ export function useBookmarkRules() {
 
   useEffect(() => {
     let cancelled = false;
-    bookmarkRuleRepository
+    void bookmarkRuleRepository
       .getAll()
       .then((rules) => {
         if (!cancelled) setItems(rules);

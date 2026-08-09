@@ -14,31 +14,31 @@ export function VariablesSection() {
 
   const saveDraft = (draft: VariableGroupDraft) => save(toPageMatchGroup(draft));
 
-  const addGroup = () => saveDraft({ id: crypto.randomUUID(), name: '', fields: [] });
+  const addGroup = () => void saveDraft({ id: crypto.randomUUID(), name: '', fields: [] });
 
   const renameGroup = (id: string, name: string) => {
     const group = groups.find((g) => g.id === id);
-    if (group) saveDraft({ ...group, name });
+    if (group) void saveDraft({ ...group, name });
   };
 
   const addField = (id: string) => {
     const group = groups.find((g) => g.id === id);
     if (group) {
       const field: VariableFieldDraft = { k: '', v: '', selectorType: DEFAULT_SELECTOR_TYPE };
-      saveDraft({ ...group, fields: [...group.fields, field] });
+      void saveDraft({ ...group, fields: [...group.fields, field] });
     }
   };
 
   const updateField = (id: string, index: number, patch: Partial<VariableFieldDraft>) => {
     const group = groups.find((g) => g.id === id);
     if (group) {
-      saveDraft({ ...group, fields: group.fields.map((f, i) => (i === index ? { ...f, ...patch } : f)) });
+      void saveDraft({ ...group, fields: group.fields.map((f, i) => (i === index ? { ...f, ...patch } : f)) });
     }
   };
 
   const removeField = (id: string, index: number) => {
     const group = groups.find((g) => g.id === id);
-    if (group) saveDraft({ ...group, fields: group.fields.filter((_, i) => i !== index) });
+    if (group) void saveDraft({ ...group, fields: group.fields.filter((_, i) => i !== index) });
   };
 
   return (
@@ -63,7 +63,7 @@ export function VariablesSection() {
             onFieldSelectorTypeChange={(index, selectorType) => updateField(g.id, index, { selectorType })}
             onAddField={() => addField(g.id)}
             onRemoveField={(index) => removeField(g.id, index)}
-            onRemove={() => remove(g.id)}
+            onRemove={() => void remove(g.id)}
           />
         ))}
       </div>

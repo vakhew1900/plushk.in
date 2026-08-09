@@ -30,7 +30,13 @@ function AppShell() {
         <OptionsSidebar tab={tab} onTabChange={setTab} ruleCount={rules.items.length} />
         <div className={styles.content}>
           {tab === "main" && <MainTab />}
-          {tab === "rules" && <RulesTab rules={rules.items} onSave={rules.save} onRemove={rules.remove} />}
+          {tab === "rules" && (
+            <RulesTab
+              rules={rules.items}
+              onSave={(rule) => void rules.save(rule)}
+              onRemove={(id) => void rules.remove(id)}
+            />
+          )}
           {tab === "search" && <SearchTab />}
           {tab === "aliases" && <AliasesTab />}
         </div>

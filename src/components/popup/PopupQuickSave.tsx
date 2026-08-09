@@ -4,7 +4,7 @@ import { FolderPicker } from '@/components/bookmark/folder-tree/FolderPicker';
 import { useQuickSave } from '@/hooks/useQuickSave';
 import { useTranslation } from '@/hooks/useTranslation';
 import { QuickSaveView, getQuickSaveView } from '@/lib/quick-save-view';
-import { Mode } from '@/types/mode';
+import type { Mode } from '@/types/mode';
 import styles from './PopupQuickSave.module.css';
 
 interface Props {
@@ -63,7 +63,7 @@ export function PopupQuickSave({ mode }: Props) {
         {view === QuickSaveView.SAVED && <SavedView />}
         {view === QuickSaveView.OFF && <OffView />}
         {view === QuickSaveView.SAVE && (
-          <FolderPicker path={path} onPathChange={handlePathChange} onSave={save} />
+          <FolderPicker path={path} onPathChange={handlePathChange} onSave={(value) => { void save(value); }} />
         )}
       </div>
     </div>

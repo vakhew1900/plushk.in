@@ -8,7 +8,7 @@ export function useDefaultFolder() {
 
   useEffect(() => {
     let cancelled = false;
-    defaultFolderSettingsRepository
+    void defaultFolderSettingsRepository
       .get()
       .then((value) => {
         if (!cancelled) setDefaultFolderState(value);

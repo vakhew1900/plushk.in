@@ -8,7 +8,7 @@ export function useFolderTree() {
 
   useEffect(() => {
     let cancelled = false;
-    bookmarkRepository.getFolderTree().then((result) => {
+    void bookmarkRepository.getFolderTree().then((result) => {
       if (!cancelled) setTree(result);
     });
     return () => {

@@ -23,7 +23,7 @@ function AppShell() {
 
   return (
     <div data-theme={resolvedTheme} className={styles.root}>
-      <PopupHeader mode={mode} onModeChange={setMode} screen={screen} onToggleScreen={toggleScreen} />
+      <PopupHeader mode={mode} onModeChange={(value) => { void setMode(value); }} screen={screen} onToggleScreen={toggleScreen} />
 
       {screen === PopupScreen.QUICK_SAVE ? <PopupQuickSave mode={mode} /> : <PopupSearch />}
 

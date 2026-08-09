@@ -164,6 +164,18 @@ export default tseslint.config(
 
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+
+      // `async` marks a method as part of an async contract (e.g. an
+      // interface implementation), not just "has an await today" — don't
+      // force it off just because there's currently nothing to await inside.
+      '@typescript-eslint/require-await': 'off',
+
+      // Passing a Promise-returning handler to a JSX prop (onClick, onSave...)
+      // is our normal fire-and-forget UI pattern, not a bug — don't force a
+      // `void` wrapper there. Still flags it everywhere else (plain
+      // arguments, variables, class properties), where a missed `await` is
+      // more likely to be an actual mistake.
+      '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: { attributes: false } }],
     },
   },
   {
@@ -184,9 +196,6 @@ export default tseslint.config(
     files: ['**/__tests__/**/*.ts', '**/*.test.ts'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
-      // Mock implementations of async interface methods routinely have no
-      // `await` in their body — that's the point of a mock.
-      '@typescript-eslint/require-await': 'off',
       // JSON.parse/deep-clone helpers and loosely-typed assertion args are
       // routine in tests; the `any` boundary is intentional there.
       '@typescript-eslint/no-unsafe-assignment': 'off',

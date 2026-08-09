@@ -19,7 +19,7 @@ export function PopupSearch() {
   const emptyMessage = query.trim() ? t('searchTab.noResults') : t('searchTab.noBookmarks');
 
   const openBookmark = (entry: BookmarkSearchEntry) => {
-    browser.tabs.create({ url: entry.url });
+    void browser.tabs.create({ url: entry.url });
   };
 
   return (

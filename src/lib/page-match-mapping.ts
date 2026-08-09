@@ -17,7 +17,7 @@ export function toPageMatchGroup(draft: VariableGroupDraft): PageMatchGroup {
   const pageMatches = new Map<string, PageMatch>();
   draft.fields.forEach((f, i) => {
     const key = f.k || `__field_${i}`;
-    const selector = { type: f.selectorType, value: f.v } as PageSelector;
+    const selector: PageSelector = { type: f.selectorType, value: f.v };
     pageMatches.set(key, { name: f.k, selector });
   });
   return { id: draft.id, alias_name: draft.name, pageMatches };

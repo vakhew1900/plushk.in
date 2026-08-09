@@ -78,6 +78,25 @@
   white-space: nowrap;
 }
 
+.pending .folderIcon,
+.pending .label {
+  color: var(--faint);
+  font-style: italic;
+}
+
+.pending.selected .folderIcon,
+.pending.selected .label {
+  color: var(--accent);
+}
+
+.pendingTag {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  color: var(--faint);
+  margin-left: auto;
+  padding-left: 6px;
+}
+
 .childrenContainer {
   padding-left: 14px;
   border-left: 1px dashed var(--border);

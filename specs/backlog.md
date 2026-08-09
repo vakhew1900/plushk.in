@@ -88,6 +88,7 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 - Статичные (не по-настоящему динамичные) `style={{...}}` вместо классов CSS Modules: `PopupFooter.tsx:15`, `RulesTab.tsx:63`, `RuleEditor.tsx:77`, `ConsView.tsx:29-33`, `AliasesSection.tsx:40`, `ConditionGroup.tsx:34`, `ModeCard.tsx:32`, `VariableBlock.tsx:71`, `VariablesSection.tsx:48`. (`PopupPageCard.tsx:28` already fixed — resolved incidentally while extracting `BookmarkFolderPath`/`BookmarkFavicon` for `SEARCH-1`.)
 - `src/entrypoints/content.ts:4` — забытый `console.log('Hello content.')`, не через `debugLog`.
 - Таблица storage в `CLAUDE.md` документирует только Dexie/IndexedDB, но `ModeSettingsRepository`/`PendingHintRepository` реально используют `wxt/utils/storage` (chrome.storage) — стоит дополнить документацию упоминанием обоих механизмов хранения.
+- `key={i}` (индекс массива вместо стабильного id) в `ConditionGroup.tsx:32` (`conds.map`) и `ConsView.tsx:25` (`groups.map`) — пока безобидно, т.к. add/remove в этих списках ещё не подключены к `RuleEditor` (`RULE-1`), но как только появятся реальные обработчики, удаление строки из середины будет путать identity соседних строк у React (фокус/локальный стейт полей). Поправить на стабильный id, когда `RULE-1` дойдёт до реализации.
 
 ### ARCH-5 — Недостающие юнит-тесты для мелких модулей
 **Priority:** Low
@@ -179,5 +180,39 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 **Priority:** Low
 **Added:** 2026-07-24
 
-Сейчас Vitest настроен с `environment: 'node'` (без jsdom/`@testing-library/react`) — тестируются только классы/функции сервисов, репозиториев и `lib/` (см. `ARCH-5`), компоненты и хуки не рендерятся и не тестируются вовсе, это осознанное ограничение (CLAUDE.md: «React components are not tested»). E2e — отдельный уровень: Playwright, управляющий распакованным MV3-расширением в реальном браузере, проверяющий сквозные сценарии через настоящий `chrome.bookmarks` (авто-сортировка при создании закладки, пауза обработки во время `bookmarks.onImportBegan`) — то, что моки `vitest-chrome` не могут подтвердить, так как не гоняют реальный браузер. На момент постановки не нужно для MVP: заведено как задача-идея на будущее, без конкретного плана внедрения (выбор раннера/CI, какие сценарии покрывать в первую очередь — не решено).
+Сейчас Vitest настроен с `environment: 'node'` (без jsdom/`@testing-library/react`) — тестируются только классы/функции сервисов, репозиториев и `lib/` (см. `ARCH-5`), компоненты и хуки не рендерятся и не тестируются вовсе, это осознанное ограничение (CLAUDE.md: «React components are not tested»). E2e — отдельный уровень: Playwright, управляющий распакованным MV3-расширением в реальном браузере, проверяющий сквозные сценарии через настоящий `chrome.bookmarks` (авто-сортировка при создании закладки — *до `UI-4`, см. ARCH-12/специфику ниже, сейчас автосортировки нативных закладок нет вовсе*) — то, что моки `vitest-chrome` не могут подтвердить, так как не гоняют реальный браузер. На момент постановки не нужно для MVP: заведено как задача-идея на будущее, без конкретного плана внедрения (выбор раннера/CI, какие сценарии покрывать в первую очередь — не решено).
+
+### ARCH-12 — Инвалидация локального стейта хуков при внешней записи в репозиторий (subscribe/notify)
+
+**Priority:** Medium
+**Added:** 2026-08-09
+
+Обнаружено пользователем: `useBookmarkRules`/`useDomainAliases` (и, вероятно, хук вкладки «Переменные» над `pageMatchGroupRepository`) тянут данные один раз при маунте в локальный `useState` и обновляют его только через свои же `save`/`remove` — а `SettingsExportImportService.importSettings()` пишет в те же репозитории напрямую (`bookmarkRuleRepository.save()`/`domainAliasRepository.save()`/`pageMatchGroupRepository.save()` в цикле), минуя эти хуки. В результате после импорта настроек вкладки «Правила»/«Алиасы»/«Переменные» показывают устаревший список до ручного обновления страницы.
+
+**Рассмотренная и отклонённая альтернатива**: `dexie-react-hooks`/`useLiveQuery` — просто и мало кода, но протаскивает знание о Dexie из репозитория в хуки/компоненты, нарушая правило CLAUDE.md «repository layer is the only place that knows Dexie exists» и жёстко привязывая к Dexie на случай будущей смены хранилища (например, облачный бэкенд на Postgres) — эту привязку явно назвал нежелательной пользователь при обсуждении.
+
+**Предложенное направление** (обсуждено с пользователем, не финализировано): прослойка на уровне контракта репозитория, а не Dexie — добавить в `IBookmarkRuleRepository`/`IDomainAliasRepository`/`IPageMatchGroupRepository` метод `subscribe(listener: () => void): () => void`; реализация — небольшой переиспользуемый `ChangeNotifier` (`src/lib/`, Set слушателей), которым композицией владеет каждый репозиторий; `save()`/`remove()` вызывают `notify()` после успешной записи. Хуки подписываются на `repository.subscribe(refetch)` в `useEffect`. Любая будущая реализация репозитория (не только Dexie) обязана вызывать тот же `notify()` в своих `save`/`remove` — контракт не завязан на конкретное хранилище.
+
+На момент постановки не решено: 1) нужно ли схлопывать множественные `notify()` за один цикл импорта (сейчас каждый `save()` в цикле дёрнет всех подписчиков по отдельности — корректно, но, возможно, расточительно для больших импортов); 2) нужен ли тот же механизм для `ModeSettingsRepository`/`DefaultFolderSettingsRepository` (сейчас не подтверждённая пользователем проблема — они не пишутся извне из `SettingsExportImportService`, так что бага именно с ними не наблюдалось); 3) стоит ли объединить эту работу с `ARCH-7` (generic `DexieRepository<T,K>` базовый класс) — `ChangeNotifier`-композиция могла бы жить прямо в этом общем базовом классе вместо дублирования в трёх репозиториях по отдельности; 4) более радикальная альтернатива — полноценный шаред data-layer/стейт-менеджер (см. `ARCH-1`) вместо точечного subscribe/notify — не выбрана как избыточная для текущего объёма данных, но стоит пересмотреть, если подобных случаев рассинхронизации станет больше.
+
+### ARCH-13 — FolderTree захардкожен на Chrome-id корневых папок, игнорирует Firefox
+
+**Priority:** Medium
+**Added:** 2026-08-09
+
+`DEFAULT_EXPANDED_IDS = ['1', '2', '3']` в `src/components/bookmark/folder-tree/FolderTree.tsx:12` — литеральные Chrome-id корневых контейнеров (Toolbar/Other/Mobile), используемые для авторазворачивания дерева при первом рендере. Проект уже решает именно эту проблему кросс-браузерности через `BookmarkRootId` (`src/lib/browser-constants/bookmarkRoots.ts`, отдельные `CHROME`/`FIREFOX` группы) — `BookmarkRepository.ts` (`resolveToolbarId`) использует константу для обоих браузеров, а `FolderTree.tsx` — нет. На Firefox (`firefox-mv2`) реальные id корней — `toolbar_____`/`unfiled_____`/`mobile______` и т.п., ни один не совпадает с `'1'/'2'/'3'`, поэтому дерево при первом открытии остаётся полностью свёрнутым — комментарий в коде («Root containers... start expanded regardless of selection») не выполняется. Обнаружено при архитектурном аудите по запросу пользователя. Исправление: заменить литералы на `Object.values(BookmarkRootId.CHROME).concat(Object.values(BookmarkRootId.FIREFOX))` (или аналог) — та же логика best-effort, что уже применена в `resolveToolbarId`.
+
+### ARCH-14 — useBookmarkRules не пересортировывает список по priority после локального save()
+
+**Priority:** Medium
+**Added:** 2026-08-09
+
+`useBookmarkRules.save()` (`src/hooks/useBookmarkRules.ts:25`) обновляет локальный `items` на месте (`prev.map(...)`) или добавляет в конец (`[...prev, rule]`), не пересортировывая по `priority` — хотя `BookmarkRuleRepository.getAll()` отдаёт список строго отсортированным (`orderBy('priority').reverse()`), и именно на этот порядок опирается и вычисление правил (`findMatchingRule`), и отображаемый в `RuleListItem`/`RulesTab` номер строки как ранг приоритета. Если пользователь меняет `priority` существующего правила в `RuleEditor` и жмёт «Сохранить», список в UI остаётся в прежнем порядке с прежними номерами до перезагрузки страницы настроек — вводит в заблуждение относительно реального порядка вычисления правил. Обнаружено при архитектурном аудите по запросу пользователя; смежно с `ARCH-12` (там — рассинхронизация стейта хука с записями *извне*, через импорт; здесь — тот же хук расходится с репозиторием даже через собственный `save()`). Простейшее исправление: пересортировывать `items` по `priority` (descending) после `save()`, либо переиспользовать общий `ChangeNotifier`/`subscribe`-механизм из `ARCH-12`, если/когда он появится, вместо точечного патча стейта.
+
+### ARCH-15 — Непроверенный `as`-каст ответа content-script в PageExtrasService
+
+**Priority:** Low
+**Added:** 2026-08-09
+
+`PageExtrasService.extract()` (`src/services/PageExtrasService.ts:25`) делает `return response as Partial<PageMeta> | undefined;`, где `response` — результат `browser.tabs.sendMessage()`, то есть данные с границы (content script), без runtime type guard. По духу это то же самое, что запрещённый CLAUDE.md `any` («`any` is forbidden. Use `unknown` + type guard for uncertain types») — просто протащенное через `as`, а не через явный тип `any`. Битый/неожиданный ответ от `content.ts` (баг, рассинхрон версий, чужое сообщение по тому же каналу) молча перезапишет часть `PageMeta` в `useQuickSave.ts` (`{...baseMeta, ...overlay}`) вместо явной ошибки на границе. Обнаружено при архитектурном аудите по запросу пользователя. Исправление: типизировать ответ как `unknown` и добавить небольшой type guard (в духе `isRuleNode`/`isSettingsExport` из `src/lib/settings-export-mapping.ts`) — при этом стоит учитывать и `ARCH-9` (замена ручных type guard'ов на zod), если та задача будет реализована раньше.
 

@@ -9,7 +9,7 @@ export function useDomainAliases() {
 
   useEffect(() => {
     let cancelled = false;
-    domainAliasRepository
+    void domainAliasRepository
       .getAll()
       .then((aliases) => {
         if (!cancelled) setItems(aliases);

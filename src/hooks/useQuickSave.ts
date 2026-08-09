@@ -20,7 +20,7 @@ export function useQuickSave(mode: Mode) {
   useEffect(() => {
     let cancelled = false;
 
-    browser.tabs.query({ active: true, currentWindow: true }).then(async ([activeTab]) => {
+    void browser.tabs.query({ active: true, currentWindow: true }).then(async ([activeTab]) => {
       if (cancelled || !activeTab?.url) return;
 
       const baseMeta = await pageMetaFiller.fillPageMeta({ url: activeTab.url, title: activeTab.title ?? '' });

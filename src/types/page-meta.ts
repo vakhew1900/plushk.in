@@ -37,6 +37,7 @@ export function getMetaField(
   if (field === PageMetaField.EXTRAS) return undefined;
 
   if (field in meta) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- kept for clarity: documents that `field` is a non-extras PageMeta key
     return meta[field as keyof Omit<PageMeta, typeof PageMetaField.EXTRAS>] as
       | string
       | string[]

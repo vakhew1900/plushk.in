@@ -9,28 +9,28 @@ export function AliasesSection() {
   const { translate: t } = useTranslation();
   const { items: aliases, save, remove } = useDomainAliases();
 
-  const addAlias = () => save({ id: crypto.randomUUID(), name: '', domain_names: [] });
+  const addAlias = () => void save({ id: crypto.randomUUID(), name: '', domain_names: [] });
 
   const renameAlias = (id: string, name: string) => {
     const alias = aliases.find((a) => a.id === id);
-    if (alias) save({ ...alias, name });
+    if (alias) void save({ ...alias, name });
   };
 
   const addDomain = (id: string) => {
     const alias = aliases.find((a) => a.id === id);
-    if (alias) save({ ...alias, domain_names: [...alias.domain_names, ''] });
+    if (alias) void save({ ...alias, domain_names: [...alias.domain_names, ''] });
   };
 
   const updateDomain = (id: string, index: number, domain: string) => {
     const alias = aliases.find((a) => a.id === id);
     if (alias) {
-      save({ ...alias, domain_names: alias.domain_names.map((d, i) => (i === index ? domain : d)) });
+      void save({ ...alias, domain_names: alias.domain_names.map((d, i) => (i === index ? domain : d)) });
     }
   };
 
   const removeDomain = (id: string, index: number) => {
     const alias = aliases.find((a) => a.id === id);
-    if (alias) save({ ...alias, domain_names: alias.domain_names.filter((_, i) => i !== index) });
+    if (alias) void save({ ...alias, domain_names: alias.domain_names.filter((_, i) => i !== index) });
   };
 
   return (
@@ -53,7 +53,7 @@ export function AliasesSection() {
             onDomainChange={(index, domain) => updateDomain(a.id, index, domain)}
             onAddDomain={() => addDomain(a.id)}
             onRemoveDomain={(index) => removeDomain(a.id, index)}
-            onRemove={() => remove(a.id)}
+            onRemove={() => void remove(a.id)}
           />
         ))}
       </div>
