@@ -1,21 +1,14 @@
 import { db } from '../db/index';
-import type { BookmarkRule } from '../types/rule';
+import { BookmarkRuleField, type BookmarkRule } from '../types/rule';
+import { DexieRepository } from './DexieRepository';
 import type { IBookmarkRuleRepository } from './interfaces/IBookmarkRuleRepository';
 
-export class BookmarkRuleRepository implements IBookmarkRuleRepository {
-  async getAll(): Promise<BookmarkRule[]> {
-    return db.rules.orderBy('priority').reverse().toArray();
+export class BookmarkRuleRepository extends DexieRepository<BookmarkRule, string> implements IBookmarkRuleRepository {
+  constructor() {
+    super(db.rules);
   }
 
-  async getById(id: string): Promise<BookmarkRule | undefined> {
-    return db.rules.get(id);
-  }
-
-  async save(rule: BookmarkRule): Promise<void> {
-    await db.rules.put(rule);
-  }
-
-  async remove(id: string): Promise<void> {
-    await db.rules.delete(id);
+  protected override queryAll(): Promise<BookmarkRule[]> {
+    return this.table.orderBy(BookmarkRuleField.PRIORITY).reverse().toArray();
   }
 }

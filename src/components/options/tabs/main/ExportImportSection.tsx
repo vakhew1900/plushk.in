@@ -9,7 +9,7 @@ import styles from './ExportImportSection.module.css';
 
 export function ExportImportSection() {
   const { translate: t } = useTranslation();
-  const { exportSettings, importSettings, error } = useSettingsExportImport();
+  const { exportSettings, importSettings } = useSettingsExportImport();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
@@ -39,7 +39,6 @@ export function ExportImportSection() {
           onChange={handleFileChange}
         />
       </div>
-      {error && <p className={styles.error}>{t(`exportSection.${error}Error`)}</p>}
     </section>
   );
 }

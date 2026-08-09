@@ -4,5 +4,3 @@
 .sectionDesc { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
 
 .exportRow { display: flex; gap: 10px; }
-
-.error { font-size: 12.5px; color: var(--red); margin-top: 8px; }

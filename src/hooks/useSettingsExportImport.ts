@@ -1,38 +1,36 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useServices } from '@/hooks/useServices';
-
-export const SettingsExportImportError = {
-  EXPORT: 'export',
-  IMPORT: 'import',
-} as const;
-export type SettingsExportImportError = typeof SettingsExportImportError[keyof typeof SettingsExportImportError];
+import { useToast } from '@/hooks/useToast';
+import { useTranslation } from '@/hooks/useTranslation';
+import { ToastVariant } from '@/types/toast';
 
 export function useSettingsExportImport() {
   const { settingsExportImportService } = useServices();
-  const [error, setError] = useState<SettingsExportImportError | undefined>(undefined);
+  const { show } = useToast();
+  const { translate: t } = useTranslation();
 
   const exportSettings = useCallback(async () => {
-    setError(undefined);
     try {
       await settingsExportImportService.exportSettings();
+      show({ variant: ToastVariant.SUCCESS, title: t('exportSection.exportSuccessTitle'), description: t('exportSection.exportSuccessDesc') });
     } catch {
-      setError(SettingsExportImportError.EXPORT);
+      show({ variant: ToastVariant.ERROR, title: t('exportSection.exportErrorTitle'), description: t('exportSection.exportError') });
     }
-  }, [settingsExportImportService]);
+  }, [settingsExportImportService, show, t]);
 
   const importSettings = useCallback(
     async (file: File) => {
-      setError(undefined);
       try {
         const text = await file.text();
         const data: unknown = JSON.parse(text);
         await settingsExportImportService.importSettings(data);
+        show({ variant: ToastVariant.SUCCESS, title: t('exportSection.importSuccessTitle'), description: t('exportSection.importSuccessDesc') });
       } catch {
-        setError(SettingsExportImportError.IMPORT);
+        show({ variant: ToastVariant.ERROR, title: t('exportSection.importErrorTitle'), description: t('exportSection.importError') });
       }
     },
-    [settingsExportImportService],
+    [settingsExportImportService, show, t],
   );
 
-  return { exportSettings, importSettings, error };
+  return { exportSettings, importSettings };
 }

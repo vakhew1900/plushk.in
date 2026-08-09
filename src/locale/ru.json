@@ -93,7 +93,13 @@
     "exportButton": "Экспорт .json",
     "importButton": "Импорт",
     "exportError": "Не удалось сохранить файл экспорта.",
-    "importError": "Не удалось импортировать файл — проверьте формат."
+    "importError": "Не удалось импортировать файл — проверьте формат.",
+    "exportSuccessTitle": "Экспорт завершён",
+    "exportSuccessDesc": "Настройки сохранены в .json файл.",
+    "exportErrorTitle": "Экспорт не выполнен",
+    "importSuccessTitle": "Импорт завершён",
+    "importSuccessDesc": "Правила, алиасы и переменные обновлены.",
+    "importErrorTitle": "Импорт не выполнен"
   },
   "defaultFolderSection": {
     "title": "Папка по умолчанию",

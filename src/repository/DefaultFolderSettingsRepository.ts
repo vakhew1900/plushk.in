@@ -1,15 +1,13 @@
 import { storage } from 'wxt/utils/storage';
 import { StorageKey } from '../lib/storage-keys';
+import { StorageItemRepository } from './StorageItemRepository';
 import type { IDefaultFolderSettingsRepository } from './interfaces/IDefaultFolderSettingsRepository';
 
-const defaultFolderItem = storage.defineItem<string>(StorageKey.DEFAULT_FOLDER, { fallback: '' });
-
-export class DefaultFolderSettingsRepository implements IDefaultFolderSettingsRepository {
-  get(): Promise<string> {
-    return defaultFolderItem.getValue();
-  }
-
-  set(path: string): Promise<void> {
-    return defaultFolderItem.setValue(path);
+export class DefaultFolderSettingsRepository
+  extends StorageItemRepository<string>
+  implements IDefaultFolderSettingsRepository
+{
+  constructor() {
+    super(storage.defineItem<string>(StorageKey.DEFAULT_FOLDER, { fallback: '' }));
   }
 }

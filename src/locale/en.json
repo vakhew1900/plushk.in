@@ -93,7 +93,13 @@
     "exportButton": "Export .json",
     "importButton": "Import",
     "exportError": "Couldn't save the export file.",
-    "importError": "Couldn't import the file — check its format."
+    "importError": "Couldn't import the file — check its format.",
+    "exportSuccessTitle": "Export complete",
+    "exportSuccessDesc": "Settings saved to a .json file.",
+    "exportErrorTitle": "Export failed",
+    "importSuccessTitle": "Import complete",
+    "importSuccessDesc": "Rules, aliases, and variables were updated.",
+    "importErrorTitle": "Import failed"
   },
   "defaultFolderSection": {
     "title": "Default folder",

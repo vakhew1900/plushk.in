@@ -34,10 +34,3 @@
 }
 .navBtn:hover { background: var(--hover); color: var(--text); }
 .navBtn.active { background: var(--accent-soft); color: var(--text); }
-
-.count {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--faint);
-  font-family: 'JetBrains Mono', monospace;
-}

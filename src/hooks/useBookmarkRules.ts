@@ -27,7 +27,8 @@ export function useBookmarkRules() {
       await bookmarkRuleRepository.save(rule);
       setItems((prev) => {
         const exists = prev.some((r) => r.id === rule.id);
-        return exists ? prev.map((r) => (r.id === rule.id ? rule : r)) : [...prev, rule];
+        const next = exists ? prev.map((r) => (r.id === rule.id ? rule : r)) : [...prev, rule];
+        return next.sort((a, b) => b.priority - a.priority);
       });
     },
     [bookmarkRuleRepository],

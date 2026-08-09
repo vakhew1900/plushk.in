@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { IconPlus } from "@/components/icons";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useBookmarkRules } from "@/hooks/useBookmarkRules";
 import { TabHeader } from "@/components/options/TabHeader";
 import { RuleListItem } from "./rules/rule/RuleListItem";
 import { RuleEditor } from "./rules/rule/RuleEditor";
@@ -9,13 +10,8 @@ import { RuleType } from "@/types/rule";
 import type { BookmarkRule } from "@/types/rule";
 import styles from "./RulesTab.module.css";
 
-interface Props {
-  rules: BookmarkRule[];
-  onSave: (rule: BookmarkRule) => void;
-  onRemove: (id: string) => void;
-}
-
-export function RulesTab({ rules, onSave, onRemove }: Props) {
+export function RulesTab() {
+  const { items: rules, save: onSave, remove: onRemove } = useBookmarkRules();
   const [selectedId, setSelectedId] = useState<string | null>(rules[0]?.id ?? null);
   const { translate: t } = useTranslation();
 
@@ -35,7 +31,7 @@ export function RulesTab({ rules, onSave, onRemove }: Props) {
       priority: 0,
       enabled: true,
     };
-    onSave(rule);
+    void onSave(rule);
     setSelectedId(rule.id);
   };
 

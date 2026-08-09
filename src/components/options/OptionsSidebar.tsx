@@ -8,7 +8,6 @@ export type Tab = 'main' | 'rules' | 'search' | 'aliases';
 interface Props {
   tab: Tab;
   onTabChange: (t: Tab) => void;
-  ruleCount: number;
 }
 
 function NavBtn({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
@@ -19,7 +18,7 @@ function NavBtn({ active, onClick, children }: { active: boolean; onClick: () =>
   );
 }
 
-export function OptionsSidebar({ tab, onTabChange, ruleCount }: Props) {
+export function OptionsSidebar({ tab, onTabChange }: Props) {
   const { translate: t } = useTranslation();
   return (
     <div className={styles.sidebar}>
@@ -33,7 +32,6 @@ export function OptionsSidebar({ tab, onTabChange, ruleCount }: Props) {
       <NavBtn active={tab === 'rules'} onClick={() => onTabChange('rules')}>
         <IconNetwork size={16} />
         {t('nav.rules')}
-        <span className={styles.count}>{ruleCount}</span>
       </NavBtn>
 
       <NavBtn active={tab === 'search'} onClick={() => onTabChange('search')}>
