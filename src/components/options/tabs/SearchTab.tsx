@@ -35,6 +35,7 @@ export function SearchTab() {
           emptyMessage={emptyMessage}
           renderEntry={(entry) => (
             <BookmarkCard
+              id={entry.id}
               title={entry.title}
               url={entry.url}
               folderPath={entry.folderPath}

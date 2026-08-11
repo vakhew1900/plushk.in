@@ -86,3 +86,17 @@ Tasks currently in progress. Moved here from `backlog.md` when work starts.
 
 Каскадная очистка `BookmarkEntityLink` при удалении закладки браузером (`bookmarks.onRemoved`) — намеренно вынесена в отдельную `BG-1` (`backlog.md`), т.к. `background.ts` сейчас пустой и требует отдельного проектирования обработчика.
 
+### SEARCH-4 — Присвоение тегов закладке: значок-редактор на карточке в Search
+**Priority:** Medium
+**Added:** 2026-08-11
+
+Продолжение `SEARCH-3` (хранение тегов уже есть — `Tag`/`ITagRepository`/вкладка «Теги», см. `changelog.md`). Реализовано с сознательным сужением объёма (ограничились только значком-редактором на уже сохранённой закладке, без quick-save popup — это отдельный follow-up, см. ниже) и с отклонением от исходно записанной схемы: вместо составного ключа `bookmarkTags: { bookmarkId, tagId }` выбран **multiEntry-индекс** Dexie — `bookmarkTags: { bookmarkId (PK), tagIds: string[] }`, схема `bookmarkId, *tagIds`. Это ближе всего в Dexie к тому, что в реляционных ORM даёт `@ManyToMany` (аннотаций там нет вообще, Dexie — не ORM): одна строка на закладку с массивом id тегов, `.where('tagIds').equals(tagId)` находит закладки по тегу без второй сущности и совпадает с уже принятым в `SHELF-1` паттерном «одна строка на закладку».
+
+Реализовано: `BookmarkTagLink`/`BookmarkTagLinkField` (`types/`), таблица `bookmarkTags` (`db/index.ts`, version 3), `BookmarkTagLinkRepository`/`IBookmarkTagLinkRepository`, регистрация в `ServicesContext`. Каскад при удалении тега — `TagRepository.remove()` переопределён: в одной транзакции вычищает `tagId` из всех `bookmarkTags.tagIds` (`.where('tagIds').equals(id).modify(...)`), затем удаляет сам тег.
+
+UI, после ревизии: `components/bookmark/tags/` (`BookmarkTagChip` — чистое read-only отображение тега, `BookmarkTagEditor` — владелец состояния/каскада отображения). Присвоенные теги показываются рядом с кнопкой-карандашом (`IconEdit`), справа в своём ряду (`margin-left: auto`); клик открывает **выпадающий чек-лист** (`@radix-ui/react-dropdown-menu`, новая прямая зависимость, `components/ui/dropdown-menu.tsx` — тонкая обёртка по тому же паттерну, что `radio-group.tsx`/`toast.tsx`) — `DropdownMenuCheckboxItem` на каждый тег, отметка сразу добавляет тег в закладку (`onSelect` заблокирован через `preventDefault`, чтобы меню не закрывалось после каждого клика — можно отметить несколько тегов подряд). Клики внутри редактора не всплывают до `onClick` карточки (`stopPropagation` на триггере и на самом `wrap`).
+
+`BookmarkTagEditor` подключён **композицией** в оба варианта карточки — `BookmarkCard` (вкладка «Поиск» в настройках) и `CompactBookmarkCard` (поиск в popup, `PopupSearch.tsx`) — один и тот же компонент-ребёнок, без общего родителя/наследования (в React такого механизма для функциональных компонентов нет — `BookmarkCard`/`CompactBookmarkCard` остаются независимыми компонентами-соседями, переиспользование через `children`/композицию, не через `extends`). Оба варианта карточки получили обязательный проп `id` (у `CompactBookmarkCard` его не было).
+
+**Out of scope этой итерации**: присвоение тега в попапе quick-save при первом сохранении (сейчас только постфактум, через редактор на уже сохранённой закладке); юнит-тесты на `BookmarkTagLinkRepository`/каскад в `TagRepository`.
+

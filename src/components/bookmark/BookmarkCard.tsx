@@ -2,16 +2,18 @@ import { Badge } from '@/components/ui/badge';
 import { IconLink } from '@/components/icons';
 import { BookmarkFavicon } from './BookmarkFavicon';
 import { BookmarkFolderPath } from './BookmarkFolderPath';
+import { BookmarkTagEditor } from './tags/BookmarkTagEditor';
 import styles from './BookmarkCard.module.css';
 
 interface Props {
+  id: string;
   title: string;
   url: string;
   folderPath: string[];
   onClick: () => void;
 }
 
-export function BookmarkCard({ title, url, folderPath, onClick }: Props) {
+export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
   const domain = new URL(url).hostname;
   const lastFolder = folderPath[folderPath.length - 1];
 
@@ -32,6 +34,8 @@ export function BookmarkCard({ title, url, folderPath, onClick }: Props) {
         <IconLink size="sm" className={styles.urlIcon} />
         <span className={styles.url}>{url.replace(/^https?:\/\//, '')}</span>
       </div>
+
+      <BookmarkTagEditor bookmarkId={id} />
     </div>
   );
 }

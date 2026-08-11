@@ -14,3 +14,4 @@ export { IconArrowRight } from './IconArrowRight';
 export { IconSearch }   from './IconSearch';
 export { IconLink }     from './IconLink';
 export { IconTag }      from './IconTag';
+export { IconEdit }     from './IconEdit';

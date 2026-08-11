@@ -7,7 +7,9 @@ import { DomainAliasRepository } from '@/repository/DomainAliasRepository';
 import { ModeSettingsRepository } from '@/repository/ModeSettingsRepository';
 import { PageMatchGroupRepository } from '@/repository/PageMatchGroupRepository';
 import { TagRepository } from '@/repository/TagRepository';
+import { BookmarkTagLinkRepository } from '@/repository/BookmarkTagLinkRepository';
 import type { IBookmarkRepository } from '@/repository/interfaces/IBookmarkRepository';
+import type { IBookmarkTagLinkRepository } from '@/repository/interfaces/IBookmarkTagLinkRepository';
 import type { IBookmarkRuleRepository } from '@/repository/interfaces/IBookmarkRuleRepository';
 import type { IDefaultFolderSettingsRepository } from '@/repository/interfaces/IDefaultFolderSettingsRepository';
 import type { IDomainAliasRepository } from '@/repository/interfaces/IDomainAliasRepository';
@@ -41,6 +43,7 @@ export interface Services {
   settingsExportImportService: ISettingsExportImportService;
   bookmarkSearchService: IBookmarkSearchService;
   tagRepository: ITagRepository;
+  bookmarkTagLinkRepository: IBookmarkTagLinkRepository;
 }
 
 export const ServicesContext = createContext<Services | null>(null);
@@ -78,6 +81,7 @@ export function ServicesProvider({ children }: Props) {
       ),
       bookmarkSearchService: new BookmarkSearchService(bookmarkRepository),
       tagRepository: new TagRepository(),
+      bookmarkTagLinkRepository: new BookmarkTagLinkRepository(),
     };
   }, []);
 
