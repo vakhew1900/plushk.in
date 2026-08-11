@@ -1,6 +1,6 @@
 .section { margin-bottom: 22px; }
 
-.h2 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+.h2 { margin-bottom: 12px; }
 
 .themeGroup {
   display: flex;

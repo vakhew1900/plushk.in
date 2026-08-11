@@ -19,7 +19,7 @@ export function ActivityItem({ letter, color, title, folder, rule, time }: Props
       <span className={styles.info}>
         <span className={styles.title}>{title}</span>
         <span className={styles.folder}>
-          <IconFolder size={11} />
+          <IconFolder size="sm" />
           {folder}
         </span>
       </span>

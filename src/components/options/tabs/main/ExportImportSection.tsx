@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import type { ChangeEvent } from 'react';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/text';
 import { IconDownload, IconUpload } from '@/components/icons';
 import { useSettingsExportImport } from '@/hooks/useSettingsExportImport';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -20,15 +21,15 @@ export function ExportImportSection() {
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.h2}>{t('exportSection.title')}</h2>
-      <p className={styles.sectionDesc}>{t('exportSection.desc')}</p>
+      <Text as="h2" size="subheading" className={styles.h2}>{t('exportSection.title')}</Text>
+      <Text size="body" tone="muted" className={styles.sectionDesc}>{t('exportSection.desc')}</Text>
       <div className={styles.exportRow}>
         <Button variant="outline" onClick={() => void exportSettings()}>
-          <IconDownload size={15} />
+          <IconDownload size="md" />
           {t('exportSection.exportButton')}
         </Button>
         <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-          <IconUpload size={15} />
+          <IconUpload size="md" />
           {t('exportSection.importButton')}
         </Button>
         <input

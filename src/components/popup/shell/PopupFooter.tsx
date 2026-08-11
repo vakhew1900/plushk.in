@@ -13,7 +13,7 @@ export function PopupFooter() {
   return (
     <div className={styles.footer}>
       <Button variant="ghost" size="sm" style={{ color: 'var(--accent)' }} onClick={openSettings}>
-        <IconSliders size={13} />
+        <IconSliders size="md" />
         {t('popup.settingsButton')}
       </Button>
     </div>

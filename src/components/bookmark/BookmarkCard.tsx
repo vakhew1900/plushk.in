@@ -29,7 +29,7 @@ export function BookmarkCard({ title, url, folderPath, onClick }: Props) {
       <BookmarkFolderPath segments={folderPath} />
 
       <div className={styles.urlRow}>
-        <IconLink size={12} className={styles.urlIcon} />
+        <IconLink size="sm" className={styles.urlIcon} />
         <span className={styles.url}>{url.replace(/^https?:\/\//, '')}</span>
       </div>
     </div>

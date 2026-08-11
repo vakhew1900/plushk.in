@@ -1,7 +1,7 @@
 .root { flex-shrink: 0; }
 
 .item {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
 }
 
 .and[data-state="checked"] { color: var(--blue); }

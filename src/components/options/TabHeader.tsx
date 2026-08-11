@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import styles from './TabHeader.module.css';
 
 interface Props {
@@ -8,8 +9,8 @@ interface Props {
 export function TabHeader({ title, lead }: Props) {
   return (
     <div className={styles.wrap}>
-      <h1 className={styles.h1}>{title}</h1>
-      <p className={styles.lead}>{lead}</p>
+      <Text as="h1" size="heading" className={styles.h1}>{title}</Text>
+      <Text size="body" tone="muted">{lead}</Text>
     </div>
   );
 }

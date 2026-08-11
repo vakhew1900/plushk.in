@@ -11,7 +11,7 @@ interface Props {
 export function SearchBar({ value, onChange, placeholder }: Props) {
   return (
     <div className={styles.wrap}>
-      <IconSearch size={16} className={styles.icon} />
+      <IconSearch size="md" className={styles.icon} />
       <Input
         className={styles.input}
         value={value}

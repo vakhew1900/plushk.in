@@ -1,4 +1,5 @@
 import { Input } from '@/components/ui/input';
+import { IconX } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { TagColor } from '@/types/tag';
 import { TagColorPicker } from './TagColorPicker';
@@ -24,7 +25,7 @@ export function TagRow({ name, color, onNameChange, onColorChange, onRemove }: P
         placeholder={t('tagsSection.namePlaceholder')}
         className={styles.nameInput}
       />
-      <button onClick={onRemove} className={styles.removeRow}>×</button>
+      <button onClick={onRemove} className={styles.removeRow}><IconX size="sm" /></button>
     </div>
   );
 }

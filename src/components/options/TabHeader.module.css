@@ -1,4 +1,3 @@
 .wrap { margin-bottom: 22px; }
 
-.h1   { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-.lead { font-size: 13.5px; color: var(--muted); }
+.h1 { margin-bottom: 4px; }

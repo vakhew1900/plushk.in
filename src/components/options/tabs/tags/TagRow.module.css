@@ -7,14 +7,15 @@
 .row:not(:last-child) { border-bottom: 1px solid var(--border); }
 
 .nameInput {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   flex: 1;
 }
 
 .removeRow {
-  font-size: 0.95rem;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--faint);
   transition: color 0.15s;
   flex-shrink: 0;

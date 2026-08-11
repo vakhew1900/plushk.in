@@ -47,9 +47,9 @@ function FolderTreeNode({ node, selectedPath, expandedIds, onToggle, onSelect }:
           })}
           onClick={handleToggle}
         >
-          <IconArrowRight size={10} />
+          <IconArrowRight size="sm" />
         </span>
-        <IconFolder size={14} className={styles.folderIcon} />
+        <IconFolder size="md" className={styles.folderIcon} />
         <span className={styles.label}>{node.title}</span>
         {node.pending && <span className={styles.pendingTag}>{t('common.folderWillBeCreated')}</span>}
       </div>

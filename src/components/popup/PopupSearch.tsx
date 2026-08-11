@@ -26,7 +26,7 @@ export function PopupSearch() {
     <div className={styles.wrap}>
       <div className={styles.header}>
         <div className={styles.icon}>
-          <IconSearch size={17} />
+          <IconSearch size="md" />
         </div>
         <div className={styles.title}>{t('nav.search')}</div>
       </div>

@@ -26,7 +26,7 @@
   border-radius: 6px;
   background: var(--bg3);
   color: var(--muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   flex-shrink: 0;
@@ -43,8 +43,9 @@
 }
 
 .removeBtn {
-  font-size: 15px;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--faint);
   transition: color 0.15s;
   flex-shrink: 0;

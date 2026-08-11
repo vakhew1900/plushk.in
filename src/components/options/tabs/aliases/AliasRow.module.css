@@ -7,7 +7,7 @@
 .row:not(:last-child) { border-bottom: 1px solid var(--border); }
 
 .nameInput {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 12.5px;
   width: 120px;
   flex-shrink: 0;
@@ -26,7 +26,7 @@
 }
 
 .domainInput {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   width: 108px;
   border: none;
@@ -35,16 +35,15 @@
 }
 
 .removeChip {
-  font-size: 13px;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--faint);
   transition: color 0.15s;
 }
 .removeChip:hover { color: var(--red); }
 
 .addChip {
-  font-size: 13px;
-  line-height: 1;
   color: var(--muted);
   border: 1px dashed var(--border);
   border-radius: 6px;
@@ -60,8 +59,9 @@
 
 .removeRow {
   margin-left: auto;
-  font-size: 15px;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--faint);
   transition: color 0.15s;
   flex-shrink: 0;

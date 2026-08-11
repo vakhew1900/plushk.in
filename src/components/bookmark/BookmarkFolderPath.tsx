@@ -11,7 +11,7 @@ export function BookmarkFolderPath({ segments }: Props) {
 
   return (
     <div className={styles.path}>
-      <IconFolder size={14} className={styles.icon} />
+      <IconFolder size="md" className={styles.icon} />
       {segments.map((segment, index) => (
         <Fragment key={index}>
           {index > 0 && <span className={styles.sep}>/</span>}

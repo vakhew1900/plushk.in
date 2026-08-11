@@ -17,7 +17,7 @@ export function FolderPicker({ path, onPathChange, onSave }: Props) {
   return (
     <div className={styles.column}>
       <div className={styles.pathRow}>
-        <IconFolder size={14} className={styles.folderIcon} />
+        <IconFolder size="md" className={styles.folderIcon} />
         <Input
           value={path}
           onChange={(e) => onPathChange(e.target.value)}
@@ -29,7 +29,7 @@ export function FolderPicker({ path, onPathChange, onSave }: Props) {
       <FolderTree selectedPath={path} onSelect={onPathChange} />
 
       <Button className={styles.saveButton} onClick={() => onSave(path)}>
-        <IconCheck size={14} className={styles.btnIcon} />
+        <IconCheck size="md" className={styles.btnIcon} />
         {t('popup.folderPicker.save')}
       </Button>
     </div>

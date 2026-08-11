@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CodeInput } from '@/components/ui/code-input';
-import { IconPlus } from '@/components/icons';
+import { IconPlus, IconX } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { VariableFieldDraft } from '@/lib/page-match-mapping';
 import { SelectorTypeToggle } from './SelectorTypeToggle';
@@ -42,7 +42,7 @@ export function VariableBlock({
           className={styles.variableNameInput}
         />
         <span className={styles.variableCount}>{t('variablesSection.fieldsCount', { count: fields.length })}</span>
-        <button onClick={onRemove} className={styles.removeBlock}>×</button>
+        <button onClick={onRemove} className={styles.removeBlock}><IconX size="sm" /></button>
       </div>
 
       <div className={styles.fields}>
@@ -65,11 +65,11 @@ export function VariableBlock({
               placeholder={t('variablesSection.fieldValuePlaceholder')}
               className={styles.fieldValueInput}
             />
-            <button onClick={() => onRemoveField(i)} className={styles.removeField}>×</button>
+            <button onClick={() => onRemoveField(i)} className={styles.removeField}><IconX size="sm" /></button>
           </div>
         ))}
         <Button variant="dashed" size="sm" style={{ alignSelf: 'flex-start' }} onClick={onAddField}>
-          <IconPlus size={11} />
+          <IconPlus size="sm" />
           {t('variablesSection.addField')}
         </Button>
       </div>

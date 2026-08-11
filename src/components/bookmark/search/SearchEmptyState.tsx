@@ -8,7 +8,7 @@ interface Props {
 export function SearchEmptyState({ message }: Props) {
   return (
     <div className={styles.wrap}>
-      <IconSearch size={22} className={styles.icon} />
+      <IconSearch size="lg" className={styles.icon} />
       <p>{message}</p>
     </div>
   );

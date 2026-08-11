@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { Switch } from '@/components/ui/switch';
+import { IconX } from '@/components/icons';
 import styles from './RuleListItem.module.css';
 
 interface Props {
@@ -26,7 +27,7 @@ export function RuleListItem({ index, name, desc, enabled, selected, onSelect, o
           onClick={(e) => { e.stopPropagation(); onRemove(); }}
           className={styles.removeBtn}
         >
-          ×
+          <IconX size="sm" />
         </button>
       </div>
       <div className={styles.desc}>{desc}</div>

@@ -19,7 +19,7 @@ export function PopupHeader({ mode, onModeChange, screen, onToggleScreen }: Prop
   return (
     <div className={styles.header}>
       <div className={styles.icon}>
-        <IconLogo size={20} />
+        <IconLogo size="lg" />
       </div>
 
       <div className={styles.meta}>
@@ -41,7 +41,7 @@ export function PopupHeader({ mode, onModeChange, screen, onToggleScreen }: Prop
         onClick={onToggleScreen}
         aria-label={screen === PopupScreen.QUICK_SAVE ? t('popup.header.openSearch') : t('popup.header.backToQuickSave')}
       >
-        {screen === PopupScreen.QUICK_SAVE ? <IconSearch size={14} /> : <IconStar size={14} />}
+        {screen === PopupScreen.QUICK_SAVE ? <IconSearch size="md" /> : <IconStar size="md" />}
       </Button>
     </div>
   );

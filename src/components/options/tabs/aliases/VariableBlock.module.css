@@ -8,7 +8,7 @@
   border-bottom: 1px solid var(--border);
 }
 .variableNameInput {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   font-size: 12.5px;
   color: var(--accent);
@@ -18,8 +18,9 @@
 .variableCount { font-size: 11px; color: var(--faint); }
 .removeBlock {
   margin-left: auto;
-  font-size: 15px;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--faint);
   transition: color 0.15s;
 }
@@ -35,15 +36,16 @@
 .fieldKeyInput {
   width: 90px;
   flex-shrink: 0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-weight: 600;
   font-size: 12.5px;
 }
 .fieldArrow { color: var(--faint); }
 .fieldValueInput { flex: 1; min-width: 0; }
 .removeField {
-  font-size: 13px;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--faint);
   transition: color 0.15s;
 }

@@ -139,9 +139,10 @@ Fallback: if no rule matches (Auto mode only), the bookmark is moved into the us
 - **Group related components into subfolders once a logical cluster forms.** Don't let a `src/components/<area>/` folder grow flat indefinitely. When 2+ components only make sense together (a multi-step flow, an editor's sub-panels), move them into `src/components/<area>/<cluster>/`. See `options/tabs/{aliases,main,rules}/` for the existing pattern. Don't pre-create a subfolder for a single component — wait until the cluster is real.
 - **Styling: CSS Modules only.** Every component has a `ComponentName.module.css` alongside it. No inline `style=` except for truly dynamic values (e.g. a color from props). No global utility classes.
 - **CSS units: `rem` is the default for new code.** In newly created `.module.css` files, prefer `rem` for `font-size`, `padding`, `margin`, `gap`, `width`/`height`, and `border-radius` (1rem = 16px baseline). Other units are fine when there's a concrete reason — hairline strokes (`border-width: 1px`, `outline-width`), matching a fixed external asset size, sub-pixel alignment — but `rem` is the priority, reach for something else only when it's actually warranted. Existing `.module.css` files already written in `px` are not required to migrate — only convert a file's units wholesale if you're already rewriting it for other reasons.
-- **SVG icons must be extracted as components.** Never write `<svg>` inline in component JSX. Create a named component in `components/icons/` (e.g. `IconPlus`, `IconFolder`) and import it. Inline SVG is allowed only inside the icon component file itself.
+- **SVG icons must be extracted as components.** Never write `<svg>` inline in component JSX. Create a named component in `components/icons/` (e.g. `IconPlus`, `IconFolder`) and import it. Inline SVG is allowed only inside the icon component file itself. **Size is a semantic `size` prop, never a raw number.** Every icon component takes `size?: IconSize` (`'sm' | 'md' | 'lg'`, from `components/icons/icon-size.ts`, default `'md'`) — resolved internally to px via the shared `ICON_SIZE_PX` map. Don't pass a numeric literal (`size={13}`) at a call site; pick the closest semantic tier instead. Changing an icon's actual pixel size project-wide means editing `icon-size.ts` (and the matching `--icon-size-*` tokens in `assets/globals.css`), not touching call sites.
+- **Text follows the same rule: use `<Text>` from `components/ui/text.tsx`, never a raw `font-size` in a new `.module.css`.** `Text` takes `size` (`'heading' | 'subheading' | 'body' | 'caption' | 'code'`, backed by the `--fs-*` tokens in `assets/globals.css`), `weight` (`'regular' | 'medium' | 'bold'`, defaults per size — bold for heading/subheading, regular otherwise), `tone` (`'default' | 'muted' | 'accent'`, backed by the existing `--text`/`--muted`/`--accent` color tokens), and `as` to override the rendered tag (e.g. `<Text as="h2" size="subheading">` keeps semantic heading level independent of visual size). Existing `.module.css` files with their own `font-size` are not required to migrate immediately — convert a file wholesale only when you're already rewriting it for other reasons, same as the `rem`-units rule above.
 - **Prefer Radix UI primitives** for interactive patterns: `RadioGroup` for segmented controls, `Switch` for toggles, `Slot` for `asChild` composition. Check `@radix-ui/*` packages before writing custom interactive elements.
-- **`components/ui/`** holds thin wrappers around Radix primitives (Button, Badge, Switch, Input, Textarea). Check there before creating new elements.
+- **`components/ui/`** holds thin wrappers around Radix primitives (Button, Badge, Switch, Input, Textarea) plus the shared `Text` typography component. Check there before creating new elements.
 - All public service contracts must have an interface in `src/services/interfaces/`. Repositories are a separate layer: classes go in `src/repository/`, interfaces in `src/repository/interfaces/`.
 - **String constants use `as const` objects, never `enum`.** Derive the union type with `typeof Obj[keyof typeof Obj]`. Use the same name for the object and the type (e.g. `RuleType` object + `type RuleType`).
 
@@ -297,3 +298,27 @@ Dark/light toggle via `data-theme="dark"/"light"` on the root element. CSS varia
 --red:      #e0746e;     --red:      #cf5a52;
 --blue:     #5c9ee0;     --blue:     #3f7fc4;
 ```
+
+### Sizing tokens
+
+Also in `assets/globals.css`, theme-independent (same in dark/light). Change here, not per call site:
+
+```css
+--font-mono: 'JetBrains Mono', monospace;
+
+--icon-size-sm: 0.875rem;  /* 14px — matches components/icons/icon-size.ts ICON_SIZE_PX */
+--icon-size-md: 1rem;      /* 16px */
+--icon-size-lg: 1.25rem;   /* 20px */
+
+--fs-heading: 1.375rem;    /* 22px */
+--fs-subheading: 1rem;     /* 16px */
+--fs-body: 0.875rem;       /* 14px */
+--fs-caption: 0.75rem;     /* 12px */
+--fs-code: 0.8125rem;      /* 13px */
+
+--fw-regular: 400;
+--fw-medium: 500;
+--fw-bold: 700;
+```
+
+Icon width/height are set via SVG attributes (can't read CSS vars), so `icon-size.ts`'s `ICON_SIZE_PX` mirrors the `--icon-size-*` rem values in px — keep both in sync if the scale changes. Typography tokens are consumed directly in CSS through `components/ui/text.tsx` (see Code rules above).

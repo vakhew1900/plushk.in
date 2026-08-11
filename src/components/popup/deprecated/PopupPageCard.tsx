@@ -21,7 +21,7 @@ export function PopupPageCard() {
           <div className={styles.matchLabel}>
             <span>Совпало правило</span>
             <Badge variant="accent">
-              <IconCheck size={11} />
+              <IconCheck size="sm" />
               Соцсети
             </Badge>
           </div>

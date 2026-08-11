@@ -25,27 +25,27 @@ export function OptionsSidebar({ tab, onTabChange }: Props) {
       <div className={styles.section}>{t('nav.section')}</div>
 
       <NavBtn active={tab === 'main'} onClick={() => onTabChange('main')}>
-        <IconHome size={16} />
+        <IconHome size="md" />
         {t('nav.main')}
       </NavBtn>
 
       <NavBtn active={tab === 'rules'} onClick={() => onTabChange('rules')}>
-        <IconNetwork size={16} />
+        <IconNetwork size="md" />
         {t('nav.rules')}
       </NavBtn>
 
       <NavBtn active={tab === 'search'} onClick={() => onTabChange('search')}>
-        <IconSearch size={16} />
+        <IconSearch size="md" />
         {t('nav.search')}
       </NavBtn>
 
       <NavBtn active={tab === 'aliases'} onClick={() => onTabChange('aliases')}>
-        <IconSliders size={16} />
+        <IconSliders size="md" />
         {t('nav.aliases')}
       </NavBtn>
 
       <NavBtn active={tab === 'tags'} onClick={() => onTabChange('tags')}>
-        <IconTag size={16} />
+        <IconTag size="md" />
         {t('nav.tags')}
       </NavBtn>
     </div>

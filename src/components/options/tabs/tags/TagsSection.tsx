@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/text';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useTags } from '@/hooks/useTags';
@@ -25,13 +26,13 @@ export function TagsSection() {
   return (
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
-        <h2 className={styles.h2}>{t('tagsSection.title')}</h2>
+        <Text as="h2" size="subheading">{t('tagsSection.title')}</Text>
         <Button variant="outline" size="sm" style={{ marginLeft: 'auto' }} onClick={addTag}>
-          <IconPlus size={12} />
+          <IconPlus size="sm" />
           {t('tagsSection.addTag')}
         </Button>
       </div>
-      <p className={styles.sectionDesc}>{t('tagsSection.desc')}</p>
+      <Text size="body" tone="muted" className={styles.sectionDesc}>{t('tagsSection.desc')}</Text>
       <div className={styles.table}>
         {tags.map((tag) => (
           <TagRow

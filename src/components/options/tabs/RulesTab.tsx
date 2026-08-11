@@ -56,7 +56,7 @@ export function RulesTab() {
             />
           ))}
           <Button variant="dashed" style={{ width: "100%" }} onClick={addRule}>
-            <IconPlus size={13} />
+            <IconPlus size="md" />
             {t("rulesTab.addRule")}
           </Button>
         </div>

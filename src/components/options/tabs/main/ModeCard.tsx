@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { Badge } from '@/components/ui/badge';
+import { Text } from '@/components/ui/text';
 import { IconFolder } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './ModeCard.module.css';
@@ -24,13 +25,13 @@ export function ModeCard({ label, tag, desc, selected, showFallback, fallbackFol
 
       <span className={styles.body}>
         <span className={styles.titleRow}>
-          <b className={styles.title}>{label}</b>
+          <Text as="b" size="subheading">{label}</Text>
           <Badge variant="secondary">{tag}</Badge>
         </span>
-        <span className={styles.desc}>{desc}</span>
+        <Text as="span" size="body" tone="muted" className={styles.desc}>{desc}</Text>
         {showFallback && (
           <span className={styles.fallback}>
-            <IconFolder size={13} fill="var(--faint)" style={{ flexShrink: 0 }} />
+            <IconFolder size="md" fill="var(--faint)" style={{ flexShrink: 0 }} />
             {t('common.noMatchFallback')} <span className={styles.fallbackText}>{fallbackFolder || t('common.bookmarksBar')}</span>
           </span>
         )}

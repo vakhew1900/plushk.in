@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/text';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useDomainAliases } from '@/hooks/useDomainAliases';
@@ -36,13 +37,13 @@ export function AliasesSection() {
   return (
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
-        <h2 className={styles.h2}>{t('aliasesSection.title')}</h2>
+        <Text as="h2" size="subheading">{t('aliasesSection.title')}</Text>
         <Button variant="outline" size="sm" style={{ marginLeft: 'auto' }} onClick={addAlias}>
-          <IconPlus size={12} />
+          <IconPlus size="sm" />
           {t('aliasesSection.addAlias')}
         </Button>
       </div>
-      <p className={styles.sectionDesc}>{t('aliasesSection.desc')}</p>
+      <Text size="body" tone="muted" className={styles.sectionDesc}>{t('aliasesSection.desc')}</Text>
       <div className={styles.table}>
         {aliases.map((a) => (
           <AliasRow

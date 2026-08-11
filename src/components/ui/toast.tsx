@@ -26,13 +26,13 @@ function Toast({ variant, title, description, open, onOpenChange }: ToastProps) 
   const Icon = VARIANT_ICON[variant];
   return (
     <RadixToast.Root className={clsx(styles.toast, VARIANT_CLASS[variant])} open={open} onOpenChange={onOpenChange}>
-      <Icon size={16} className={styles.icon} />
+      <Icon size="md" className={styles.icon} />
       <div className={styles.body}>
         <RadixToast.Title className={styles.title}>{title}</RadixToast.Title>
         {description && <RadixToast.Description className={styles.description}>{description}</RadixToast.Description>}
       </div>
       <RadixToast.Close className={styles.close} aria-label="Close">
-        <IconX size={12} />
+        <IconX size="sm" />
       </RadixToast.Close>
     </RadixToast.Root>
   );

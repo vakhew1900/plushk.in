@@ -1,4 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import { Text } from '@/components/ui/text';
 import { Theme } from '@/context/ThemeContext';
 import { useTheme } from '@/hooks/useTheme';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -12,7 +13,7 @@ export function ThemeSection() {
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.h2}>{t('themeSection.title')}</h2>
+      <Text as="h2" size="subheading" className={styles.h2}>{t('themeSection.title')}</Text>
       <RadioGroup.Root
         value={theme}
         onValueChange={(v) => setTheme(v as Theme)}

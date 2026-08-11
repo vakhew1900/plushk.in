@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/text';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { usePageMatchGroups } from '@/hooks/usePageMatchGroups';
@@ -44,13 +45,13 @@ export function VariablesSection() {
   return (
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
-        <h2 className={styles.h2}>{t('variablesSection.title')}</h2>
+        <Text as="h2" size="subheading">{t('variablesSection.title')}</Text>
         <Button variant="outline" size="sm" style={{ marginLeft: 'auto' }} onClick={addGroup}>
-          <IconPlus size={12} />
+          <IconPlus size="sm" />
           {t('variablesSection.addGroup')}
         </Button>
       </div>
-      <p className={styles.sectionDesc}>{t('variablesSection.desc')}</p>
+      <Text size="body" tone="muted" className={styles.sectionDesc}>{t('variablesSection.desc')}</Text>
       <div className={styles.variableList}>
         {groups.map((g) => (
           <VariableBlock

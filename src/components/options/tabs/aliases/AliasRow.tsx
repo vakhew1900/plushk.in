@@ -1,4 +1,5 @@
 import { Input } from '@/components/ui/input';
+import { IconPlus, IconX } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './AliasRow.module.css';
 
@@ -40,12 +41,12 @@ export function AliasRow({
               placeholder={t('aliasesSection.domainPlaceholder')}
               className={styles.domainInput}
             />
-            <button onClick={() => onRemoveDomain(i)} className={styles.removeChip}>×</button>
+            <button onClick={() => onRemoveDomain(i)} className={styles.removeChip}><IconX size="sm" /></button>
           </div>
         ))}
-        <button onClick={onAddDomain} className={styles.addChip}>+</button>
+        <button onClick={onAddDomain} className={styles.addChip}><IconPlus size="sm" /></button>
       </div>
-      <button onClick={onRemove} className={styles.removeRow}>×</button>
+      <button onClick={onRemove} className={styles.removeRow}><IconX size="sm" /></button>
     </div>
   );
 }

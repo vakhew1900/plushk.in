@@ -98,7 +98,7 @@ export function RuleEditor({ rule, onSave }: Props) {
 
       <div className={styles.editorFooter}>
         <Button variant="outline" size="sm">
-          <IconCheck size={13} />
+          <IconCheck size="md" />
           {t('ruleEditor.testButton')}
         </Button>
         <div style={{ flex: 1 }} />

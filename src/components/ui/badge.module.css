@@ -10,8 +10,8 @@
 .green     { padding: 2px 8px; border-radius: 6px; background: var(--green-soft); color: var(--green); font-size: 11px; }
 .red       { padding: 2px 8px; border-radius: 6px; background: var(--red-soft); color: var(--red); font-size: 11px; }
 .blue      { padding: 2px 8px; border-radius: 6px; background: var(--blue-soft); color: var(--blue); font-size: 11px; }
-.mono      { padding: 4px 9px; border-radius: 7px; background: var(--bg3); color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 12.5px; }
-.monoAccent { padding: 4px 9px; border-radius: 7px; background: var(--bg3); color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 12.5px; }
-.orBadge   { padding: 4px 11px; border-radius: 7px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
-.andBadge  { padding: 3px 9px; border-radius: 6px; background: var(--blue-soft); color: var(--blue); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-.notBadge  { padding: 4px 9px; border-radius: 6px; background: var(--red-soft); color: var(--red); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.mono      { padding: 4px 9px; border-radius: 7px; background: var(--bg3); color: var(--text); font-family: var(--font-mono); font-size: 12.5px; }
+.monoAccent { padding: 4px 9px; border-radius: 7px; background: var(--bg3); color: var(--accent); font-family: var(--font-mono); font-size: 12.5px; }
+.orBadge   { padding: 4px 11px; border-radius: 7px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); font-family: var(--font-mono); font-size: 12px; }
+.andBadge  { padding: 3px 9px; border-radius: 6px; background: var(--blue-soft); color: var(--blue); font-family: var(--font-mono); font-size: 11px; }
+.notBadge  { padding: 4px 9px; border-radius: 6px; background: var(--red-soft); color: var(--red); font-family: var(--font-mono); font-size: 11px; }

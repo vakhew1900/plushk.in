@@ -92,7 +92,7 @@ export function ConditionGroup({ node, onChange, onRemove }: Props) {
         <div className={styles.addRow}>
           <AddConditionMenu onAdd={addCondition} />
           <Button variant="dashed" size="sm" onClick={addGroup}>
-            <IconPlus size={11} />
+            <IconPlus size="sm" />
             {t('conditionGroup.addGroup')}
           </Button>
         </div>

@@ -20,7 +20,7 @@ function SavedView() {
   const { translate: t } = useTranslation();
   return (
     <div className={styles.saved}>
-      <IconCheck size={14} />
+      <IconCheck size="md" />
       {t('popup.quickSave.saved')}
     </div>
   );
@@ -54,7 +54,7 @@ export function PopupQuickSave({ mode }: Props) {
     <div className={styles.wrap}>
       <div className={styles.header}>
         <div className={styles.icon}>
-          <IconStar size={17} />
+          <IconStar size="md" />
         </div>
         <div className={styles.title}>{t('popup.quickSave.title')}</div>
       </div>
