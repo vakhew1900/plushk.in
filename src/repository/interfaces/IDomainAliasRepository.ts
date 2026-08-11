@@ -1,8 +1,4 @@
 import type { DomainAlias } from '../../types/domain-alias';
+import type { ICrudRepository } from './ICrudRepository';
 
-export interface IDomainAliasRepository {
-  getAll(): Promise<DomainAlias[]>;
-  getById(id: string): Promise<DomainAlias | undefined>;
-  save(alias: DomainAlias): Promise<void>;
-  remove(id: string): Promise<void>;
-}
+export type IDomainAliasRepository = ICrudRepository<DomainAlias>;

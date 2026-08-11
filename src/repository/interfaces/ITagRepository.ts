@@ -1,8 +1,4 @@
 import type { Tag } from '../../types/tag';
+import type { ICrudRepository } from './ICrudRepository';
 
-export interface ITagRepository {
-  getAll(): Promise<Tag[]>;
-  getById(id: string): Promise<Tag | undefined>;
-  save(tag: Tag): Promise<void>;
-  remove(id: string): Promise<void>;
-}
+export type ITagRepository = ICrudRepository<Tag>;

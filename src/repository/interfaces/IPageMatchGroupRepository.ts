@@ -1,8 +1,4 @@
 import type { PageMatchGroup } from '../../types/page-match';
+import type { ICrudRepository } from './ICrudRepository';
 
-export interface IPageMatchGroupRepository {
-  getAll(): Promise<PageMatchGroup[]>;
-  getById(id: string): Promise<PageMatchGroup | undefined>;
-  save(group: PageMatchGroup): Promise<void>;
-  remove(id: string): Promise<void>;
-}
+export type IPageMatchGroupRepository = ICrudRepository<PageMatchGroup>;
