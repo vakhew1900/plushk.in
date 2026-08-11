@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "exportedAt": "2026-07-24T00:00:00.000Z",
   "rules": [
     {
@@ -8,7 +8,7 @@
       "desc": "Заголовок содержит слово Java или JavaScript (границы слова \\b, поэтому не ловит 'javadoc' как часть другого слова). Приоритет выше общего IT-правила, чтобы более специфичная папка побеждала.",
       "condition": {
         "type": "and",
-        "and": [
+        "nodes": [
           { "type": "terms", "field": "domain", "values": ["habr.com", "dev.to"] },
           { "type": "regex", "field": "title", "pattern": "\\b[Jj]ava(?:[Ss]cript)?\\b" }
         ]
@@ -23,7 +23,7 @@
       "desc": "Заголовок содержит слово IT именно как отдельное слово (\\bIT\\b), а не часть другого слова (напр. 'split'). Паттерн регистрозависим (только заглавные IT) — движок regex-правил не поддерживает флаг case-insensitive, а матчинг строчного 'it' как английского местоимения дал бы слишком много ложных срабатываний.",
       "condition": {
         "type": "and",
-        "and": [
+        "nodes": [
           { "type": "terms", "field": "domain", "values": ["habr.com", "dev.to"] },
           { "type": "regex", "field": "title", "pattern": "\\bIT\\b" }
         ]

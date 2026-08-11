@@ -83,7 +83,7 @@ describe('and', () => {
   it('returns true when all sub-rules match', () => {
     expect(evaluate({
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
         { type: RuleType.TERM, field: 'author', value: 'John Doe' },
       ],
@@ -93,7 +93,7 @@ describe('and', () => {
   it('returns false when one sub-rule fails', () => {
     expect(evaluate({
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
         { type: RuleType.TERM, field: 'author', value: 'Jane Doe' },
       ],
@@ -105,7 +105,7 @@ describe('or', () => {
   it('returns true when at least one sub-rule matches', () => {
     expect(evaluate({
       type: RuleType.OR,
-      or: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'github.com' },
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
       ],
@@ -115,7 +115,7 @@ describe('or', () => {
   it('returns false when no sub-rule matches', () => {
     expect(evaluate({
       type: RuleType.OR,
-      or: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'github.com' },
         { type: RuleType.TERM, field: 'domain', value: 'vimeo.com' },
       ],
@@ -127,7 +127,7 @@ describe('not', () => {
   it('returns true when all sub-rules do not match', () => {
     expect(evaluate({
       type: RuleType.NOT,
-      not: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'github.com' },
       ],
     }, meta)).toBe(true);
@@ -136,7 +136,7 @@ describe('not', () => {
   it('returns false when a sub-rule matches', () => {
     expect(evaluate({
       type: RuleType.NOT,
-      not: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
       ],
     }, meta)).toBe(false);
@@ -149,11 +149,11 @@ describe('AND + OR', () => {
   it('matches when domain fits AND at least one tag matches', () => {
     expect(evaluate({
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
         {
           type: RuleType.OR,
-          or: [
+          nodes: [
             { type: RuleType.TERM, field: 'tags', value: 'tutorial' },
             { type: RuleType.TERM, field: 'tags', value: 'video' },
           ],
@@ -165,11 +165,11 @@ describe('AND + OR', () => {
   it('fails when OR sub-rules all fail', () => {
     expect(evaluate({
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
         {
           type: RuleType.OR,
-          or: [
+          nodes: [
             { type: RuleType.TERM, field: 'tags', value: 'python' },
             { type: RuleType.TERM, field: 'tags', value: 'video' },
           ],
@@ -183,9 +183,9 @@ describe('AND + NOT', () => {
   it('matches when domain fits AND author is not excluded', () => {
     expect(evaluate({
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
-        { type: RuleType.NOT, not: [{ type: RuleType.TERM, field: 'author', value: 'Jane Doe' }] },
+        { type: RuleType.NOT, nodes: [{ type: RuleType.TERM, field: 'author', value: 'Jane Doe' }] },
       ],
     }, meta)).toBe(true);
   });
@@ -193,9 +193,9 @@ describe('AND + NOT', () => {
   it('fails when NOT sub-rule matches', () => {
     expect(evaluate({
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
-        { type: RuleType.NOT, not: [{ type: RuleType.TERM, field: 'author', value: 'John Doe' }] },
+        { type: RuleType.NOT, nodes: [{ type: RuleType.TERM, field: 'author', value: 'John Doe' }] },
       ],
     }, meta)).toBe(false);
   });
@@ -205,9 +205,9 @@ describe('OR + NOT', () => {
   it('returns true via NOT branch when domain does not match forbidden value', () => {
     expect(evaluate({
       type: RuleType.OR,
-      or: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'github.com' },
-        { type: RuleType.NOT, not: [{ type: RuleType.TERM, field: 'domain', value: 'github.com' }] },
+        { type: RuleType.NOT, nodes: [{ type: RuleType.TERM, field: 'domain', value: 'github.com' }] },
       ],
     }, meta)).toBe(true);
   });
@@ -219,18 +219,18 @@ describe('complex: AND containing NOT and OR', () => {
   it('matches a video tutorial that is not for advanced users', () => {
     expect(evaluate({
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
         {
           type: RuleType.OR,
-          or: [
+          nodes: [
             { type: RuleType.TERM, field: 'tags', value: 'tutorial' },
             { type: RuleType.TERM, field: 'tags', value: 'course' },
           ],
         },
         {
           type: RuleType.NOT,
-          not: [{ type: RuleType.WILDCARD, field: 'title', pattern: '*Advanced*' }],
+          nodes: [{ type: RuleType.WILDCARD, field: 'title', pattern: '*Advanced*' }],
         },
       ],
     }, meta)).toBe(true);
@@ -240,17 +240,17 @@ describe('complex: AND containing NOT and OR', () => {
     const advancedMeta: PageMeta = { ...meta, title: 'Advanced React Patterns' };
     expect(evaluate({
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
         {
           type: RuleType.OR,
-          or: [
+          nodes: [
             { type: RuleType.TERM, field: 'tags', value: 'tutorial' },
           ],
         },
         {
           type: RuleType.NOT,
-          not: [{ type: RuleType.WILDCARD, field: 'title', pattern: '*Advanced*' }],
+          nodes: [{ type: RuleType.WILDCARD, field: 'title', pattern: '*Advanced*' }],
         },
       ],
     }, advancedMeta)).toBe(false);
@@ -261,17 +261,17 @@ describe('complex: deeply nested AND inside OR', () => {
   it('matches when second AND branch succeeds', () => {
     expect(evaluate({
       type: RuleType.OR,
-      or: [
+      nodes: [
         {
           type: RuleType.AND,
-          and: [
+          nodes: [
             { type: RuleType.TERM, field: 'domain', value: 'github.com' },
             { type: RuleType.TERM, field: 'tags', value: 'open-source' },
           ],
         },
         {
           type: RuleType.AND,
-          and: [
+          nodes: [
             { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
             { type: RuleType.TERM, field: 'tags', value: 'react' },
           ],
@@ -291,7 +291,7 @@ describe('countLeafRules', () => {
   it('sums leaves across an AND group', () => {
     expect(countLeafRules({
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
         { type: RuleType.TERM, field: 'author', value: 'John Doe' },
       ],
@@ -301,12 +301,12 @@ describe('countLeafRules', () => {
   it('sums leaves across nested OR/AND/NOT groups', () => {
     expect(countLeafRules({
       type: RuleType.OR,
-      or: [
+      nodes: [
         {
           type: RuleType.AND,
-          and: [
+          nodes: [
             { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
-            { type: RuleType.NOT, not: [{ type: RuleType.TERM, field: 'author', value: 'Jane Doe' }] },
+            { type: RuleType.NOT, nodes: [{ type: RuleType.TERM, field: 'author', value: 'Jane Doe' }] },
           ],
         },
         { type: RuleType.WILDCARD, field: 'title', pattern: '*Tutorial*' },
@@ -315,7 +315,7 @@ describe('countLeafRules', () => {
   });
 
   it('returns 0 for an empty compound rule', () => {
-    expect(countLeafRules({ type: RuleType.OR, or: [] })).toBe(0);
+    expect(countLeafRules({ type: RuleType.OR, nodes: [] })).toBe(0);
   });
 });
 
@@ -330,7 +330,7 @@ describe('parseRuleNode', () => {
   it('parses a valid nested compound rule', () => {
     const node = {
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
         { type: RuleType.TERMS, field: 'tags', values: ['tutorial', 'course'] },
       ],
@@ -357,7 +357,7 @@ describe('parseRuleNode', () => {
   it('returns null when a compound rule child is invalid', () => {
     const raw = JSON.stringify({
       type: RuleType.AND,
-      and: [{ type: RuleType.TERM, field: 'domain', value: 'youtube.com' }, { type: 'bogus' }],
+      nodes: [{ type: RuleType.TERM, field: 'domain', value: 'youtube.com' }, { type: 'bogus' }],
     });
     expect(parseRuleNode(raw)).toBeNull();
   });

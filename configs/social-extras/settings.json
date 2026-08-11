@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "exportedAt": "2026-07-24T00:00:00.000Z",
   "rules": [
     {
@@ -8,7 +8,7 @@
       "desc": "Матчит по extras.subreddit, который заполняется через PageMatchGroup 'pmg-reddit'. Пока не сработает на живых закладках: PageExtractorService/content script ещё не подключены к background.ts (см. RULE-5 в specs/backlog.md) — extras сейчас никогда не заполняется в реальном flow создания закладки.",
       "condition": {
         "type": "and",
-        "and": [
+        "nodes": [
           { "type": "terms", "field": "domain", "values": ["reddit.com", "www.reddit.com", "old.reddit.com"] },
           { "type": "term", "field": "subreddit", "value": "programming" }
         ]
@@ -23,7 +23,7 @@
       "desc": "Матчит по extras.hub, который заполняется через PageMatchGroup 'pmg-dtf'. Тот же статус, что и у reddit-правила выше — ждёт RULE-5.",
       "condition": {
         "type": "and",
-        "and": [
+        "nodes": [
           { "type": "term", "field": "domain", "value": "dtf.ru" },
           { "type": "term", "field": "hub", "value": "Игры" }
         ]

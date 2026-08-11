@@ -20,17 +20,17 @@ interface BaseRule {
 
 export interface AndRule extends BaseRule {
   readonly type: typeof RuleType.AND;
-  readonly and: RuleNode[];
+  readonly nodes: RuleNode[];
 }
 
 export interface OrRule extends BaseRule {
   readonly type: typeof RuleType.OR;
-  readonly or: RuleNode[];
+  readonly nodes: RuleNode[];
 }
 
 export interface NotRule extends BaseRule {
   readonly type: typeof RuleType.NOT;
-  readonly not: RuleNode[];
+  readonly nodes: RuleNode[];
 }
 
 // Leaf rules — match a single PageMeta field

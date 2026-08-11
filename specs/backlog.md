@@ -129,3 +129,16 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 `PageExtrasService.extract()` (`src/services/PageExtrasService.ts:25`) делает `return response as Partial<PageMeta> | undefined;`, где `response` — результат `browser.tabs.sendMessage()`, то есть данные с границы (content script), без runtime type guard. По духу это то же самое, что запрещённый CLAUDE.md `any` («`any` is forbidden. Use `unknown` + type guard for uncertain types») — просто протащенное через `as`, а не через явный тип `any`. Битый/неожиданный ответ от `content.ts` (баг, рассинхрон версий, чужое сообщение по тому же каналу) молча перезапишет часть `PageMeta` в `useQuickSave.ts` (`{...baseMeta, ...overlay}`) вместо явной ошибки на границе. Обнаружено при архитектурном аудите по запросу пользователя. Исправление: типизировать ответ как `unknown` и добавить небольшой type guard (в духе `isRuleNode`/`isSettingsExport` из `src/lib/settings-export-mapping.ts`) — при этом стоит учитывать и `ARCH-9` (замена ручных type guard'ов на zod), если та задача будет реализована раньше.
 
+### BG-1 — `bookmarks.onRemoved`: удаление закладки каскадно чистит связанные записи
+**Priority:** Medium
+**Added:** 2026-08-11
+
+`entrypoints/background.ts` сейчас пустой (`defineBackground(() => {})`, см. `UI-4`) — событие `bookmarks.onRemoved` не обрабатывается вообще, хотя таблица storage в `CLAUDE.md` уже давно резервирует под него строку «Remove metadata from IndexedDB (not yet implemented)». Возникла попутно при проектировании `SHELF-1`: удаление закладки должно каскадно чистить `BookmarkEntityLink`-строку (`bookmarkEntityLinkRepository.remove(bookmarkId)` — `bookmarkId` уже является PK таблицы `bookmarkEntityLinks`, так что это просто вызов базового `remove()`, без дополнительного метода в интерфейсе). Симметрично должна чиститься и будущая таблица связи тегов с закладками (`SEARCH-3`, ещё не реализована) — на момент реализации `BG-1` просто добавить туда ещё один такой же вызов, отдельной абстракции/реестра «cleanup-хуков» заводить не нужно (YAGNI, пока потребителей у неё два от силы).
+
+**Зависит от `SHELF-1`** — без таблицы `bookmarkEntityLinks`/`BookmarkEntityLinkRepository`, которые вводит та задача, чистить нечего; в `backlog.md` до тех пор, пока `SHELF-1` не даст готовый репозиторий.
+
+Технические детали, за которые не нужно повторно спрашивать при реализации:
+- В service worker нет `ServicesContext` (React недоступен) — репозиторий(и) инстанцируются напрямую в `background.ts` (`new BookmarkEntityLinkRepository()`), без DI, как и было до `UI-4` в аналогичных местах.
+- `chrome.bookmarks.onRemoved` при удалении **папки** целиком не вызывается рекурсивно для каждого дочернего узла — по документации API фронт получает одно событие на саму папку, а `removeInfo.node` содержит вложенное поддерево (`node.children`) с уже удалёнными закладками внутри. Чтобы не терять эти вложенные закладки, обработчик обязан рекурсивно обойти `removeInfo.node` и вызвать очистку для id каждой закладки в поддереве (не только для id верхнего узла).
+- `Table.delete(key)` в Dexie не бросает, если строки с таким ключом не существует — отдельная проверка «есть ли связь у этой закладки» перед удалением не нужна.
+

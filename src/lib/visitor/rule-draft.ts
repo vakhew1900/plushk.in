@@ -27,15 +27,16 @@ export type LeafRuleType =
 
 export type LeafRuleNode = TermRule | TermsRule | RegexRule | WildcardRule;
 
-export type DraftAndRule = { id: string } & Omit<AndRule, 'and'> & { and: DraftRuleNode[] };
-export type DraftOrRule = { id: string } & Omit<OrRule, 'or'> & { or: DraftRuleNode[] };
-export type DraftNotRule = { id: string } & Omit<NotRule, 'not'> & { not: DraftRuleNode[] };
+// `AndRule`/`OrRule`/`NotRule` differ only by their `type` literal — the
+// `nodes` array they carry is identically shaped — so unlike the leaf
+// types below, one flat type covers all three instead of a per-variant
+// `Omit`+intersection each.
+export type DraftGroupNode = { id: string; type: CompoundRuleType; nodes: DraftRuleNode[] };
 export type DraftTermRule = { id: string } & TermRule;
 export type DraftTermsRule = { id: string } & TermsRule;
 export type DraftRegexRule = { id: string } & RegexRule;
 export type DraftWildcardRule = { id: string } & WildcardRule;
 
-export type DraftGroupNode = DraftAndRule | DraftOrRule | DraftNotRule;
 export type DraftLeafNode = DraftTermRule | DraftTermsRule | DraftRegexRule | DraftWildcardRule;
 export type DraftRuleNode = DraftGroupNode | DraftLeafNode;
 
@@ -47,41 +48,23 @@ export const isDraftGroup = (node: DraftRuleNode): node is DraftGroupNode => isC
 
 export const isDraftLeaf = (node: DraftRuleNode): node is DraftLeafNode => isLeafRule(node);
 
+// Thin accessors kept (rather than inlined `node.nodes` at call sites) so
+// `ConditionGroup`/`ConsView` stay decoupled from the draft tree's field
+// layout, same reasoning as before the `and`/`or`/`not` → `nodes` unification.
 export function getDraftChildren(node: DraftGroupNode): DraftRuleNode[] {
-  switch (node.type) {
-    case RuleType.AND: return node.and;
-    case RuleType.OR: return node.or;
-    case RuleType.NOT: return node.not;
-  }
+  return node.nodes;
 }
 
 export function withDraftChildren(node: DraftGroupNode, children: DraftRuleNode[]): DraftGroupNode {
-  switch (node.type) {
-    case RuleType.AND: return { ...node, and: children };
-    case RuleType.OR: return { ...node, or: children };
-    case RuleType.NOT: return { ...node, not: children };
-  }
+  return { ...node, nodes: children };
 }
 
-// Changes only the discriminant — children carry over as-is, since
-// `AndRule`/`OrRule`/`NotRule` all just hold a `RuleNode[]` under a
-// differently-named key.
 export function withDraftGroupType(node: DraftGroupNode, type: CompoundRuleType): DraftGroupNode {
-  const children = getDraftChildren(node);
-  switch (type) {
-    case RuleType.AND: return { id: node.id, type: RuleType.AND, and: children };
-    case RuleType.OR: return { id: node.id, type: RuleType.OR, or: children };
-    case RuleType.NOT: return { id: node.id, type: RuleType.NOT, not: children };
-  }
+  return { ...node, type };
 }
 
 export function makeDraftGroup(type: CompoundRuleType): DraftGroupNode {
-  const id = crypto.randomUUID();
-  switch (type) {
-    case RuleType.AND: return { id, type, and: [] };
-    case RuleType.OR: return { id, type, or: [] };
-    case RuleType.NOT: return { id, type, not: [] };
-  }
+  return { id: crypto.randomUUID(), type, nodes: [] };
 }
 
 export function makeDraftLeaf(type: LeafRuleType): DraftLeafNode {
@@ -106,9 +89,13 @@ export function makeDraftLeaf(type: LeafRuleType): DraftLeafNode {
 // Kept as a plain recursive function, same `switch (node.type)` shape.
 
 class ToDraftVisitor implements RuleVisitor<DraftRuleNode> {
-  and(r: AndRule): DraftRuleNode { return { id: crypto.randomUUID(), type: r.type, and: r.and.map((c) => visitRule(c, this)) }; }
-  or(r: OrRule): DraftRuleNode { return { id: crypto.randomUUID(), type: r.type, or: r.or.map((c) => visitRule(c, this)) }; }
-  not(r: NotRule): DraftRuleNode { return { id: crypto.randomUUID(), type: r.type, not: r.not.map((c) => visitRule(c, this)) }; }
+  private group(r: AndRule | OrRule | NotRule): DraftRuleNode {
+    return { id: crypto.randomUUID(), type: r.type, nodes: r.nodes.map((c) => visitRule(c, this)) };
+  }
+
+  and(r: AndRule): DraftRuleNode { return this.group(r); }
+  or(r: OrRule): DraftRuleNode { return this.group(r); }
+  not(r: NotRule): DraftRuleNode { return this.group(r); }
   term(r: TermRule): DraftRuleNode { return { id: crypto.randomUUID(), type: r.type, field: r.field, value: r.value }; }
   terms(r: TermsRule): DraftRuleNode { return { id: crypto.randomUUID(), type: r.type, field: r.field, values: r.values }; }
   regex(r: RegexRule): DraftRuleNode { return { id: crypto.randomUUID(), type: r.type, field: r.field, pattern: r.pattern }; }
@@ -121,9 +108,9 @@ export function toDraftNode(rule: RuleNode): DraftRuleNode {
 
 export function fromDraftNode(draft: DraftRuleNode): RuleNode {
   switch (draft.type) {
-    case RuleType.AND: return { type: draft.type, and: draft.and.map(fromDraftNode) };
-    case RuleType.OR: return { type: draft.type, or: draft.or.map(fromDraftNode) };
-    case RuleType.NOT: return { type: draft.type, not: draft.not.map(fromDraftNode) };
+    case RuleType.AND: return { type: draft.type, nodes: draft.nodes.map(fromDraftNode) };
+    case RuleType.OR: return { type: draft.type, nodes: draft.nodes.map(fromDraftNode) };
+    case RuleType.NOT: return { type: draft.type, nodes: draft.nodes.map(fromDraftNode) };
     case RuleType.TERM: return { type: draft.type, field: draft.field, value: draft.value };
     case RuleType.TERMS: return { type: draft.type, field: draft.field, values: draft.values };
     case RuleType.REGEX: return { type: draft.type, field: draft.field, pattern: draft.pattern };
@@ -180,9 +167,13 @@ export function subtreeHasErrors(node: DraftRuleNode): boolean {
 }
 
 class ErrorVisitor implements RuleVisitor<boolean> {
-  and(r: AndRule): boolean { return r.and.length === 0 || r.and.some((c) => visitRule(c, this)); }
-  or(r: OrRule): boolean { return r.or.length === 0 || r.or.some((c) => visitRule(c, this)); }
-  not(r: NotRule): boolean { return r.not.length === 0 || r.not.some((c) => visitRule(c, this)); }
+  private group(r: AndRule | OrRule | NotRule): boolean {
+    return r.nodes.length === 0 || r.nodes.some((c) => visitRule(c, this));
+  }
+
+  and(r: AndRule): boolean { return this.group(r); }
+  or(r: OrRule): boolean { return this.group(r); }
+  not(r: NotRule): boolean { return this.group(r); }
   term(r: TermRule): boolean { return validateLeafNode(r).length > 0; }
   terms(r: TermsRule): boolean { return validateLeafNode(r).length > 0; }
   regex(r: RegexRule): boolean { return validateLeafNode(r).length > 0; }

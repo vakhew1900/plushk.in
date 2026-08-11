@@ -32,7 +32,7 @@ function otherMethodNames(called: keyof RuleVisitor<string>): (keyof RuleVisitor
 describe('visitRule', () => {
   it('dispatches an AndRule to visitor.and with the rule itself', () => {
     const visitor = createMockVisitor();
-    const rule: AndRule = { type: RuleType.AND, and: [] };
+    const rule: AndRule = { type: RuleType.AND, nodes: [] };
 
     const result = visitRule(rule, visitor);
 
@@ -43,7 +43,7 @@ describe('visitRule', () => {
 
   it('dispatches an OrRule to visitor.or with the rule itself', () => {
     const visitor = createMockVisitor();
-    const rule: OrRule = { type: RuleType.OR, or: [] };
+    const rule: OrRule = { type: RuleType.OR, nodes: [] };
 
     const result = visitRule(rule, visitor);
 
@@ -54,7 +54,7 @@ describe('visitRule', () => {
 
   it('dispatches a NotRule to visitor.not with the rule itself', () => {
     const visitor = createMockVisitor();
-    const rule: NotRule = { type: RuleType.NOT, not: [] };
+    const rule: NotRule = { type: RuleType.NOT, nodes: [] };
 
     const result = visitRule(rule, visitor);
 
@@ -110,9 +110,9 @@ describe('visitRule', () => {
   it('recurses into nested rules via the same visitor', () => {
     const visited: RuleNode[] = [];
     const collectingVisitor: RuleVisitor<void> = {
-      and: (r) => { visited.push(r); r.and.forEach((sub) => visitRule(sub, collectingVisitor)); },
-      or: (r) => { visited.push(r); r.or.forEach((sub) => visitRule(sub, collectingVisitor)); },
-      not: (r) => { visited.push(r); r.not.forEach((sub) => visitRule(sub, collectingVisitor)); },
+      and: (r) => { visited.push(r); r.nodes.forEach((sub) => visitRule(sub, collectingVisitor)); },
+      or: (r) => { visited.push(r); r.nodes.forEach((sub) => visitRule(sub, collectingVisitor)); },
+      not: (r) => { visited.push(r); r.nodes.forEach((sub) => visitRule(sub, collectingVisitor)); },
       term: (r) => { visited.push(r); },
       terms: (r) => { visited.push(r); },
       regex: (r) => { visited.push(r); },
@@ -121,9 +121,9 @@ describe('visitRule', () => {
 
     const rule: AndRule = {
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
-        { type: RuleType.OR, or: [{ type: RuleType.TERM, field: 'tags', value: 'tutorial' }] },
+        { type: RuleType.OR, nodes: [{ type: RuleType.TERM, field: 'tags', value: 'tutorial' }] },
       ],
     };
 

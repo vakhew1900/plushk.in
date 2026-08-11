@@ -24,9 +24,9 @@ function wildcardToRegex(pattern: string): RegExp {
 class EvaluatorVisitor implements RuleVisitor<boolean> {
   constructor(private readonly meta: PageMeta) {}
 
-  and(r: AndRule): boolean  { return r.and.every((sub) => visitRule(sub, this)); }
-  or(r: OrRule): boolean    { return r.or.some((sub) => visitRule(sub, this)); }
-  not(r: NotRule): boolean  { return r.not.every((sub) => !visitRule(sub, this)); }
+  and(r: AndRule): boolean  { return r.nodes.every((sub) => visitRule(sub, this)); }
+  or(r: OrRule): boolean    { return r.nodes.some((sub) => visitRule(sub, this)); }
+  not(r: NotRule): boolean  { return r.nodes.every((sub) => !visitRule(sub, this)); }
 
   term(r: TermRule) {
     const val = getMetaField(this.meta, r.field);
@@ -66,9 +66,13 @@ export function findMatchingRule(rules: BookmarkRule[], meta: PageMeta): Bookmar
 }
 
 class LeafCounterVisitor implements RuleVisitor<number> {
-  and(r: AndRule): number { return r.and.reduce((sum, sub) => sum + visitRule(sub, this), 0); }
-  or(r: OrRule): number   { return r.or.reduce((sum, sub) => sum + visitRule(sub, this), 0); }
-  not(r: NotRule): number { return r.not.reduce((sum, sub) => sum + visitRule(sub, this), 0); }
+  private group(r: AndRule | OrRule | NotRule): number {
+    return r.nodes.reduce((sum, sub) => sum + visitRule(sub, this), 0);
+  }
+
+  and(r: AndRule): number { return this.group(r); }
+  or(r: OrRule): number   { return this.group(r); }
+  not(r: NotRule): number { return this.group(r); }
   term(): number     { return 1; }
   terms(): number    { return 1; }
   regex(): number    { return 1; }
@@ -85,11 +89,9 @@ function isRuleNode(value: unknown): value is RuleNode {
 
   switch (v.type) {
     case RuleType.AND:
-      return Array.isArray(v.and) && v.and.every(isRuleNode);
     case RuleType.OR:
-      return Array.isArray(v.or) && v.or.every(isRuleNode);
     case RuleType.NOT:
-      return Array.isArray(v.not) && v.not.every(isRuleNode);
+      return Array.isArray(v.nodes) && v.nodes.every(isRuleNode);
     case RuleType.TERM:
       return typeof v.field === 'string' && typeof v.value === 'string';
     case RuleType.TERMS:

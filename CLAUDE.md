@@ -83,9 +83,9 @@ Rules are stored as JSON. The evaluator recursively resolves them against `PageM
 **Compound rules** — combine arrays of sub-rules:
 
 ```json
-{ "and": [ <rule>, <rule>, ... ] }
-{ "or":  [ <rule>, <rule>, ... ] }
-{ "not": [ <rule>, <rule>, ... ] }
+{ "type": "and", "nodes": [ <rule>, <rule>, ... ] }
+{ "type": "or",  "nodes": [ <rule>, <rule>, ... ] }
+{ "type": "not", "nodes": [ <rule>, <rule>, ... ] }
 ```
 
 **Leaf rules** — match a single field:
@@ -103,12 +103,15 @@ Any field from `PageMeta` (including `extras.*`) can be used as the key.
 
 ```json
 {
-  "and": [
+  "type": "and",
+  "nodes": [
     { "term":  { "domain": "youtube.com" } },
-    { "or": [
+    { "type": "or",
+      "nodes": [
         { "terms":    { "tags": ["tutorial", "course"] } },
         { "wildcard": { "title": "*tutorial*" } }
-    ]}
+      ]
+    }
   ]
 }
 ```

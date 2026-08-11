@@ -19,16 +19,16 @@ import {
 
 const nested: RuleNode = {
   type: RuleType.AND,
-  and: [
+  nodes: [
     { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
     {
       type: RuleType.OR,
-      or: [
+      nodes: [
         { type: RuleType.TERMS, field: 'tags', values: ['tutorial', 'course'] },
         { type: RuleType.WILDCARD, field: 'title', pattern: '*tutorial*' },
       ],
     },
-    { type: RuleType.NOT, not: [{ type: RuleType.TERM, field: 'extras.watched', value: 'true' }] },
+    { type: RuleType.NOT, nodes: [{ type: RuleType.TERM, field: 'extras.watched', value: 'true' }] },
   ],
 };
 
@@ -68,7 +68,7 @@ describe('isDraftGroup / isDraftLeaf', () => {
 });
 
 describe('getDraftChildren / withDraftChildren', () => {
-  it('reads children through the type-specific key', () => {
+  it('reads and writes children through the shared nodes field', () => {
     const group = makeDraftGroup(RuleType.AND);
     const leaf = makeDraftLeaf(RuleType.TERM);
     const withChild = withDraftChildren(group, [leaf]);
@@ -129,9 +129,9 @@ describe('subtreeHasErrors', () => {
   it('is true when a deeply nested leaf is invalid', () => {
     const broken: RuleNode = {
       type: RuleType.AND,
-      and: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
-        { type: RuleType.OR, or: [{ type: RuleType.TERM, field: '', value: 'x' }] },
+        { type: RuleType.OR, nodes: [{ type: RuleType.TERM, field: '', value: 'x' }] },
       ],
     };
     expect(subtreeHasErrors(toDraftNode(broken))).toBe(true);
@@ -150,15 +150,15 @@ describe('hasRuleErrors', () => {
   it('is true when any leaf is invalid, however deep', () => {
     const broken: RuleNode = {
       type: RuleType.OR,
-      or: [
+      nodes: [
         { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
-        { type: RuleType.NOT, not: [{ type: RuleType.TERMS, field: 'tags', values: [] }] },
+        { type: RuleType.NOT, nodes: [{ type: RuleType.TERMS, field: 'tags', values: [] }] },
       ],
     };
     expect(hasRuleErrors(broken)).toBe(true);
   });
 
   it('is true for an empty compound rule', () => {
-    expect(hasRuleErrors({ type: RuleType.AND, and: [] })).toBe(true);
+    expect(hasRuleErrors({ type: RuleType.AND, nodes: [] })).toBe(true);
   });
 });

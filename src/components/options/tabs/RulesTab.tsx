@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { IconPlus } from "@/components/icons";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -12,21 +12,20 @@ import styles from "./RulesTab.module.css";
 
 export function RulesTab() {
   const { items: rules, save: onSave, remove: onRemove } = useBookmarkRules();
-  const [selectedId, setSelectedId] = useState<string | null>(rules[0]?.id ?? null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const { translate: t } = useTranslation();
 
-  useEffect(() => {
-    if (selectedId === null || !rules.some((r) => r.id === selectedId)) {
-      setSelectedId(rules[0]?.id ?? null);
-    }
-  }, [rules, selectedId]);
+  // Derived, not synced via effect: falls back to the first rule whenever
+  // the explicitly selected id is unset or no longer present in `rules`
+  // (e.g. after a removal), without ever writing back to `selectedId` itself.
+  const effectiveSelectedId = rules.some((r) => r.id === selectedId) ? selectedId : rules[0]?.id ?? null;
 
   const addRule = () => {
     const rule: BookmarkRule = {
       id: crypto.randomUUID(),
       name: "",
       desc: "",
-      condition: { type: RuleType.OR, or: [] },
+      condition: { type: RuleType.OR, nodes: [] },
       targetFolder: "",
       priority: 0,
       enabled: true,
@@ -35,7 +34,7 @@ export function RulesTab() {
     setSelectedId(rule.id);
   };
 
-  const selected = rules.find((r) => r.id === selectedId) ?? null;
+  const selected = rules.find((r) => r.id === effectiveSelectedId) ?? null;
 
   return (
     <div>
@@ -50,7 +49,7 @@ export function RulesTab() {
               name={r.name}
               desc={r.desc ?? ""}
               enabled={r.enabled}
-              selected={selectedId === r.id}
+              selected={effectiveSelectedId === r.id}
               onSelect={() => setSelectedId(r.id)}
               onToggle={() => onSave({ ...r, enabled: !r.enabled })}
               onRemove={() => onRemove(r.id)}

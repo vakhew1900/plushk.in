@@ -75,5 +75,7 @@ Every backlog/task ID starts with a category tag (see the entry format in `CLAUD
 | `TEST` | Test data/fixtures for manual or automated testing — example rule sets, sample bookmark trees, import/export test cases |
 | `INTEGR` | Integrations with external services beyond the Obsidian export flow (`EXPORT`) — e.g. Telegram |
 | `SEARCH` | Search across sorted bookmarks — the search tab/UI, simple + fuzzy search, tag storage & tag search (rules for auto-assigning tags live under `RULE`) |
+| `SHELF` | User-defined content-type entities (Книга/Видео/...) and their optional workflow (ordered status list, e.g. to-read/reading/done/abandoned), the per-bookmark entity+status assignment, and the "Shelf" settings tab that manages both — distinct from tag storage/search (`SEARCH`) |
+| `BG` | Service worker (`entrypoints/background.ts`) event handling — `bookmarks.onRemoved`/`onChanged` and cross-cutting cleanup of records in other tables when a bookmark disappears or changes |
 
 More categories are added as new areas of the project need one.

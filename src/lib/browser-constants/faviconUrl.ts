@@ -1,15 +1,21 @@
 import { browser } from 'wxt/browser';
+import type { PublicPath } from 'wxt/browser';
 import { debugLog } from '../debug-log';
 import { BrowserTarget } from './browserTarget';
 
 // Chrome exposes a `_favicon` internal endpoint that returns a cached
 // favicon (or a generic placeholder) for an arbitrary page URL. Requires the
-// `favicon` permission (see wxt.config.ts) and WXT's built-in typing for
-// `/_favicon/?...` paths.
+// `favicon` permission (see wxt.config.ts).
 // https://developer.chrome.com/docs/extensions/how-to/ui/favicons
+//
+// `_favicon` is a Chrome-internal virtual endpoint, not a file WXT ever
+// bundles, so it can never appear in WXT's generated `PublicPath` union
+// (.wxt/types/paths.d.ts, built from actual output files). The cast below
+// is a permanent, intentional escape hatch for this one Chrome-only path —
+// not a TODO to remove once WXT "adds typing" for it.
 function chromeFaviconUrl(pageUrl: string): string {
   const query = new URLSearchParams({ pageUrl, size: '32' });
-  return browser.runtime.getURL(`/_favicon/?${query}`);
+  return browser.runtime.getURL(`/_favicon/?${query}` as PublicPath);
 }
 
 // Firefox has no WebExtensions-accessible favicon lookup for arbitrary
