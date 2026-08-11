@@ -5,6 +5,7 @@ Manual correctness checklist — things to verify by hand in the running extensi
 ## SEARCH
 
 - [ ] Favicon display in search results: real site icon shown on Chrome (via the `_favicon` endpoint, `src/lib/browser-constants/faviconUrl.ts`); letter fallback shown on Firefox (no native favicon API available — see `FaviconUrl.FIREFOX`) and on Chrome whenever a site truly has no icon.
+- [ ] `SEARCH-3` new "Tags" sidebar tab: create a tag, rename it, change its color via the swatch picker (selected swatch shows the text-colored border), delete it — list updates immediately and survives an options-page reload (Dexie `tags` table, `db.version(2)`). Check both themes: all 8 palette colors stay legible against `--bg3` in dark and light.
 
 ## RULE
 

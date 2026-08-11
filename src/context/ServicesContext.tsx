@@ -6,12 +6,14 @@ import { DefaultFolderSettingsRepository } from '@/repository/DefaultFolderSetti
 import { DomainAliasRepository } from '@/repository/DomainAliasRepository';
 import { ModeSettingsRepository } from '@/repository/ModeSettingsRepository';
 import { PageMatchGroupRepository } from '@/repository/PageMatchGroupRepository';
+import { TagRepository } from '@/repository/TagRepository';
 import type { IBookmarkRepository } from '@/repository/interfaces/IBookmarkRepository';
 import type { IBookmarkRuleRepository } from '@/repository/interfaces/IBookmarkRuleRepository';
 import type { IDefaultFolderSettingsRepository } from '@/repository/interfaces/IDefaultFolderSettingsRepository';
 import type { IDomainAliasRepository } from '@/repository/interfaces/IDomainAliasRepository';
 import type { IModeSettingsRepository } from '@/repository/interfaces/IModeSettingsRepository';
 import type { IPageMatchGroupRepository } from '@/repository/interfaces/IPageMatchGroupRepository';
+import type { ITagRepository } from '@/repository/interfaces/ITagRepository';
 import { BookmarkSearchService } from '@/services/BookmarkSearchService';
 import { FileService } from '@/services/FileService';
 import { PageExtrasService } from '@/services/PageExtrasService';
@@ -38,6 +40,7 @@ export interface Services {
   quickSaveFolderResolver: IQuickSaveFolderResolver;
   settingsExportImportService: ISettingsExportImportService;
   bookmarkSearchService: IBookmarkSearchService;
+  tagRepository: ITagRepository;
 }
 
 export const ServicesContext = createContext<Services | null>(null);
@@ -74,6 +77,7 @@ export function ServicesProvider({ children }: Props) {
         fileService,
       ),
       bookmarkSearchService: new BookmarkSearchService(bookmarkRepository),
+      tagRepository: new TagRepository(),
     };
   }, []);
 

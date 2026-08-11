@@ -11,7 +11,8 @@
     "main": "Home",
     "rules": "Rules",
     "search": "Search",
-    "aliases": "Aliases"
+    "aliases": "Aliases",
+    "tags": "Tags"
   },
   "modes": {
     "on": {
@@ -96,6 +97,15 @@
     "desc": "One alias for multiple domains — e.g. regional mirrors.",
     "namePlaceholder": "name",
     "domainPlaceholder": "domain.com"
+  },
+  "tagsTab": {
+    "lead": "Tags for bookmarks — name and color. Assigning tags to bookmarks and searching by them are coming separately."
+  },
+  "tagsSection": {
+    "title": "Tags",
+    "addTag": "Tag",
+    "desc": "The list of tags with a color. Definitions only for now — assigning a tag to a bookmark comes later.",
+    "namePlaceholder": "tag name"
   },
   "variablesSection": {
     "title": "Variables",

@@ -10,6 +10,16 @@ Tasks currently in progress. Moved here from `backlog.md` when work starts.
 
 Унифицированное имя — `nodes: RuleNode[]` (выбор пользователя из `nodes`/`children`); `type` не меняется. Данные в IndexedDB не мигрируются (dev-данные без реальных пользователей, пересоздаются вручную) — Dexie-миграция и не нужна технически, `stores()` не декларирует форму `condition`. `SETTINGS_EXPORT_VERSION` поднимается `1`→`2` (уже существующий, готовый к этому механизм версионирования в `isSettingsExport()`). `CLAUDE.md` (секция Rule DSL) переписывается под новую JSON-форму. Глубокая спецификация — `specs/tasks/RULE-11-unify-compound-nodes-field/`.
 
+### SEARCH-3 — Теги для закладок: хранение (имя + цвет) и вкладка «Теги»
+**Priority:** Medium
+**Added:** 2026-07-24
+
+Ранее в бэклоге как «хранение и поиск по тегам» — при подхвате разбито на три отдельные задачи: эта закрывает только хранение (список тегов с именем и цветом, CRUD); присвоение тега закладке — `SEARCH-4`; поиск/фильтр по тегам — `SEARCH-5`. Правила автоподбора тегов — отдельная `RULE-4`.
+
+Реализовано: `Tag`/`TagField`/`TagColor` (`src/types/tag.ts`) — фиксированная палитра из 8 цветов (не свободный hex/color-picker), хранится как семантический ключ (`'red'`, `'orange'`, …), не сырой цвет — резолвится в CSS через `var(--tag-${color})`, токены `--tag-*` заведены в `assets/globals.css` отдельно от семантических `--red`/`--green`/`--blue` (те означают error/success/info в остальном UI, цвет тега не должен занимать это же значение). `ITagRepository`/`TagRepository extends DexieRepository<Tag, string>` (переиспользует `ARCH-7`), таблица `tags` в новой `db.version(2).stores({...})` (существующие три таблицы переобъявлены без изменений индексов). Новая вкладка «Теги» в сайдбаре настроек (`TagsTab` → `components/options/tabs/tags/{TagsSection,TagRow,TagColorPicker}`) — по образцу `AliasesTab`/`AliasesSection`/`AliasRow`. `TagColorPicker` — тонкая обёртка над `RadioGroup`/`RadioGroupItem` (тот же паттерн, что `GroupTypeSwitcher`), не кастомный виджет и не новая Radix-зависимость — визуальный вариант (скруглённый квадрат, обводка в `--text` у выбранного) выбран пользователем из 3 вариантов, показанных на артефакте.
+
+Глубокая спецификация — `specs/tasks/SEARCH-3-tag-storage/`.
+
 ### RULE-1 — Реализация ConsView
 **Priority:** Low
 **Added:** 2026-07-06

@@ -1,9 +1,9 @@
 import { clsx } from 'clsx';
-import { IconHome, IconNetwork, IconSearch, IconSliders } from '@/components/icons';
+import { IconHome, IconNetwork, IconSearch, IconSliders, IconTag } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './OptionsSidebar.module.css';
 
-export type Tab = 'main' | 'rules' | 'search' | 'aliases';
+export type Tab = 'main' | 'rules' | 'search' | 'aliases' | 'tags';
 
 interface Props {
   tab: Tab;
@@ -42,6 +42,11 @@ export function OptionsSidebar({ tab, onTabChange }: Props) {
       <NavBtn active={tab === 'aliases'} onClick={() => onTabChange('aliases')}>
         <IconSliders size={16} />
         {t('nav.aliases')}
+      </NavBtn>
+
+      <NavBtn active={tab === 'tags'} onClick={() => onTabChange('tags')}>
+        <IconTag size={16} />
+        {t('nav.tags')}
       </NavBtn>
     </div>
   );

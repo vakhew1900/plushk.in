@@ -1,0 +1,22 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.8rem 0.95rem;
+}
+.row:not(:last-child) { border-bottom: 1px solid var(--border); }
+
+.nameInput {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  flex: 1;
+}
+
+.removeRow {
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--faint);
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.removeRow:hover { color: var(--red); }

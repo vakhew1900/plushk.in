@@ -12,6 +12,7 @@ import { MainTab } from "@/components/options/tabs/MainTab";
 import { RulesTab } from "@/components/options/tabs/RulesTab";
 import { SearchTab } from "@/components/options/tabs/SearchTab";
 import { AliasesTab } from "@/components/options/tabs/AliasesTab";
+import { TagsTab } from "@/components/options/tabs/TagsTab";
 import { Toaster } from "@/components/Toaster";
 import styles from "./App.module.css";
 
@@ -33,6 +34,7 @@ function AppShell() {
           {tab === "rules" && <RulesTab />}
           {tab === "search" && <SearchTab />}
           {tab === "aliases" && <AliasesTab />}
+          {tab === "tags" && <TagsTab />}
         </div>
       </div>
       <Toaster />

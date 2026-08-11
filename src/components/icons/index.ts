@@ -13,3 +13,4 @@ export { IconStar }     from './IconStar';
 export { IconArrowRight } from './IconArrowRight';
 export { IconSearch }   from './IconSearch';
 export { IconLink }     from './IconLink';
+export { IconTag }      from './IconTag';
