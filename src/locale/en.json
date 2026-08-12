@@ -107,6 +107,9 @@
     "desc": "The list of tags with a color. Definitions only for now — assigning a tag to a bookmark comes later.",
     "namePlaceholder": "tag name"
   },
+  "bookmarkTagEditor": {
+    "editButton": "Edit"
+  },
   "variablesSection": {
     "title": "Variables",
     "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",

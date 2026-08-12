@@ -1,7 +1,6 @@
 import { IconEdit } from '@/components/icons';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem } from '@/components/ui/dropdown-menu';
-import { useTags } from '@/hooks/useTags';
-import { useBookmarkTagLink } from '@/hooks/useBookmarkTagLink';
+import { useBookmarkTagEditor } from '@/hooks/useBookmarkTagEditor';
 import { BookmarkTagChip } from './BookmarkTagChip';
 import styles from './BookmarkTagEditor.module.css';
 
@@ -10,10 +9,7 @@ interface Props {
 }
 
 export function BookmarkTagEditor({ bookmarkId }: Props) {
-  const { items: tags } = useTags();
-  const { tagIds, toggleTag } = useBookmarkTagLink(bookmarkId);
-
-  const selectedTags = tags.filter((tag) => tagIds.includes(tag.id));
+  const { tags, selectedTags, tagIds, toggleTag } = useBookmarkTagEditor(bookmarkId);
 
   return (
     <div className={styles.wrap} onClick={(e) => e.stopPropagation()}>
