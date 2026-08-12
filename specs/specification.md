@@ -20,8 +20,6 @@ The directions below have been discussed but are deliberately out of scope for t
 
 - Import/export of all extension settings (rules, aliases, variables) as a single file
 - Import/export of individual pages to Obsidian (beyond the plain Markdown article export)
-- Tags for bookmarks
-- A separate settings tab, **"Shelf"** — search across saved bookmarks, statuses (read / watched / to read / to watch)
 - Telegram integration
 - Other similar integrations that come up as the project grows
 
@@ -74,7 +72,7 @@ Every backlog/task ID starts with a category tag (see the entry format in `CLAUD
 | `DEV` | Dev tooling and process — build config, Claude Code skills, specs workflow itself, non-product infrastructure |
 | `TEST` | Test data/fixtures for manual or automated testing — example rule sets, sample bookmark trees, import/export test cases |
 | `INTEGR` | Integrations with external services beyond the Obsidian export flow (`EXPORT`) — e.g. Telegram |
-| `SEARCH` | Search across sorted bookmarks — the search tab/UI, simple + fuzzy search, tag storage & tag search (rules for auto-assigning tags live under `RULE`) |
+| `SEARCH` | Search across sorted bookmarks — the options-page "Библиотека"/Library tab (`LibraryTab`, formerly "Search"/`SearchTab`) and its popup counterpart, simple + fuzzy search, tag storage & tag search (rules for auto-assigning tags live under `RULE`) |
 | `SHELF` | User-defined content-type entities (Книга/Видео/...) and their optional workflow (ordered status list, e.g. to-read/reading/done/abandoned), the per-bookmark entity+status assignment, and the "Shelf" settings tab that manages both — distinct from tag storage/search (`SEARCH`) |
 | `BG` | Service worker (`entrypoints/background.ts`) event handling — `bookmarks.onRemoved`/`onChanged` and cross-cutting cleanup of records in other tables when a bookmark disappears or changes |
 

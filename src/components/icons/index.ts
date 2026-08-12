@@ -12,6 +12,7 @@ export { IconUpload }   from './IconUpload';
 export { IconStar }     from './IconStar';
 export { IconArrowRight } from './IconArrowRight';
 export { IconSearch }   from './IconSearch';
+export { IconLibrary }  from './IconLibrary';
 export { IconLink }     from './IconLink';
 export { IconTag }      from './IconTag';
 export { IconEdit }     from './IconEdit';

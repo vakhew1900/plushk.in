@@ -1,14 +1,14 @@
 import { useTranslation } from '@/hooks/useTranslation';
 import { TabHeader } from '@/components/options/TabHeader';
 import { TagsSection } from './tags/TagsSection';
-import styles from './TagsTab.module.css';
+import styles from './CategoriesTab.module.css';
 
-export function TagsTab() {
+export function CategoriesTab() {
   const { translate: t } = useTranslation();
 
   return (
     <div className={styles.wrap}>
-      <TabHeader title={t('nav.tags')} lead={t('tagsTab.lead')} />
+      <TabHeader title={t('nav.categories')} lead={t('categoriesTab.lead')} />
 
       <TagsSection />
     </div>

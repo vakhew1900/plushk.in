@@ -1,9 +1,9 @@
 import { clsx } from 'clsx';
-import { IconHome, IconNetwork, IconSearch, IconSliders, IconTag } from '@/components/icons';
+import { IconHome, IconNetwork, IconLibrary, IconSliders, IconTag } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './OptionsSidebar.module.css';
 
-export type Tab = 'main' | 'rules' | 'search' | 'aliases' | 'tags';
+export type Tab = 'main' | 'rules' | 'library' | 'mappings' | 'categories';
 
 interface Props {
   tab: Tab;
@@ -34,19 +34,19 @@ export function OptionsSidebar({ tab, onTabChange }: Props) {
         {t('nav.rules')}
       </NavBtn>
 
-      <NavBtn active={tab === 'search'} onClick={() => onTabChange('search')}>
-        <IconSearch size="md" />
-        {t('nav.search')}
+      <NavBtn active={tab === 'library'} onClick={() => onTabChange('library')}>
+        <IconLibrary size="md" />
+        {t('nav.library')}
       </NavBtn>
 
-      <NavBtn active={tab === 'aliases'} onClick={() => onTabChange('aliases')}>
+      <NavBtn active={tab === 'mappings'} onClick={() => onTabChange('mappings')}>
         <IconSliders size="md" />
-        {t('nav.aliases')}
+        {t('nav.mappings')}
       </NavBtn>
 
-      <NavBtn active={tab === 'tags'} onClick={() => onTabChange('tags')}>
+      <NavBtn active={tab === 'categories'} onClick={() => onTabChange('categories')}>
         <IconTag size="md" />
-        {t('nav.tags')}
+        {t('nav.categories')}
       </NavBtn>
     </div>
   );

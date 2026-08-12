@@ -2,14 +2,14 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { TabHeader } from '@/components/options/TabHeader';
 import { AliasesSection } from './aliases/AliasesSection';
 import { VariablesSection } from './aliases/VariablesSection';
-import styles from './AliasesTab.module.css';
+import styles from './MappingsTab.module.css';
 
-export function AliasesTab() {
+export function MappingsTab() {
   const { translate: t } = useTranslation();
 
   return (
     <div className={styles.wrap}>
-      <TabHeader title={t('nav.aliases')} lead={t('aliasesTab.lead')} />
+      <TabHeader title={t('nav.mappings')} lead={t('mappingsTab.lead')} />
 
       <AliasesSection />
       <VariablesSection />

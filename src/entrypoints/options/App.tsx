@@ -10,9 +10,9 @@ import { OptionsSidebar } from "@/components/options/OptionsSidebar";
 import type { Tab } from "@/components/options/OptionsSidebar";
 import { MainTab } from "@/components/options/tabs/MainTab";
 import { RulesTab } from "@/components/options/tabs/RulesTab";
-import { SearchTab } from "@/components/options/tabs/SearchTab";
-import { AliasesTab } from "@/components/options/tabs/AliasesTab";
-import { TagsTab } from "@/components/options/tabs/TagsTab";
+import { LibraryTab } from "@/components/options/tabs/LibraryTab";
+import { MappingsTab } from "@/components/options/tabs/MappingsTab";
+import { CategoriesTab } from "@/components/options/tabs/CategoriesTab";
 import { Toaster } from "@/components/Toaster";
 import styles from "./App.module.css";
 
@@ -32,9 +32,9 @@ function AppShell() {
         <div className={styles.content}>
           {tab === "main" && <MainTab />}
           {tab === "rules" && <RulesTab />}
-          {tab === "search" && <SearchTab />}
-          {tab === "aliases" && <AliasesTab />}
-          {tab === "tags" && <TagsTab />}
+          {tab === "library" && <LibraryTab />}
+          {tab === "mappings" && <MappingsTab />}
+          {tab === "categories" && <CategoriesTab />}
         </div>
       </div>
       <Toaster />

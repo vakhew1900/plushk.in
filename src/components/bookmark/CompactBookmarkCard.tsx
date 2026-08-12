@@ -1,15 +1,13 @@
 import { BookmarkFavicon } from './BookmarkFavicon';
-import { BookmarkTagEditor } from './tags/BookmarkTagEditor';
 import styles from './CompactBookmarkCard.module.css';
 
 interface Props {
-  id: string;
   title: string;
   url: string;
   onClick: () => void;
 }
 
-export function CompactBookmarkCard({ id, title, url, onClick }: Props) {
+export function CompactBookmarkCard({ title, url, onClick }: Props) {
   const domain = new URL(url).hostname;
 
   return (
@@ -19,7 +17,6 @@ export function CompactBookmarkCard({ id, title, url, onClick }: Props) {
         <div className={styles.title}>{title}</div>
         <div className={styles.url}>{url.replace(/^https?:\/\//, '')}</div>
       </div>
-      <BookmarkTagEditor bookmarkId={id} />
     </div>
   );
 }

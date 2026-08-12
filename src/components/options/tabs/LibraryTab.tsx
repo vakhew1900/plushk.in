@@ -6,9 +6,9 @@ import { useTranslation } from '@/hooks/useTranslation';
 import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
 import { SearchBar } from '@/components/bookmark/search/SearchBar';
 import { SearchResultsList } from '@/components/bookmark/search/SearchResultsList';
-import styles from './SearchTab.module.css';
+import styles from './LibraryTab.module.css';
 
-export function SearchTab() {
+export function LibraryTab() {
   const { translate: t } = useTranslation();
   const { query, setQuery, results, totalCount, loading } = useBookmarkSearch();
 
@@ -24,7 +24,7 @@ export function SearchTab() {
 
   return (
     <div className={styles.wrap}>
-      <TabHeader title={t('nav.search')} lead={t('searchTab.lead')} />
+      <TabHeader title={t('nav.library')} lead={t('searchTab.lead')} />
 
       <SearchBar value={query} onChange={setQuery} placeholder={t('searchTab.placeholder')} />
 
