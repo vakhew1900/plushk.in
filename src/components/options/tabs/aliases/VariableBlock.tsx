@@ -1,16 +1,23 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CodeInput } from '@/components/ui/code-input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { IconPlus, IconX } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { VariableFieldDraft } from '@/lib/page-match-mapping';
 import { SelectorTypeToggle } from './SelectorTypeToggle';
 import styles from './VariableBlock.module.css';
 
-interface Props {
+export interface AliasOption {
+  id: string;
   name: string;
+}
+
+interface Props {
+  aliasId: string;
+  aliasOptions: AliasOption[];
   fields: VariableFieldDraft[];
-  onNameChange: (name: string) => void;
+  onAliasChange: (aliasId: string) => void;
   onFieldKeyChange: (index: number, key: string) => void;
   onFieldValueChange: (index: number, value: string) => void;
   onFieldSelectorTypeChange: (index: number, selectorType: VariableFieldDraft['selectorType']) => void;
@@ -20,9 +27,10 @@ interface Props {
 }
 
 export function VariableBlock({
-  name,
+  aliasId,
+  aliasOptions,
   fields,
-  onNameChange,
+  onAliasChange,
   onFieldKeyChange,
   onFieldValueChange,
   onFieldSelectorTypeChange,
@@ -35,12 +43,18 @@ export function VariableBlock({
   return (
     <div className={styles.variableBlock}>
       <div className={styles.variableHead}>
-        <Input
-          value={name}
-          onChange={(e) => onNameChange(e.target.value)}
-          placeholder={t('variablesSection.namePlaceholder')}
-          className={styles.variableNameInput}
-        />
+        <Select value={aliasId} onValueChange={onAliasChange}>
+          <SelectTrigger className={styles.aliasSelectTrigger}>
+            <SelectValue placeholder={t('variablesSection.aliasPlaceholder')} />
+          </SelectTrigger>
+          <SelectContent>
+            {aliasOptions.map((alias) => (
+              <SelectItem key={alias.id} value={alias.id}>
+                {alias.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <span className={styles.variableCount}>{t('variablesSection.fieldsCount', { count: fields.length })}</span>
         <button onClick={onRemove} className={styles.removeBlock}><IconX size="sm" /></button>
       </div>

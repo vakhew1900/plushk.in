@@ -138,8 +138,9 @@
     "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",
     "fieldsCount": "{{count}} fields",
     "addGroup": "Group",
+    "addGroupDisabledHint": "Add a domain alias not yet claimed by another group first",
     "addField": "Field",
-    "namePlaceholder": "name",
+    "aliasPlaceholder": "alias",
     "fieldKeyPlaceholder": "field",
     "fieldValuePlaceholder": "selector"
   },

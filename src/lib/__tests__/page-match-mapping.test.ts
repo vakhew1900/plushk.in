@@ -8,7 +8,7 @@ describe('toPageMatchGroup / fromPageMatchGroup', () => {
   it('round-trips a group with multiple fields, preserving order', () => {
     const draft: VariableGroupDraft = {
       id: 'g1',
-      name: 'reddit',
+      aliasId: 'reddit',
       fields: [
         { k: 'title', v: 'body h1.post-title', selectorType: PageSelectorType.CSS },
         { k: 'author', v: 'author', selectorType: PageSelectorType.META },
@@ -18,14 +18,14 @@ describe('toPageMatchGroup / fromPageMatchGroup', () => {
 
     const group = toPageMatchGroup(draft);
     expect(group.id).toBe('g1');
-    expect(group.alias_name).toBe('reddit');
+    expect(group.aliasId).toBe('reddit');
     expect(fromPageMatchGroup(group)).toEqual(draft);
   });
 
   it('produces a Map keyed by field name', () => {
     const draft: VariableGroupDraft = {
       id: 'g1',
-      name: 'habr',
+      aliasId: 'habr',
       fields: [{ k: 'title', v: 'h1.tm-title', selectorType: PageSelectorType.CSS }],
     };
 
@@ -39,7 +39,7 @@ describe('toPageMatchGroup / fromPageMatchGroup', () => {
   it('keeps two unnamed fields independent instead of collapsing them', () => {
     const draft: VariableGroupDraft = {
       id: 'g1',
-      name: 'draft',
+      aliasId: 'draft',
       fields: [
         { k: '', v: 'first', selectorType: PageSelectorType.CSS },
         { k: '', v: 'second', selectorType: PageSelectorType.CSS },
@@ -54,7 +54,7 @@ describe('toPageMatchGroup / fromPageMatchGroup', () => {
   it('collapses two fields that share the same real name (known limitation)', () => {
     const draft: VariableGroupDraft = {
       id: 'g1',
-      name: 'draft',
+      aliasId: 'draft',
       fields: [
         { k: 'title', v: 'first', selectorType: PageSelectorType.CSS },
         { k: 'title', v: 'second', selectorType: PageSelectorType.CSS },
@@ -67,7 +67,7 @@ describe('toPageMatchGroup / fromPageMatchGroup', () => {
   });
 
   it('returns an empty fields array for a group with no page matches', () => {
-    const group: PageMatchGroup = { id: 'g1', alias_name: 'empty', pageMatches: new Map() };
-    expect(fromPageMatchGroup(group)).toEqual({ id: 'g1', name: 'empty', fields: [] });
+    const group: PageMatchGroup = { id: 'g1', aliasId: 'empty', pageMatches: new Map() };
+    expect(fromPageMatchGroup(group)).toEqual({ id: 'g1', aliasId: 'empty', fields: [] });
   });
 });

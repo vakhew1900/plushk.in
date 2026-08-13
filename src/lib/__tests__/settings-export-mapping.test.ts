@@ -9,7 +9,7 @@ describe('toExportPageMatchGroup / fromExportPageMatchGroup', () => {
   it('round-trips a group through the JSON-safe Record form', () => {
     const group: PageMatchGroup = {
       id: 'g1',
-      alias_name: 'habr',
+      aliasId: 'alias-habr',
       pageMatches: new Map([
         ['title', { name: 'title', selector: { type: PageSelectorType.CSS, value: 'h1.tm-title' } }],
       ]),
@@ -18,7 +18,7 @@ describe('toExportPageMatchGroup / fromExportPageMatchGroup', () => {
     const exported = toExportPageMatchGroup(group);
     expect(exported).toEqual({
       id: 'g1',
-      alias_name: 'habr',
+      aliasId: 'alias-habr',
       pageMatches: { title: { name: 'title', selector: { type: PageSelectorType.CSS, value: 'h1.tm-title' } } },
     });
     expect(fromExportPageMatchGroup(exported)).toEqual(group);

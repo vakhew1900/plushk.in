@@ -69,7 +69,7 @@ const alias: DomainAlias = { id: 'alias-1', name: 'youtube', domain_names: ['you
 
 const group: PageMatchGroup = {
   id: 'group-1',
-  alias_name: 'habr',
+  aliasId: 'alias-1',
   pageMatches: new Map([['title', { name: 'title', selector: { type: PageSelectorType.CSS, value: 'h1' } }]]),
 };
 
@@ -95,7 +95,7 @@ describe('SettingsExportImportService.exportSettings', () => {
     expect(data.rules).toEqual([rule]);
     expect(data.domainAliases).toEqual([alias]);
     expect(data.pageMatchGroups).toEqual([
-      { id: 'group-1', alias_name: 'habr', pageMatches: { title: { name: 'title', selector: { type: PageSelectorType.CSS, value: 'h1' } } } },
+      { id: 'group-1', aliasId: 'alias-1', pageMatches: { title: { name: 'title', selector: { type: PageSelectorType.CSS, value: 'h1' } } } },
     ]);
     expect(typeof data.exportedAt).toBe('string');
   });
@@ -112,7 +112,7 @@ describe('SettingsExportImportService.importSettings', () => {
       rules: [rule],
       domainAliases: [alias],
       pageMatchGroups: [
-        { id: 'group-1', alias_name: 'habr', pageMatches: { title: { name: 'title', selector: { type: PageSelectorType.CSS, value: 'h1' } } } },
+        { id: 'group-1', aliasId: 'alias-1', pageMatches: { title: { name: 'title', selector: { type: PageSelectorType.CSS, value: 'h1' } } } },
       ],
     });
 

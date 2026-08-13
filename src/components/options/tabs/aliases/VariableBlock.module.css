@@ -7,12 +7,12 @@
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
 }
-.variableNameInput {
+.aliasSelectTrigger {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   color: var(--accent);
-  width: 120px;
+  width: 8.75rem;
   flex-shrink: 0;
 }
 .variableCount { font-size: 11px; color: var(--faint); }

@@ -16,3 +16,4 @@ export { IconLibrary }  from './IconLibrary';
 export { IconLink }     from './IconLink';
 export { IconTag }      from './IconTag';
 export { IconEdit }     from './IconEdit';
+export { IconChevronDown } from './IconChevronDown';

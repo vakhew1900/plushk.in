@@ -1,6 +1,6 @@
 import type { IDomainAliasRepository } from '../repository/interfaces/IDomainAliasRepository';
-import type { PageMeta } from '../types/page-meta';
-import type { IPageMetaFiller, PageMetaFillerInput } from './interfaces/IPageMetaFiller';
+import type { DomainAlias } from '../types/domain-alias';
+import type { IPageMetaFiller, PageMetaFillerInput, PageMetaFillerResult } from './interfaces/IPageMetaFiller';
 
 /**
  * Base `url`/`domain`/`alias`/`title` only — cheap and DOM-free, safe to call
@@ -12,20 +12,23 @@ import type { IPageMetaFiller, PageMetaFillerInput } from './interfaces/IPageMet
 export class PageMetaFiller implements IPageMetaFiller {
   constructor(private readonly domainAliasRepository: IDomainAliasRepository) {}
 
-  async fillPageMeta({ url = '', title }: PageMetaFillerInput): Promise<PageMeta> {
+  async fillPageMeta({ url = '', title }: PageMetaFillerInput): Promise<PageMetaFillerResult> {
     const domain = url ? new URL(url).hostname : '';
-    const alias = domain ? await this.resolveAlias(domain) : undefined;
+    const domainAlias = domain ? await this.resolveDomainAlias(domain) : undefined;
 
     return {
-      url,
-      domain,
-      alias,
-      title,
+      meta: {
+        url,
+        domain,
+        alias: domainAlias?.name,
+        title,
+      },
+      aliasId: domainAlias?.id,
     };
   }
 
-  private async resolveAlias(domain: string): Promise<string | undefined> {
+  private async resolveDomainAlias(domain: string): Promise<DomainAlias | undefined> {
     const aliases = await this.domainAliasRepository.getAll();
-    return aliases.find((a) => a.domain_names.includes(domain))?.name;
+    return aliases.find((a) => a.domain_names.includes(domain));
   }
 }

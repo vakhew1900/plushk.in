@@ -16,24 +16,25 @@ describe('PageMetaFiller', () => {
   it('derives url/domain/title from url/title input', async () => {
     const filler = new PageMetaFiller(createDomainAliasRepositoryStub([]));
 
-    const meta = await filler.fillPageMeta({
+    const result = await filler.fillPageMeta({
       title: 'React Tutorial for Beginners',
       url: 'https://youtube.com/watch?v=abc123',
     });
 
-    expect(meta).toEqual({
+    expect(result.meta).toEqual({
       url: 'https://youtube.com/watch?v=abc123',
       domain: 'youtube.com',
       title: 'React Tutorial for Beginners',
     });
+    expect(result.aliasId).toBeUndefined();
   });
 
   it('falls back to an empty url/domain when no url is given', async () => {
     const filler = new PageMetaFiller(createDomainAliasRepositoryStub([]));
 
-    const meta = await filler.fillPageMeta({ title: 'Videos' });
+    const result = await filler.fillPageMeta({ title: 'Videos' });
 
-    expect(meta).toEqual({ url: '', domain: '', title: 'Videos' });
+    expect(result.meta).toEqual({ url: '', domain: '', title: 'Videos' });
   });
 
   it('resolves alias from a DomainAlias whose domain_names includes the page domain', async () => {
@@ -43,9 +44,10 @@ describe('PageMetaFiller', () => {
       ]),
     );
 
-    const meta = await filler.fillPageMeta({ title: 'Inbox', url: 'https://mail.google.com/mail/u/0' });
+    const result = await filler.fillPageMeta({ title: 'Inbox', url: 'https://mail.google.com/mail/u/0' });
 
-    expect(meta.alias).toBe('Gmail');
+    expect(result.meta.alias).toBe('Gmail');
+    expect(result.aliasId).toBe('1');
   });
 
   it('leaves alias undefined when no DomainAlias matches the domain', async () => {
@@ -53,8 +55,9 @@ describe('PageMetaFiller', () => {
       createDomainAliasRepositoryStub([{ id: '1', name: 'Gmail', domain_names: ['gmail.com'] }]),
     );
 
-    const meta = await filler.fillPageMeta({ title: 'Docs', url: 'https://docs.google.com/document/1' });
+    const result = await filler.fillPageMeta({ title: 'Docs', url: 'https://docs.google.com/document/1' });
 
-    expect(meta.alias).toBeUndefined();
+    expect(result.meta.alias).toBeUndefined();
+    expect(result.aliasId).toBeUndefined();
   });
 });

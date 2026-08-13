@@ -195,16 +195,6 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 
 **3) Экспорт в Markdown/Obsidian (`EXPORT-1`).** У SVG-иконки нет прямого эквивалента в Markdown-файле — при экспорте статьи/заметки, помеченной тегом или сущностью с иконкой, нужно явное решение, как (и нужно ли вообще) её туда переносить: эмодзи-соответствие по `IconName` (таблица маппинга), текстовое имя иконки в frontmatter, либо иконка полностью игнорируется при экспорте и участвует только во внутреннем UI расширения. Открыто до реализации `EXPORT-1` и этой задачи — не блокирует ни одну из них по отдельности, но обе стоит свести до финального решения по формату frontmatter в `EXPORT-1`.
 
-### RULE-12 — Привязать PageMatchGroup к DomainAlias по id вместо свободного alias_name
-**Priority:** Medium
-**Added:** 2026-08-14
-
-Сейчас `PageMatchGroup.alias_name` (`src/types/page-match.ts`) — произвольная текстовая метка, а не ссылка на `DomainAlias`: `VariableBlock` (вкладка «Алиасы», секция «Переменные») редактирует её как обычную строку через `Input`, и нигде в коде это имя не сверяется ни с `DomainAlias.name`, ни с доменом текущей страницы. `useQuickSave.ts` тянет **все** `PageMatchGroup` через `pageMatchGroupRepository.getAll()` и передаёт их все в `PageExtrasService.extract()` — `content.ts` прогоняет селекторы каждой группы по DOM любой открытой страницы независимо от домена/алиаса, результаты сливаются `Object.assign` в порядке групп (при совпадении ключей — молча перезаписывают друг друга). `RULE-5` подключил этот pipeline к реальному flow создания закладки, но alias-scoping не добавлял — пробел обнаружен при аудите `PageMetaFiller`/`VariableBlock` по просьбе пользователя.
-
-Меняется: `PageMatchGroup.alias_name: string` → `aliasId: string`, реальная ссылка на `DomainAlias.id`. `VariableBlock` — вместо текстового поля имени выпадающий список (Radix `Select`) с существующими `DomainAlias`. Не более одной группы на алиас — обеспечивается уникальным индексом `&aliasId` в Dexie и фильтрацией списка алиасов в выпадающем списке (уже занятые другой группой алиасы не предлагаются). При удалении `DomainAlias`, на который ссылается группа, группа удаляется каскадно (`DomainAliasRepository.remove()`, по образцу каскада `TagRepository.remove()` из `SEARCH-4`). При quick-save `PageMetaFiller` резолвит не только `alias.name` (для движка правил, как сейчас), но и сам `DomainAlias.id` — `useQuickSave.ts` использует этот id, чтобы найти **ровно одну** подходящую `PageMatchGroup` (если такая есть) и передать в `PageExtrasService.extract()` только её, вместо всех групп разом.
-
-Глубокая спецификация — `specs/tasks/RULE-12-page-match-group-alias-link/`.
-
 ### SEARCH-7 — Карточная (grid) отображение закладок как альтернатива списку
 **Priority:** Low
 **Added:** 2026-08-13

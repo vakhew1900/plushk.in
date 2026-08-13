@@ -160,3 +160,20 @@ Finished tasks, moved here from `tasks.md` when completed. Kept for history — 
 
 Правило про сами эти находки задокументировано (не было зафиксировано первым проходом реализации): `CLAUDE.md` (Code rules, рядом с правилом про SVG-иконки) и скилл `scaffold` (`component.md`, правило 8) теперь явно запрещают сырой юникод-глиф (`×`/`+`/`→` и т.п.) как содержимое кликабельного элемента вместо иконки-компонента — с явной оговоркой, что глиф как типографский разделитель в обычном тексте (не внутри `<button>`/`onClick`) иконкой не считается и остаётся текстом.
 
+### RULE-12 — Привязать PageMatchGroup к DomainAlias по id вместо свободного alias_name
+**Priority:** Medium
+**Added:** 2026-08-14
+**Completed:** 2026-08-14
+
+Реализовано по плану из глубокой спецификации (`specs/tasks/RULE-12-page-match-group-alias-link/`). `PageMatchGroup.alias_name: string` → `aliasId: string`, реальный FK на `DomainAlias.id` (`types/page-match.ts`), с уникальным индексом `&aliasId` на `pageMatchGroups`. Пользователь уточнил в ходе реализации: раз реальных пользователей ещё нет, отдельная версия Dexie-схемы под это изменение не нужна — `db/index.ts` схлопнут обратно в единственный `db.version(1)` с финальной формой всех 9 таблиц (вместо цепочки `version(1..5)`, изначально заведённой этой же задачей); аналогично `SETTINGS_EXPORT_VERSION` (`types/settings-export.ts`) оставлен `1` вместо инкремента до `3`. Тот же принцип, что уже применялся в `RULE-11` — просто доведён на этот раз до отказа от промежуточных версий вовсе, а не только от миграции данных.
+
+`VariableBlock` — текстовое поле имени заменено на `Select` (новая тонкая обёртка `components/ui/select.tsx` над `@radix-ui/react-select`, новая прямая зависимость; новый `IconChevronDown`) со списком `DomainAlias`. `VariablesSection` — уже занятые другой группой алиасы не предлагаются в выпадающем списке (собственный алиас группы остаётся выбираемым); «Добавить группу» задизейблена с подсказкой, когда нет ни одного `DomainAlias` без группы (создаёт новую группу сразу на первом незанятом алиасе — без промежуточного «пустого» состояния).
+
+`DomainAliasRepository.remove()` переопределён — каскадно удаляет привязанную `PageMatchGroup` в одной транзакции перед удалением самого алиаса (по образцу `TagRepository.remove()`/`SEARCH-4`).
+
+`PageMetaFiller.fillPageMeta()` меняет контракт (`IPageMetaFiller`) — возвращает `{ meta: PageMeta; aliasId?: string }` вместо голого `PageMeta` (резолвит `DomainAlias` целиком, не только `.name`). `useQuickSave.ts` использует `aliasId`, чтобы найти не более одной подходящей `PageMatchGroup` и передать в `PageExtrasService.extract()` только её — вместо `pageMatchGroupRepository.getAll()` без фильтрации, как было раньше (пробел, оставленный `RULE-5`).
+
+Экспорт/импорт настроек: `ExportedPageMatchGroup.alias_name` → `aliasId`, `SETTINGS_EXPORT_VERSION` остался `1` (см. выше). `configs/social-extras/settings.json` обновлён под новую схему (`aliasId`, реально указывающий на существующие `test-alias-reddit`/`test-alias-dtf`); `configs/mail/settings.json`/`configs/it/settings.json` (пустые `pageMatchGroups`, поля не переименовывались) синхронизированы на `"version": 1`, раз они всё равно должны совпадать с `SETTINGS_EXPORT_VERSION` для успешного импорта.
+
+`tsc --noEmit`, `eslint`, `vitest run` (166/166) прогнаны после реализации — 0 новых ошибок; 6 предсуществующих lint-ошибок (`FolderTree.tsx`, `MainTab.tsx`, `PopupQuickSave.tsx`, `useBookmarkSearch.ts`) не в затронутых файлах, не связаны с этой задачей. `npm run build:firefox` (реальная сборка WXT) — успешно. Ручная проверка по `specs/verification.md` (секция RULE, новые пункты `RULE-12`) — не отмечена, стоит прогнать перед релизом; в этой сессии не было доступа к инструментам управления реальным браузером (нет `chromium-cli`/Playwright/`web-ext` в окружении), так что клик-тест выпадающего списка алиасов, каскадного удаления и quick-save на живой странице пользователю стоит прогнать вручную через `dev:firefox`.
+

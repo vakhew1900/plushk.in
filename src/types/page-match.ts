@@ -24,13 +24,13 @@ export type PageMatchField = typeof PageMatchField[keyof typeof PageMatchField];
 
 export type PageMatchGroup = {
   id: string;
-  alias_name: string;
+  aliasId: string;
   pageMatches: Map<string, PageMatch>;
 };
 
 export const PageMatchGroupField = {
   ID:           'id',
-  ALIAS_NAME:   'alias_name',
+  ALIAS_ID:     'aliasId',
   PAGE_MATCHES: 'pageMatches',
 } as const;
 export type PageMatchGroupField = typeof PageMatchGroupField[keyof typeof PageMatchGroupField];

@@ -23,16 +23,24 @@ export function useQuickSave(mode: Mode) {
     void browser.tabs.query({ active: true, currentWindow: true }).then(async ([activeTab]) => {
       if (cancelled || !activeTab?.url) return;
 
-      const baseMeta = await pageMetaFiller.fillPageMeta({ url: activeTab.url, title: activeTab.title ?? '' });
+      const { meta: baseMeta, aliasId } = await pageMetaFiller.fillPageMeta({
+        url: activeTab.url,
+        title: activeTab.title ?? '',
+      });
       setTab({ title: baseMeta.title, url: baseMeta.url });
 
       // Off mode never resolves a folder — skip the extraction round-trip entirely.
       if (mode === Mode.OFF) return;
 
+      // Only the PageMatchGroup scoped to the page's own resolved alias
+      // applies here — never every stored group (RULE-12).
       let overlay: Partial<PageMeta> | undefined;
-      if (activeTab.id !== undefined) {
+      if (activeTab.id !== undefined && aliasId !== undefined) {
         const groups = await pageMatchGroupRepository.getAll();
-        overlay = await pageExtrasService.extract(activeTab.id, groups);
+        const matchingGroup = groups.find((g) => g.aliasId === aliasId);
+        if (matchingGroup) {
+          overlay = await pageExtrasService.extract(activeTab.id, [matchingGroup]);
+        }
       }
 
       const meta: PageMeta = { ...baseMeta, ...overlay };

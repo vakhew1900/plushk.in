@@ -2,24 +2,36 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useDomainAliases } from '@/hooks/useDomainAliases';
 import { usePageMatchGroups } from '@/hooks/usePageMatchGroups';
 import { DEFAULT_SELECTOR_TYPE, fromPageMatchGroup, toPageMatchGroup } from '@/lib/page-match-mapping';
 import type { VariableFieldDraft, VariableGroupDraft } from '@/lib/page-match-mapping';
 import { VariableBlock } from './VariableBlock';
+import type { AliasOption } from './VariableBlock';
 import styles from './VariablesSection.module.css';
 
 export function VariablesSection() {
   const { translate: t } = useTranslation();
+  const { items: aliases } = useDomainAliases();
   const { items, save, remove } = usePageMatchGroups();
   const groups = items.map(fromPageMatchGroup);
 
+  // At most one group per alias — an alias already claimed by another group
+  // isn't offered again (RULE-12).
+  const usedAliasIds = new Set(groups.map((g) => g.aliasId));
+  const unclaimedAliases = aliases.filter((a) => !usedAliasIds.has(a.id));
+
   const saveDraft = (draft: VariableGroupDraft) => save(toPageMatchGroup(draft));
 
-  const addGroup = () => void saveDraft({ id: crypto.randomUUID(), name: '', fields: [] });
+  const canAddGroup = unclaimedAliases.length > 0;
+  const addGroup = () => {
+    if (!canAddGroup) return;
+    void saveDraft({ id: crypto.randomUUID(), aliasId: unclaimedAliases[0].id, fields: [] });
+  };
 
-  const renameGroup = (id: string, name: string) => {
+  const changeAlias = (id: string, aliasId: string) => {
     const group = groups.find((g) => g.id === id);
-    if (group) void saveDraft({ ...group, name });
+    if (group) void saveDraft({ ...group, aliasId });
   };
 
   const addField = (id: string) => {
@@ -42,11 +54,23 @@ export function VariablesSection() {
     if (group) void saveDraft({ ...group, fields: group.fields.filter((_, i) => i !== index) });
   };
 
+  // A group's own current alias stays selectable alongside every alias no
+  // other group has claimed yet.
+  const aliasOptionsFor = (group: VariableGroupDraft): AliasOption[] =>
+    aliases.filter((a) => a.id === group.aliasId || !usedAliasIds.has(a.id));
+
   return (
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
         <Text as="h2" size="subheading">{t('variablesSection.title')}</Text>
-        <Button variant="outline" size="sm" style={{ marginLeft: 'auto' }} onClick={addGroup}>
+        <Button
+          variant="outline"
+          size="sm"
+          style={{ marginLeft: 'auto' }}
+          onClick={addGroup}
+          disabled={!canAddGroup}
+          title={canAddGroup ? undefined : t('variablesSection.addGroupDisabledHint')}
+        >
           <IconPlus size="sm" />
           {t('variablesSection.addGroup')}
         </Button>
@@ -56,9 +80,10 @@ export function VariablesSection() {
         {groups.map((g) => (
           <VariableBlock
             key={g.id}
-            name={g.name}
+            aliasId={g.aliasId}
+            aliasOptions={aliasOptionsFor(g)}
             fields={g.fields}
-            onNameChange={(name) => renameGroup(g.id, name)}
+            onAliasChange={(aliasId) => changeAlias(g.id, aliasId)}
             onFieldKeyChange={(index, k) => updateField(g.id, index, { k })}
             onFieldValueChange={(index, v) => updateField(g.id, index, { v })}
             onFieldSelectorTypeChange={(index, selectorType) => updateField(g.id, index, { selectorType })}

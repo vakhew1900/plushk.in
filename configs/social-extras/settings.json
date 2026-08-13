@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 1,
   "exportedAt": "2026-07-24T00:00:00.000Z",
   "rules": [
     {
@@ -48,7 +48,7 @@
   "pageMatchGroups": [
     {
       "id": "pmg-reddit",
-      "alias_name": "Reddit — subreddit",
+      "aliasId": "test-alias-reddit",
       "pageMatches": {
         "subreddit": {
           "name": "subreddit",
@@ -58,7 +58,7 @@
     },
     {
       "id": "pmg-dtf",
-      "alias_name": "DTF — хаб",
+      "aliasId": "test-alias-dtf",
       "pageMatches": {
         "hub": {
           "name": "hub",

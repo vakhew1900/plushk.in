@@ -9,7 +9,7 @@ export interface VariableFieldDraft {
 
 export interface VariableGroupDraft {
   id: string;
-  name: string;
+  aliasId: string;
   fields: VariableFieldDraft[];
 }
 
@@ -20,13 +20,13 @@ export function toPageMatchGroup(draft: VariableGroupDraft): PageMatchGroup {
     const selector: PageSelector = { type: f.selectorType, value: f.v };
     pageMatches.set(key, { name: f.k, selector });
   });
-  return { id: draft.id, alias_name: draft.name, pageMatches };
+  return { id: draft.id, aliasId: draft.aliasId, pageMatches };
 }
 
 export function fromPageMatchGroup(group: PageMatchGroup): VariableGroupDraft {
   return {
     id: group.id,
-    name: group.alias_name,
+    aliasId: group.aliasId,
     fields: Array.from(group.pageMatches.values()).map((m) => ({
       k: m.name,
       v: m.selector.value,

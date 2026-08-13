@@ -138,8 +138,9 @@
     "desc": "Поля-псевдонимы для путей по HTML-дереву страницы. Используются в правилах и при экспорте.",
     "fieldsCount": "{{count}} поля",
     "addGroup": "Группа",
+    "addGroupDisabledHint": "Сначала добавьте алиас домена, ещё не занятый другой группой",
     "addField": "Поле",
-    "namePlaceholder": "имя",
+    "aliasPlaceholder": "алиас",
     "fieldKeyPlaceholder": "поле",
     "fieldValuePlaceholder": "селектор"
   },

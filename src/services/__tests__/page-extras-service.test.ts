@@ -14,7 +14,7 @@ vi.mock('wxt/browser', () => ({
   browser: { scripting: scriptingApi, tabs: tabsApi },
 }));
 
-const groups: PageMatchGroup[] = [{ id: 'g1', alias_name: 'Reddit', pageMatches: new Map() }];
+const groups: PageMatchGroup[] = [{ id: 'g1', aliasId: 'reddit-alias-id', pageMatches: new Map() }];
 
 beforeEach(() => {
   vi.resetAllMocks();

@@ -12,13 +12,13 @@ import { BookmarkEntityLinkField, type BookmarkEntityLink } from '../types/bookm
 // Map<string, PageMatch> → Record for safe structured-clone storage
 export type StoredPageMatchGroup = {
   id: string;
-  alias_name: string;
+  aliasId: string;
   pageMatches: Record<string, PageMatch>;
 };
 
 const { ID: rId, PRIORITY, TARGET_FOLDER } = BookmarkRuleField;
 const { ID: dId, NAME }                     = DomainAliasField;
-const { ID: pId, ALIAS_NAME }               = PageMatchGroupField;
+const { ID: pId, ALIAS_ID }                 = PageMatchGroupField;
 const { ID: tId, NAME: tName }              = TagField;
 const { BOOKMARK_ID: btBookmarkId, TAG_IDS: btTagIds } = BookmarkTagLinkField;
 const { ID: etId, NAME: etName }            = EntityTypeField;
@@ -39,28 +39,13 @@ class AppDb extends Dexie {
 
   constructor() {
     super('book-manager');
+    // Single version: dev-only data, no real users yet, so there's no
+    // migration chain to preserve — the schema is just rewritten in place
+    // as it evolves (see CLAUDE.md/specs/changelog.md RULE-11 precedent).
     this.version(1).stores({
-      rules:           `${rId}, ${PRIORITY}, ${TARGET_FOLDER}`,
-      domainAliases:   `${dId}, ${NAME}`,
-      pageMatchGroups: `${pId}, ${ALIAS_NAME}`,
-    });
-    this.version(2).stores({
-      rules:           `${rId}, ${PRIORITY}, ${TARGET_FOLDER}`,
-      domainAliases:   `${dId}, ${NAME}`,
-      pageMatchGroups: `${pId}, ${ALIAS_NAME}`,
-      tags:            `${tId}, ${tName}`,
-    });
-    this.version(3).stores({
-      rules:           `${rId}, ${PRIORITY}, ${TARGET_FOLDER}`,
-      domainAliases:   `${dId}, ${NAME}`,
-      pageMatchGroups: `${pId}, ${ALIAS_NAME}`,
-      tags:            `${tId}, ${tName}`,
-      bookmarkTags:    `${btBookmarkId}, *${btTagIds}`,
-    });
-    this.version(4).stores({
       rules:               `${rId}, ${PRIORITY}, ${TARGET_FOLDER}`,
       domainAliases:       `${dId}, ${NAME}`,
-      pageMatchGroups:     `${pId}, ${ALIAS_NAME}`,
+      pageMatchGroups:     `${pId}, &${ALIAS_ID}`,
       tags:                `${tId}, ${tName}`,
       bookmarkTags:        `${btBookmarkId}, *${btTagIds}`,
       entityTypes:         `${etId}, ${etName}`,

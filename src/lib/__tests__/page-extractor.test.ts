@@ -46,7 +46,7 @@ function fakeDoc({
 }
 
 function group(pageMatches: [string, PageMatch][]): PageMatchGroup {
-  return { id: 'g1', alias_name: 'test', pageMatches: new Map(pageMatches) };
+  return { id: 'g1', aliasId: 'test', pageMatches: new Map(pageMatches) };
 }
 
 function match(name: string, selector: PageSelector): PageMatch {
