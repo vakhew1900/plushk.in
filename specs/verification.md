@@ -24,3 +24,16 @@ Manual correctness checklist — things to verify by hand in the running extensi
 - [ ] `RULE-12` quick-save on a page whose domain resolves to an alias with a linked `PageMatchGroup`: only that group's selectors run (check via `dev:firefox`/dev console — `PageExtrasService.extract` is called with a single-element array, not every saved group).
 - [ ] `RULE-12` quick-save on a page whose domain resolves to an alias with **no** linked group, or to no alias at all: extraction is skipped entirely (no content-script injection), same as the existing `RULE-5` "no `PageMatchGroup` saved at all" case above.
 - [ ] `RULE-12` import `configs/social-extras/settings.json` (now on `version: 3`, `pageMatchGroups[].aliasId`): import succeeds, Reddit/DTF groups show up in the Variables section each bound to their respective alias via the dropdown.
+
+## UI
+
+- [ ] `UI-9` set theme to Light (or System while OS is Light), reload the options page: stays Light, doesn't reset to Dark.
+- [ ] `UI-9` in Light theme, open a tag-assignment popover and an entity/status dropdown on a bookmark card: both render with light colors, not the old always-dark look.
+- [ ] `UI-9` Categories tab: try to create a tag/category/workflow status/domain alias and leave the name empty, then click elsewhere (blur) — the blank row disappears instead of saving; typing a name and blurring saves normally.
+- [ ] `UI-9` Rules tab: create a new rule, leave the name empty — "Save" stays disabled until a name is entered (in addition to a valid condition).
+- [ ] `UI-9` assign a very long tag name to a bookmark: the chip truncates with an ellipsis instead of stretching the row.
+- [ ] `UI-9` options page sidebar (tab list) reaches the full height of the window, no gap/short square at the bottom, at various window heights.
+- [ ] `UI-9` body text and Russian labels render in Manrope (not a fallback system font) throughout the options page and popup; domain/URL/folder-path/JSON render in IBM Plex Mono.
+- [ ] `UI-9` "+ Тег"/"+ Категория"/"+ Правило" buttons: taller and less rounded than before.
+- [ ] `UI-9` bookmark card with an assigned category and workflow status: category pill top-right of the card, status pill on the same line as the tags row, bottom-right — check both themes and a long category/status name doesn't overlap the title.
+- [ ] `UI-9` bookmark card tag row: "Теги" button (icon + label) opens the tag popover, replacing the old icon-only pencil button.
