@@ -1,19 +1,9 @@
-export const TagColor = {
-  RED: 'red',
-  ORANGE: 'orange',
-  YELLOW: 'yellow',
-  GREEN: 'green',
-  TEAL: 'teal',
-  BLUE: 'blue',
-  PURPLE: 'purple',
-  PINK: 'pink',
-} as const;
-export type TagColor = (typeof TagColor)[keyof typeof TagColor];
+import type { PaletteColor } from './palette-color';
 
 export type Tag = {
   id: string;
   name: string;
-  color: TagColor;
+  color: PaletteColor;
 };
 
 export const TagField = {

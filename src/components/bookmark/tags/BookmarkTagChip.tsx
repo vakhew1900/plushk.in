@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { PaletteDot } from '@/components/ui/palette-dot';
 import type { Tag } from '@/types/tag';
 import styles from './BookmarkTagChip.module.css';
 
@@ -7,11 +7,9 @@ interface Props {
 }
 
 export function BookmarkTagChip({ tag }: Props) {
-  const style = { '--dot-color': `var(--tag-${tag.color})` } as CSSProperties;
-
   return (
-    <span className={styles.chip} style={style}>
-      <span className={styles.dot} />
+    <span className={styles.chip}>
+      <PaletteDot color={tag.color} />
       {tag.name}
     </span>
   );

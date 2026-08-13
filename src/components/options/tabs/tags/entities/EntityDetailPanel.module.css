@@ -1,0 +1,51 @@
+.panel {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.field { margin-bottom: 1.1rem; }
+.field:last-child { margin-bottom: 0; }
+
+.label {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.45rem;
+}
+
+.nameRow { display: flex; align-items: center; gap: 0.5rem; }
+.nameInput { font-family: var(--font-mono); font-size: 0.8rem; flex: 1; }
+
+.removeEntity {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--faint);
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.removeEntity:hover { color: var(--red); }
+
+.iconRow { display: flex; align-items: center; gap: 0.5rem; }
+.iconSlot {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  border: 1px dashed var(--faint);
+  color: var(--faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.iconComingSoon { font-size: 0.75rem; color: var(--faint); }
+
+.statusTable {
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  overflow: hidden;
+}
+
+.addStatus { margin-top: 0.5rem; }

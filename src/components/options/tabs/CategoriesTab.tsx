@@ -1,6 +1,7 @@
 import { useTranslation } from '@/hooks/useTranslation';
 import { TabHeader } from '@/components/options/TabHeader';
 import { TagsSection } from './tags/TagsSection';
+import { EntitiesSection } from './tags/entities/EntitiesSection';
 import styles from './CategoriesTab.module.css';
 
 export function CategoriesTab() {
@@ -11,6 +12,7 @@ export function CategoriesTab() {
       <TabHeader title={t('nav.categories')} lead={t('categoriesTab.lead')} />
 
       <TagsSection />
+      <EntitiesSection />
     </div>
   );
 }

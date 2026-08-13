@@ -8,6 +8,10 @@ import { ModeSettingsRepository } from '@/repository/ModeSettingsRepository';
 import { PageMatchGroupRepository } from '@/repository/PageMatchGroupRepository';
 import { TagRepository } from '@/repository/TagRepository';
 import { BookmarkTagLinkRepository } from '@/repository/BookmarkTagLinkRepository';
+import { EntityTypeRepository } from '@/repository/EntityTypeRepository';
+import { WorkflowRepository } from '@/repository/WorkflowRepository';
+import { WorkflowStatusRepository } from '@/repository/WorkflowStatusRepository';
+import { BookmarkEntityLinkRepository } from '@/repository/BookmarkEntityLinkRepository';
 import type { IBookmarkRepository } from '@/repository/interfaces/IBookmarkRepository';
 import type { IBookmarkTagLinkRepository } from '@/repository/interfaces/IBookmarkTagLinkRepository';
 import type { IBookmarkRuleRepository } from '@/repository/interfaces/IBookmarkRuleRepository';
@@ -16,6 +20,10 @@ import type { IDomainAliasRepository } from '@/repository/interfaces/IDomainAlia
 import type { IModeSettingsRepository } from '@/repository/interfaces/IModeSettingsRepository';
 import type { IPageMatchGroupRepository } from '@/repository/interfaces/IPageMatchGroupRepository';
 import type { ITagRepository } from '@/repository/interfaces/ITagRepository';
+import type { IEntityTypeRepository } from '@/repository/interfaces/IEntityTypeRepository';
+import type { IWorkflowRepository } from '@/repository/interfaces/IWorkflowRepository';
+import type { IWorkflowStatusRepository } from '@/repository/interfaces/IWorkflowStatusRepository';
+import type { IBookmarkEntityLinkRepository } from '@/repository/interfaces/IBookmarkEntityLinkRepository';
 import { BookmarkSearchService } from '@/services/BookmarkSearchService';
 import { FileService } from '@/services/FileService';
 import { PageExtrasService } from '@/services/PageExtrasService';
@@ -44,6 +52,10 @@ export interface Services {
   bookmarkSearchService: IBookmarkSearchService;
   tagRepository: ITagRepository;
   bookmarkTagLinkRepository: IBookmarkTagLinkRepository;
+  entityTypeRepository: IEntityTypeRepository;
+  workflowRepository: IWorkflowRepository;
+  workflowStatusRepository: IWorkflowStatusRepository;
+  bookmarkEntityLinkRepository: IBookmarkEntityLinkRepository;
 }
 
 export const ServicesContext = createContext<Services | null>(null);
@@ -82,6 +94,10 @@ export function ServicesProvider({ children }: Props) {
       bookmarkSearchService: new BookmarkSearchService(bookmarkRepository),
       tagRepository: new TagRepository(),
       bookmarkTagLinkRepository: new BookmarkTagLinkRepository(),
+      entityTypeRepository: new EntityTypeRepository(),
+      workflowRepository: new WorkflowRepository(),
+      workflowStatusRepository: new WorkflowStatusRepository(),
+      bookmarkEntityLinkRepository: new BookmarkEntityLinkRepository(),
     };
   }, []);
 

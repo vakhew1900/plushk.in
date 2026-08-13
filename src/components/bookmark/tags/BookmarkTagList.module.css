@@ -1,18 +1,23 @@
 .wrap {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.3rem;
 }
 
-.anchor {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
+.editTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  color: var(--faint);
+  flex-shrink: 0;
+  transition: background-color 0.12s ease, color 0.12s ease;
 }
+.editTrigger:hover,
+.editTrigger[data-state='open'] { background: var(--hover); color: var(--text); }
 
 .empty {
   padding: 0.3rem 0.5rem;

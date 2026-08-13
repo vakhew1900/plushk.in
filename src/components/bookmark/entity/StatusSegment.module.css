@@ -1,0 +1,13 @@
+.segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.71875rem;
+  color: var(--muted);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: none;
+  border-radius: 0 1rem 1rem 0;
+}
+.segment:hover { background: var(--hover); color: var(--text); }

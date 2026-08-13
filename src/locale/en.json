@@ -100,7 +100,7 @@
     "domainPlaceholder": "domain.com"
   },
   "categoriesTab": {
-    "lead": "Tags for bookmarks — name and color."
+    "lead": "Tags and entities for bookmarks."
   },
   "tagsSection": {
     "title": "Tags",
@@ -110,6 +110,28 @@
   },
   "bookmarkTagEditor": {
     "editButton": "Edit"
+  },
+  "entitiesSection": {
+    "title": "Entities",
+    "addEntity": "Entity",
+    "desc": "A content type (Book, Video, ...) with an optional workflow status for the bookmark.",
+    "namePlaceholder": "entity name",
+    "noEntities": "No entities yet"
+  },
+  "entityDetail": {
+    "colorLabel": "Color",
+    "nameLabel": "Name",
+    "iconLabel": "Icon",
+    "iconComingSoon": "coming soon",
+    "workflowLabel": "Statuses",
+    "addStatus": "Status",
+    "statusNamePlaceholder": "status name",
+    "startStatusHint": "start"
+  },
+  "bookmarkEntityControl": {
+    "addEntity": "Add entity",
+    "noEntity": "No entity",
+    "editTooltip": "Edit"
   },
   "variablesSection": {
     "title": "Variables",

@@ -100,7 +100,7 @@
     "domainPlaceholder": "domain.com"
   },
   "categoriesTab": {
-    "lead": "Теги для закладок — имя и цвет."
+    "lead": "Теги и сущности для закладок."
   },
   "tagsSection": {
     "title": "Теги",
@@ -110,6 +110,28 @@
   },
   "bookmarkTagEditor": {
     "editButton": "Редактировать"
+  },
+  "entitiesSection": {
+    "title": "Сущности",
+    "addEntity": "Сущность",
+    "desc": "Тип контента (Книга, Видео, ...) с опциональным workflow-статусом закладки.",
+    "namePlaceholder": "имя сущности",
+    "noEntities": "Пока нет сущностей"
+  },
+  "entityDetail": {
+    "colorLabel": "Цвет",
+    "nameLabel": "Название",
+    "iconLabel": "Иконка",
+    "iconComingSoon": "скоро",
+    "workflowLabel": "Статусы",
+    "addStatus": "Статус",
+    "statusNamePlaceholder": "имя статуса",
+    "startStatusHint": "старт"
+  },
+  "bookmarkEntityControl": {
+    "addEntity": "Добавить сущность",
+    "noEntity": "Без сущности",
+    "editTooltip": "Редактировать"
   },
   "variablesSection": {
     "title": "Переменные",

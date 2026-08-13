@@ -3,7 +3,7 @@ import { Text } from '@/components/ui/text';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useTags } from '@/hooks/useTags';
-import { TagColor } from '@/types/tag';
+import { PaletteColor } from '@/types/palette-color';
 import { TagRow } from './TagRow';
 import styles from './TagsSection.module.css';
 
@@ -11,14 +11,14 @@ export function TagsSection() {
   const { translate: t } = useTranslation();
   const { items: tags, save, remove } = useTags();
 
-  const addTag = () => void save({ id: crypto.randomUUID(), name: '', color: TagColor.RED });
+  const addTag = () => void save({ id: crypto.randomUUID(), name: '', color: PaletteColor.RED });
 
   const renameTag = (id: string, name: string) => {
     const tag = tags.find((t) => t.id === id);
     if (tag) void save({ ...tag, name });
   };
 
-  const recolorTag = (id: string, color: TagColor) => {
+  const recolorTag = (id: string, color: PaletteColor) => {
     const tag = tags.find((t) => t.id === id);
     if (tag) void save({ ...tag, color });
   };

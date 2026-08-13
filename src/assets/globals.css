@@ -22,17 +22,18 @@
   --blue-soft: rgba(92, 158, 224, 0.14);
   --shadow: rgba(0, 0, 0, 0.5);
 
-  /* Fixed tag color palette — deliberately separate from the semantic
+  /* Fixed 8-color palette — deliberately separate from the semantic
      --red/--green/--blue tokens above (those mean error/success/info
-     elsewhere in the UI; a user's tag color shouldn't borrow that meaning). */
-  --tag-red: #e0746e;
-  --tag-orange: #e0975c;
-  --tag-yellow: #d9c15c;
-  --tag-green: #5cba8f;
-  --tag-teal: #5cb8b0;
-  --tag-blue: #5c9ee0;
-  --tag-purple: #9c7ee0;
-  --tag-pink: #e07ec2;
+     elsewhere in the UI). Shared by tags, entities, and workflow statuses —
+     a user's own color choice shouldn't borrow semantic meaning. */
+  --palette-red: #e0746e;
+  --palette-orange: #e0975c;
+  --palette-yellow: #d9c15c;
+  --palette-green: #5cba8f;
+  --palette-teal: #5cb8b0;
+  --palette-blue: #5c9ee0;
+  --palette-purple: #9c7ee0;
+  --palette-pink: #e07ec2;
 }
 
 [data-theme="light"] {
@@ -55,14 +56,14 @@
   --blue-soft: rgba(63, 127, 196, 0.12);
   --shadow: rgba(0, 0, 0, 0.13);
 
-  --tag-red: #cf5a52;
-  --tag-orange: #c67a3f;
-  --tag-yellow: #b89c3f;
-  --tag-green: #3f9d6f;
-  --tag-teal: #3f9a91;
-  --tag-blue: #3f7fc4;
-  --tag-purple: #7a5cc4;
-  --tag-pink: #c45ca3;
+  --palette-red: #cf5a52;
+  --palette-orange: #c67a3f;
+  --palette-yellow: #b89c3f;
+  --palette-green: #3f9d6f;
+  --palette-teal: #3f9a91;
+  --palette-blue: #3f7fc4;
+  --palette-purple: #7a5cc4;
+  --palette-pink: #c45ca3;
 }
 
 /* ── Sizing tokens (icon dimensions + typography) — change here, applies everywhere ── */

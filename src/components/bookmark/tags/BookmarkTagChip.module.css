@@ -11,10 +11,3 @@
   line-height: 1;
 }
 
-.dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--dot-color);
-  flex-shrink: 0;
-}
