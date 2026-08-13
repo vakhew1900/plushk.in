@@ -15,7 +15,7 @@ export function BookmarkFolderPath({ segments }: Props) {
       {segments.map((segment, index) => (
         <Fragment key={index}>
           {index > 0 && <span className={styles.sep}>/</span>}
-          <span className={index === segments.length - 1 ? styles.accent : styles.muted}>{segment}</span>
+          <span className={styles.muted}>{segment}</span>
         </Fragment>
       ))}
     </div>

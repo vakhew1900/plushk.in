@@ -1,13 +1,16 @@
 .segment {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.2rem 0.55rem;
-  font-size: 0.71875rem;
+  gap: 0.4rem;
+  padding: 0.32rem 0.8rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: var(--muted);
   background: var(--bg3);
   border: 1px solid var(--border);
-  border-left: none;
-  border-radius: 0 1rem 1rem 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.15rem 0.45rem var(--shadow);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .segment:hover { background: var(--hover); color: var(--text); }

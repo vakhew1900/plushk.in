@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 /* ── Runtime theme tokens (change with data-theme) ── */
 :root,
@@ -68,7 +68,7 @@
 
 /* ── Sizing tokens (icon dimensions + typography) — change here, applies everywhere ── */
 :root {
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'IBM Plex Mono', monospace;
 
   /* Icon width/height. Components read the equivalent px values from
      components/icons/icon-size.ts (SVG width/height attrs can't consume CSS vars) —
@@ -98,7 +98,7 @@
 }
 
 body {
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -1,14 +1,15 @@
 .segment {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.2rem 0.55rem;
-  font-size: 0.71875rem;
+  gap: 0.5rem;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
   color: var(--text);
   background: var(--bg3);
   border: 1px solid var(--border);
-  border-radius: 1rem 0 0 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 0.2rem 0.6rem var(--shadow);
+  white-space: nowrap;
 }
 .segment:hover { background: var(--hover); }
-
-.standalone { border-radius: 1rem; }

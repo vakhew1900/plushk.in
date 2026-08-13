@@ -13,7 +13,7 @@
 
 .topRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.6875rem;
 }
 
@@ -46,6 +46,12 @@
 }
 
 .urlIcon { flex-shrink: 0; }
+
+.bottomRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
 
 .url {
   font-size: 0.71875rem;

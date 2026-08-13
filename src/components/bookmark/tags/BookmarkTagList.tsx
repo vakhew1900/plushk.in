@@ -1,6 +1,7 @@
 import type React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { IconCheck, IconEdit } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { IconCheck, IconTag } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBookmarkTagEditor } from '@/hooks/useBookmarkTagEditor';
 import { BookmarkTagChip } from './BookmarkTagChip';
@@ -24,9 +25,10 @@ export function BookmarkTagList({ bookmarkId }: Props) {
 
       <Popover>
         <PopoverTrigger asChild>
-          <button type="button" className={styles.editTrigger} title={t('bookmarkTagEditor.editButton')}>
-            <IconEdit size="sm" />
-          </button>
+          <Button type="button" variant="outline" size="sm">
+            <IconTag size="sm" />
+            {t('bookmarkTagEditor.editButton')}
+          </Button>
         </PopoverTrigger>
         <PopoverContent onClick={handleClick}>
           {tags.length === 0 && <div className={styles.empty}>—</div>}

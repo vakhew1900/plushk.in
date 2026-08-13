@@ -100,7 +100,7 @@
     "domainPlaceholder": "domain.com"
   },
   "categoriesTab": {
-    "lead": "Tags and entities for bookmarks."
+    "lead": "Tags and categories for bookmarks."
   },
   "tagsSection": {
     "title": "Tags",
@@ -109,14 +109,14 @@
     "namePlaceholder": "tag name"
   },
   "bookmarkTagEditor": {
-    "editButton": "Edit"
+    "editButton": "Tags"
   },
   "entitiesSection": {
-    "title": "Entities",
-    "addEntity": "Entity",
+    "title": "Categories",
+    "addEntity": "Category",
     "desc": "A content type (Book, Video, ...) with an optional workflow status for the bookmark.",
-    "namePlaceholder": "entity name",
-    "noEntities": "No entities yet"
+    "namePlaceholder": "category name",
+    "noEntities": "No categories yet"
   },
   "entityDetail": {
     "colorLabel": "Color",
@@ -129,8 +129,8 @@
     "startStatusHint": "start"
   },
   "bookmarkEntityControl": {
-    "addEntity": "Add entity",
-    "noEntity": "No entity",
+    "addEntity": "Category",
+    "noEntity": "No category",
     "editTooltip": "Edit"
   },
   "variablesSection": {

@@ -1,9 +1,10 @@
-import { Badge } from '@/components/ui/badge';
 import { IconLink } from '@/components/icons';
+import { useBookmarkEntityEditor } from '@/hooks/useBookmarkEntityEditor';
 import { BookmarkFavicon } from './BookmarkFavicon';
 import { BookmarkFolderPath } from './BookmarkFolderPath';
 import { BookmarkTagList } from './tags/BookmarkTagList';
-import { BookmarkEntityControl } from './entity/BookmarkEntityControl';
+import { EntitySegment } from './entity/EntitySegment';
+import { StatusSegment } from './entity/StatusSegment';
 import styles from './BookmarkCard.module.css';
 
 interface Props {
@@ -16,7 +17,9 @@ interface Props {
 
 export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
   const domain = new URL(url).hostname;
-  const lastFolder = folderPath[folderPath.length - 1];
+  const { entityTypes, selectedEntity, statuses, selectedStatus, chooseEntity, chooseStatus } =
+    useBookmarkEntityEditor(id);
+  const showStatus = Boolean(selectedEntity) && statuses.length > 0;
 
   return (
     <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
@@ -26,10 +29,14 @@ export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
           <div className={styles.title}>{title}</div>
           <div className={styles.domain}>{domain}</div>
         </div>
-        {lastFolder && <Badge variant="accent">{lastFolder}</Badge>}
+        {entityTypes.length > 0 && (
+          <EntitySegment
+            entityTypes={entityTypes}
+            selectedEntity={selectedEntity}
+            onChoose={(entityTypeId) => void chooseEntity(entityTypeId)}
+          />
+        )}
       </div>
-
-      <BookmarkEntityControl bookmarkId={id} />
 
       <BookmarkFolderPath segments={folderPath} />
 
@@ -38,7 +45,16 @@ export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
         <span className={styles.url}>{url.replace(/^https?:\/\//, '')}</span>
       </div>
 
-      <BookmarkTagList bookmarkId={id} />
+      <div className={styles.bottomRow}>
+        <BookmarkTagList bookmarkId={id} />
+        {showStatus && (
+          <StatusSegment
+            statuses={statuses}
+            selectedStatus={selectedStatus}
+            onChoose={(statusId) => void chooseStatus(statusId)}
+          />
+        )}
+      </div>
     </div>
   );
 }

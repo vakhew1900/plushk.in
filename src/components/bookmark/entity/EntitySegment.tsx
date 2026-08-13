@@ -1,5 +1,4 @@
 import type React from 'react';
-import { clsx } from 'clsx';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -15,11 +14,10 @@ import styles from './EntitySegment.module.css';
 interface Props {
   entityTypes: EntityType[];
   selectedEntity: EntityType | undefined;
-  standalone: boolean;
   onChoose: (entityTypeId: string | undefined) => void;
 }
 
-export function EntitySegment({ entityTypes, selectedEntity, standalone, onChoose }: Props) {
+export function EntitySegment({ entityTypes, selectedEntity, onChoose }: Props) {
   const { translate: t } = useTranslation();
   const handleClick = (e: React.MouseEvent) => e.stopPropagation();
 
@@ -28,17 +26,18 @@ export function EntitySegment({ entityTypes, selectedEntity, standalone, onChoos
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className={clsx(styles.segment, standalone && styles.standalone)}
+          className={styles.segment}
+          onClick={handleClick}
           title={selectedEntity ? t('bookmarkEntityControl.editTooltip') : undefined}
         >
           {selectedEntity ? (
             <>
-              <PaletteDot color={selectedEntity.color} />
+              <PaletteDot color={selectedEntity.color} size="md" />
               {selectedEntity.name}
             </>
           ) : (
             <>
-              <IconPlus size="sm" />
+              <IconPlus size="md" />
               {t('bookmarkEntityControl.addEntity')}
             </>
           )}

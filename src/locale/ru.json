@@ -100,7 +100,7 @@
     "domainPlaceholder": "domain.com"
   },
   "categoriesTab": {
-    "lead": "Теги и сущности для закладок."
+    "lead": "Теги и категории для закладок."
   },
   "tagsSection": {
     "title": "Теги",
@@ -109,14 +109,14 @@
     "namePlaceholder": "имя тега"
   },
   "bookmarkTagEditor": {
-    "editButton": "Редактировать"
+    "editButton": "Теги"
   },
   "entitiesSection": {
-    "title": "Сущности",
-    "addEntity": "Сущность",
+    "title": "Категории",
+    "addEntity": "Категория",
     "desc": "Тип контента (Книга, Видео, ...) с опциональным workflow-статусом закладки.",
-    "namePlaceholder": "имя сущности",
-    "noEntities": "Пока нет сущностей"
+    "namePlaceholder": "имя категории",
+    "noEntities": "Пока нет категорий"
   },
   "entityDetail": {
     "colorLabel": "Цвет",
@@ -129,8 +129,8 @@
     "startStatusHint": "старт"
   },
   "bookmarkEntityControl": {
-    "addEntity": "Добавить сущность",
-    "noEntity": "Без сущности",
+    "addEntity": "Категория",
+    "noEntity": "Без категории",
     "editTooltip": "Редактировать"
   },
   "variablesSection": {

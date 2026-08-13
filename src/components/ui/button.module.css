@@ -16,7 +16,7 @@
 
 /* Sizes */
 .sizeMd  { height: 36px; padding: 0 16px; border-radius: 9px; font-size: 13px; }
-.sizeSm  { height: 32px; padding: 0 12px; border-radius: 8px; font-size: 12px; }
+.sizeSm  { height: 34px; padding: 0 15px; border-radius: 6px; font-size: 12.5px; }
 .sizeLg  { height: 42px; padding: 0 16px; border-radius: 9px; font-size: 13px; }
 .sizeIcon   { height: 36px; width: 36px; border-radius: 8px; }
 .sizeIconSm { height: 28px; width: 28px; border-radius: 6px; }

@@ -24,8 +24,8 @@ export function StatusSegment({ statuses, selectedStatus, onChoose }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" className={styles.segment} title={t('bookmarkEntityControl.editTooltip')}>
-          <PaletteDot color={current.color} />
+        <button type="button" className={styles.segment} onClick={handleClick} title={t('bookmarkEntityControl.editTooltip')}>
+          <PaletteDot color={current.color} size="md" />
           {current.name}
         </button>
       </DropdownMenuTrigger>
