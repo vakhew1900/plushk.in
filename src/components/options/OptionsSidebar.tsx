@@ -3,7 +3,8 @@ import { IconHome, IconNetwork, IconLibrary, IconSliders, IconTag } from '@/comp
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './OptionsSidebar.module.css';
 
-export type Tab = 'main' | 'rules' | 'library' | 'mappings' | 'categories';
+export const Tab = { MAIN: 'main', RULES: 'rules', LIBRARY: 'library', MAPPINGS: 'mappings', CATEGORIES: 'categories' } as const;
+export type Tab = typeof Tab[keyof typeof Tab];
 
 interface Props {
   tab: Tab;
@@ -24,27 +25,27 @@ export function OptionsSidebar({ tab, onTabChange }: Props) {
     <div className={styles.sidebar}>
       <div className={styles.section}>{t('nav.section')}</div>
 
-      <NavBtn active={tab === 'main'} onClick={() => onTabChange('main')}>
+      <NavBtn active={tab === Tab.MAIN} onClick={() => onTabChange(Tab.MAIN)}>
         <IconHome size="md" />
         {t('nav.main')}
       </NavBtn>
 
-      <NavBtn active={tab === 'rules'} onClick={() => onTabChange('rules')}>
+      <NavBtn active={tab === Tab.RULES} onClick={() => onTabChange(Tab.RULES)}>
         <IconNetwork size="md" />
         {t('nav.rules')}
       </NavBtn>
 
-      <NavBtn active={tab === 'library'} onClick={() => onTabChange('library')}>
+      <NavBtn active={tab === Tab.LIBRARY} onClick={() => onTabChange(Tab.LIBRARY)}>
         <IconLibrary size="md" />
         {t('nav.library')}
       </NavBtn>
 
-      <NavBtn active={tab === 'mappings'} onClick={() => onTabChange('mappings')}>
+      <NavBtn active={tab === Tab.MAPPINGS} onClick={() => onTabChange(Tab.MAPPINGS)}>
         <IconSliders size="md" />
         {t('nav.mappings')}
       </NavBtn>
 
-      <NavBtn active={tab === 'categories'} onClick={() => onTabChange('categories')}>
+      <NavBtn active={tab === Tab.CATEGORIES} onClick={() => onTabChange(Tab.CATEGORIES)}>
         <IconTag size="md" />
         {t('nav.categories')}
       </NavBtn>
