@@ -16,6 +16,7 @@ export function useCrudResource<T, K = string>(
   repository: CrudSource<T, K>,
   getId: (item: T) => K,
   postProcess: PostProcess<T>[] = [],
+  isValid?: (item: T) => boolean,
 ) {
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,15 +44,20 @@ export function useCrudResource<T, K = string>(
 
   const save = useCallback(
     async (item: T) => {
-      await repository.save(item);
+      // Optimistic update always happens — so a still-invalid draft (e.g. an
+      // empty name mid-typing) reflects in the UI — but persistence to the
+      // repository is skipped while `isValid` rejects it, so invalid state
+      // never reaches storage.
       setItems((prev) => {
         const id = getId(item);
         const exists = prev.some((i) => getId(i) === id);
         const next = exists ? prev.map((i) => (getId(i) === id ? item : i)) : [...prev, item];
         return applyPostProcess(next);
       });
+      if (isValid && !isValid(item)) return;
+      await repository.save(item);
     },
-    [repository, getId, applyPostProcess],
+    [repository, getId, applyPostProcess, isValid],
   );
 
   const remove = useCallback(

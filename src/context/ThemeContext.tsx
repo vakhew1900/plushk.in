@@ -1,8 +1,7 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-
-export const Theme = { DARK: 'dark', LIGHT: 'light', SYSTEM: 'system' } as const;
-export type Theme = typeof Theme[keyof typeof Theme];
+import { ServicesContext } from '@/context/ServicesContext';
+import { Theme } from '@/types/theme';
 
 type ResolvedTheme = typeof Theme.DARK | typeof Theme.LIGHT;
 
@@ -25,7 +24,11 @@ interface Props {
 }
 
 export function ThemeProvider({ children, initialTheme = Theme.DARK }: Props) {
-  const [theme, setTheme] = useState<Theme>(initialTheme);
+  // Reads ServicesContext directly (not the useServices hook) to stay a
+  // context-layer-only dependency per CLAUDE.md's layer order. Falls back to
+  // in-memory-only state if rendered outside a ServicesProvider.
+  const services = useContext(ServicesContext);
+  const [theme, setThemeState] = useState<Theme>(initialTheme);
   const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(getSystemTheme);
 
   useEffect(() => {
@@ -36,11 +39,39 @@ export function ThemeProvider({ children, initialTheme = Theme.DARK }: Props) {
     return () => media.removeEventListener('change', listener);
   }, []);
 
+  useEffect(() => {
+    if (!services) return;
+    let cancelled = false;
+    void services.themeSettingsRepository.get().then((value) => {
+      if (!cancelled) setThemeState(value);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [services]);
+
   const resolvedTheme = theme === Theme.SYSTEM ? systemTheme : theme;
+
+  // Radix portals (Select/DropdownMenu/Popover) render into document.body,
+  // outside the app root div that normally carries data-theme — without this
+  // they'd always inherit the :root/html fallback (dark) regardless of the
+  // chosen theme. Mirroring the attribute onto <html> keeps everything,
+  // portalled or not, in the same theme scope.
+  useEffect(() => {
+    document.documentElement.dataset.theme = resolvedTheme;
+  }, [resolvedTheme]);
+
+  const setTheme = useCallback(
+    (value: Theme) => {
+      setThemeState(value);
+      void services?.themeSettingsRepository.set(value);
+    },
+    [services],
+  );
 
   const value = useMemo<ThemeContextValue>(
     () => ({ theme, resolvedTheme, setTheme }),
-    [theme, resolvedTheme],
+    [theme, resolvedTheme, setTheme],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

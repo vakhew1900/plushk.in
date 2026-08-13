@@ -22,6 +22,7 @@ export function TagRow({ name, color, onNameChange, onColorChange, onRemove }: P
       <Input
         value={name}
         onChange={(e) => onNameChange(e.target.value)}
+        onBlur={() => { if (!name.trim()) onRemove(); }}
         placeholder={t('tagsSection.namePlaceholder')}
         className={styles.nameInput}
       />

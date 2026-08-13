@@ -33,6 +33,7 @@ export function EntityDetailPanel({ entity, onNameChange, onColorChange, onRemov
           <Input
             value={entity.name}
             onChange={(e) => onNameChange(e.target.value)}
+            onBlur={() => { if (!entity.name.trim()) onRemove(); }}
             placeholder={t('entitiesSection.namePlaceholder')}
             className={styles.nameInput}
           />

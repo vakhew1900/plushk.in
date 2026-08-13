@@ -1,7 +1,7 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { Text } from '@/components/ui/text';
-import { Theme } from '@/context/ThemeContext';
 import { useTheme } from '@/hooks/useTheme';
+import { Theme } from '@/types/theme';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './ThemeSection.module.css';
 

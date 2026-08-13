@@ -2,6 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  max-width: 100%;
   padding: 0.2rem 0.55rem;
   border-radius: 1rem;
   border: 1px solid var(--border);
@@ -9,5 +10,12 @@
   color: var(--text);
   font-size: 0.71875rem;
   line-height: 1;
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 10rem;
 }
 

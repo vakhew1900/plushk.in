@@ -45,13 +45,13 @@ function AppShell() {
 export default function App() {
   return (
     <LocaleProvider>
-      <ThemeProvider>
-        <ServicesProvider>
+      <ServicesProvider>
+        <ThemeProvider>
           <ToastProvider>
             <AppShell />
           </ToastProvider>
-        </ServicesProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </ServicesProvider>
     </LocaleProvider>
   );
 }

@@ -29,6 +29,7 @@ export function AliasRow({
       <Input
         value={name}
         onChange={(e) => onNameChange(e.target.value)}
+        onBlur={() => { if (!name.trim()) onRemove(); }}
         placeholder={t('aliasesSection.namePlaceholder')}
         className={styles.nameInput}
       />

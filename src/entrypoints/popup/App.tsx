@@ -35,11 +35,11 @@ function AppShell() {
 export default function App() {
   return (
     <LocaleProvider>
-      <ThemeProvider>
-        <ServicesProvider>
+      <ServicesProvider>
+        <ThemeProvider>
           <AppShell />
-        </ServicesProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </ServicesProvider>
     </LocaleProvider>
   );
 }

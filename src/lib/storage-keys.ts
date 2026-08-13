@@ -4,5 +4,6 @@
 export const StorageKey = {
   MODE: 'local:mode',
   DEFAULT_FOLDER: 'local:defaultFolder',
+  THEME: 'local:theme',
 } as const;
 export type StorageKey = typeof StorageKey[keyof typeof StorageKey];

@@ -23,6 +23,7 @@ export function WorkflowStatusRow({ name, color, isStart, onNameChange, onColorC
       <Input
         value={name}
         onChange={(e) => onNameChange(e.target.value)}
+        onBlur={() => { if (!name.trim()) onRemove(); }}
         placeholder={t('entityDetail.statusNamePlaceholder')}
         className={styles.nameInput}
       />

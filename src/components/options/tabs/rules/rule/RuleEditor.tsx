@@ -6,6 +6,7 @@ import { IconCheck } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { parseRuleNode } from '@/lib/visitor/rule-evaluator';
 import { hasRuleErrors } from '@/lib/visitor/rule-draft';
+import { hasValidName } from '@/lib/validation/named-entity';
 import type { BookmarkRule, RuleNode } from '@/types/rule';
 import { JsonView } from '../json/JsonView';
 import { ConsView } from '../cons/ConsView';
@@ -42,7 +43,7 @@ export function RuleEditor({ rule, onSave }: Props) {
   }
   const displayedCondition = parsedCondition ?? lastValidCondition;
 
-  const canSave = parsedCondition !== null && !hasRuleErrors(parsedCondition);
+  const canSave = parsedCondition !== null && !hasRuleErrors(parsedCondition) && hasValidName(name);
 
   const handleSave = () => {
     if (!canSave || !parsedCondition) return;
