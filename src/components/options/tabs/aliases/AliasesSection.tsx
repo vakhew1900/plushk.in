@@ -2,13 +2,18 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useDomainAliases } from '@/hooks/useDomainAliases';
+import type { DomainAlias } from '@/types/domain-alias';
 import { AliasRow } from './AliasRow';
 import styles from './AliasesSection.module.css';
 
-export function AliasesSection() {
+interface Props {
+  aliases: DomainAlias[];
+  save: (alias: DomainAlias) => Promise<void>;
+  remove: (id: string) => Promise<void>;
+}
+
+export function AliasesSection({ aliases, save, remove }: Props) {
   const { translate: t } = useTranslation();
-  const { items: aliases, save, remove } = useDomainAliases();
 
   const addAlias = () => void save({ id: crypto.randomUUID(), name: '', domain_names: [] });
 
