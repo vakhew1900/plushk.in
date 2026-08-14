@@ -75,5 +75,6 @@ Every backlog/task ID starts with a category tag (see the entry format in `CLAUD
 | `SEARCH` | Search across sorted bookmarks — the options-page "Библиотека"/Library tab (`LibraryTab`, formerly "Search"/`SearchTab`) and its popup counterpart, simple + fuzzy search, tag storage & tag search (rules for auto-assigning tags live under `RULE`) |
 | `SHELF` | User-defined content-type entities (Книга/Видео/...) and their optional workflow (ordered status list, e.g. to-read/reading/done/abandoned), the per-bookmark entity+status assignment, and the "Shelf" settings tab that manages both — distinct from tag storage/search (`SEARCH`) |
 | `BG` | Service worker (`entrypoints/background.ts`) event handling — `bookmarks.onRemoved`/`onChanged` and cross-cutting cleanup of records in other tables when a bookmark disappears or changes |
+| `AUDIT` | Findings surfaced by scanning existing code for one specific class of issue (missing tests, unsafe `as` casts, missing transactional atomicity, layering violations) — distinct from `ARCH`'s forward-looking, deliberately-chosen architecture decisions. A task belongs here when its own text says it was *discovered* by an audit pass, not designed from a feature requirement. |
 
 More categories are added as new areas of the project need one.
