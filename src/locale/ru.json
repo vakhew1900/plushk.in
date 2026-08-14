@@ -40,6 +40,8 @@
     "descLabel": "Описание",
     "targetFolderLabel": "Целевая папка",
     "priorityLabel": "Приоритет",
+    "categoryLabel": "Категория",
+    "tagsLabel": "Теги",
     "conditionTitle": "Условие",
     "visualViewTab": "Конструктор",
     "jsonViewTab": "JSON",
@@ -187,7 +189,13 @@
     "quickSave": {
       "title": "Быстрое сохранение",
       "saved": "Сохранено",
-      "offNote": "Быстрое сохранение выключено — режим «Выключен» не вмешивается в закладки."
+      "offNote": "Быстрое сохранение выключено — режим «Выключен» не вмешивается в закладки.",
+      "advanced": {
+        "title": "Дополнительно",
+        "categoryLabel": "Категория",
+        "tagsLabel": "Теги",
+        "matchedByRule": "Подобрано правилом «{{name}}»"
+      }
     }
   }
 }

@@ -3,7 +3,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { IconCheck } from '@/components/icons';
+import { EntitySegment } from '@/components/bookmark/entity/EntitySegment';
+import { TagPicker } from '@/components/bookmark/tags/TagPicker';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useEntityWorkflows } from '@/hooks/useEntityWorkflows';
+import { useTags } from '@/hooks/useTags';
 import { parseRuleNode } from '@/lib/visitor/rule-evaluator';
 import { hasRuleErrors } from '@/lib/visitor/rule-draft';
 import { hasValidName } from '@/lib/validation/named-entity';
@@ -24,8 +28,24 @@ export function RuleEditor({ rule, onSave }: Props) {
   const [desc, setDesc] = useState(rule.desc ?? '');
   const [targetFolder, setTargetFolder] = useState(rule.targetFolder);
   const [priority, setPriority] = useState(rule.priority);
+  const [entityTypeId, setEntityTypeId] = useState(rule.entityTypeId);
+  const [statusId, setStatusId] = useState(rule.statusId);
+  const [tagIds, setTagIds] = useState(rule.tagIds ?? []);
   const [conditionText, setConditionText] = useState(JSON.stringify(rule.condition, null, 2));
   const [conditionView, setConditionView] = useState<ConditionView>(ConditionView.VISUAL);
+
+  const { entityTypes, statusesFor } = useEntityWorkflows();
+  const { items: tags } = useTags();
+  const selectedEntity = entityTypes.find((e) => e.id === entityTypeId);
+
+  const chooseEntity = (id: string | undefined) => {
+    setEntityTypeId(id);
+    setStatusId(id === undefined ? undefined : statusesFor(id)[0]?.id);
+  };
+
+  const toggleTag = (tagId: string) => {
+    setTagIds((prev) => (prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]));
+  };
 
   const slug = name.toLowerCase().replace(/[^a-zа-я0-9]+/gi, '_').replace(/^_|_$/g, '');
   const parsedCondition = useMemo(() => parseRuleNode(conditionText), [conditionText]);
@@ -47,7 +67,17 @@ export function RuleEditor({ rule, onSave }: Props) {
 
   const handleSave = () => {
     if (!canSave || !parsedCondition) return;
-    onSave({ ...rule, name, desc, targetFolder, priority, condition: parsedCondition });
+    onSave({
+      ...rule,
+      name,
+      desc,
+      targetFolder,
+      priority,
+      entityTypeId,
+      statusId,
+      tagIds: tagIds.length > 0 ? tagIds : undefined,
+      condition: parsedCondition,
+    });
   };
 
   return (
@@ -74,6 +104,18 @@ export function RuleEditor({ rule, onSave }: Props) {
               onChange={(e) => setPriority(Number(e.target.value))}
             />
           </div>
+        </div>
+
+        {entityTypes.length > 0 && (
+          <div>
+            <div className={styles.fieldLabel}>{t('ruleEditor.categoryLabel')}</div>
+            <EntitySegment entityTypes={entityTypes} selectedEntity={selectedEntity} onChoose={chooseEntity} />
+          </div>
+        )}
+
+        <div>
+          <div className={styles.fieldLabel}>{t('ruleEditor.tagsLabel')}</div>
+          <TagPicker tags={tags} selectedTagIds={tagIds} onToggle={toggleTag} />
         </div>
       </div>
 

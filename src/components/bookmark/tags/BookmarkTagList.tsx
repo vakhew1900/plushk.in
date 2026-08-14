@@ -1,55 +1,12 @@
-import type React from 'react';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { IconCheck, IconTag } from '@/components/icons';
-import { useTranslation } from '@/hooks/useTranslation';
 import { useBookmarkTagEditor } from '@/hooks/useBookmarkTagEditor';
-import { BookmarkTagChip } from './BookmarkTagChip';
-import styles from './BookmarkTagList.module.css';
+import { TagPicker } from './TagPicker';
 
 interface Props {
   bookmarkId: string;
 }
 
 export function BookmarkTagList({ bookmarkId }: Props) {
-  const { translate: t } = useTranslation();
-  const { tags, selectedTags, tagIds, toggleTag } = useBookmarkTagEditor(bookmarkId);
+  const { tags, tagIds, toggleTag } = useBookmarkTagEditor(bookmarkId);
 
-  const handleClick = (e: React.MouseEvent) => e.stopPropagation();
-
-  return (
-    <div className={styles.wrap} onClick={handleClick}>
-      {selectedTags.map((tag) => (
-        <BookmarkTagChip key={tag.id} tag={tag} />
-      ))}
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button type="button" variant="outline" size="sm">
-            <IconTag size="sm" />
-            {t('bookmarkTagEditor.editButton')}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent onClick={handleClick}>
-          {tags.length === 0 && <div className={styles.empty}>—</div>}
-          {tags.map((tag) => {
-            const checked = tagIds.includes(tag.id);
-            return (
-              <button
-                key={tag.id}
-                type="button"
-                role="checkbox"
-                aria-checked={checked}
-                className={styles.item}
-                onClick={() => void toggleTag(tag.id)}
-              >
-                <span className={styles.checkMark}>{checked && <IconCheck size="sm" />}</span>
-                {tag.name}
-              </button>
-            );
-          })}
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
+  return <TagPicker tags={tags} selectedTagIds={tagIds} onToggle={(tagId) => void toggleTag(tagId)} />;
 }

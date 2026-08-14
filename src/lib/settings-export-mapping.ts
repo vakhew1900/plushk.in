@@ -31,6 +31,8 @@ export function isSettingsExport(value: unknown): value is SettingsExport {
     typeof value.exportedAt === 'string' &&
     Array.isArray(value.rules) &&
     Array.isArray(value.domainAliases) &&
-    Array.isArray(value.pageMatchGroups)
+    Array.isArray(value.pageMatchGroups) &&
+    (value.tags === undefined || Array.isArray(value.tags)) &&
+    (value.entityTypes === undefined || Array.isArray(value.entityTypes))
   );
 }

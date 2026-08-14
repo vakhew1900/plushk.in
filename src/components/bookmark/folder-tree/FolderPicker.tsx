@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { IconCheck, IconFolder } from '@/components/icons';
@@ -9,9 +10,10 @@ interface Props {
   path: string;
   onPathChange: (path: string) => void;
   onSave: (path: string) => void;
+  children?: ReactNode;
 }
 
-export function FolderPicker({ path, onPathChange, onSave }: Props) {
+export function FolderPicker({ path, onPathChange, onSave, children }: Props) {
   const { translate: t } = useTranslation();
 
   return (
@@ -27,6 +29,8 @@ export function FolderPicker({ path, onPathChange, onSave }: Props) {
       </div>
 
       <FolderTree selectedPath={path} onSelect={onPathChange} />
+
+      {children}
 
       <Button className={styles.saveButton} onClick={() => onSave(path)}>
         <IconCheck size="md" className={styles.btnIcon} />

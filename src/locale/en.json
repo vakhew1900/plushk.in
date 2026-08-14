@@ -40,6 +40,8 @@
     "descLabel": "Description",
     "targetFolderLabel": "Target folder",
     "priorityLabel": "Priority",
+    "categoryLabel": "Category",
+    "tagsLabel": "Tags",
     "conditionTitle": "Condition",
     "visualViewTab": "Builder",
     "jsonViewTab": "JSON",
@@ -187,7 +189,13 @@
     "quickSave": {
       "title": "Quick save",
       "saved": "Saved",
-      "offNote": "Quick save is off — \"Off\" mode doesn't touch bookmarks."
+      "offNote": "Quick save is off — \"Off\" mode doesn't touch bookmarks.",
+      "advanced": {
+        "title": "Advanced",
+        "categoryLabel": "Category",
+        "tagsLabel": "Tags",
+        "matchedByRule": "Suggested by rule \"{{name}}\""
+      }
     }
   }
 }

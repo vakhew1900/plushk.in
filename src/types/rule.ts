@@ -90,6 +90,9 @@ export interface BookmarkRule {
   readonly desc?: string;
   readonly condition: RuleNode;
   readonly targetFolder: string;
+  readonly tagIds?: string[];
+  readonly entityTypeId?: string;
+  readonly statusId?: string;
   readonly priority: number;
   readonly enabled: boolean;
 }
@@ -100,6 +103,9 @@ export const BookmarkRuleField = {
   DESC: "desc",
   CONDITION: "condition",
   TARGET_FOLDER: "targetFolder",
+  TAG_IDS: "tagIds",
+  ENTITY_TYPE_ID: "entityTypeId",
+  STATUS_ID: "statusId",
   PRIORITY: "priority",
   ENABLED: "enabled",
 } as const;

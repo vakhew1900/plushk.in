@@ -13,6 +13,7 @@ import { EntityTypeRepository } from '@/repository/EntityTypeRepository';
 import { WorkflowRepository } from '@/repository/WorkflowRepository';
 import { WorkflowStatusRepository } from '@/repository/WorkflowStatusRepository';
 import { BookmarkEntityLinkRepository } from '@/repository/BookmarkEntityLinkRepository';
+import { BookmarkQuickSaveLinksRepository } from '@/repository/BookmarkQuickSaveLinksRepository';
 import type { IBookmarkRepository } from '@/repository/interfaces/IBookmarkRepository';
 import type { IBookmarkTagLinkRepository } from '@/repository/interfaces/IBookmarkTagLinkRepository';
 import type { IBookmarkRuleRepository } from '@/repository/interfaces/IBookmarkRuleRepository';
@@ -26,17 +27,20 @@ import type { IEntityTypeRepository } from '@/repository/interfaces/IEntityTypeR
 import type { IWorkflowRepository } from '@/repository/interfaces/IWorkflowRepository';
 import type { IWorkflowStatusRepository } from '@/repository/interfaces/IWorkflowStatusRepository';
 import type { IBookmarkEntityLinkRepository } from '@/repository/interfaces/IBookmarkEntityLinkRepository';
+import type { IBookmarkQuickSaveLinksRepository } from '@/repository/interfaces/IBookmarkQuickSaveLinksRepository';
 import { BookmarkSearchService } from '@/services/BookmarkSearchService';
 import { FileService } from '@/services/FileService';
 import { PageExtrasService } from '@/services/PageExtrasService';
 import { PageMetaFiller } from '@/services/PageMetaFiller';
 import { QuickSaveFolderResolver } from '@/services/QuickSaveFolderResolver';
+import { QuickSaveBookmarkCreator } from '@/services/QuickSaveBookmarkCreator';
 import { SettingsExportImportService } from '@/services/SettingsExportImportService';
 import type { IBookmarkSearchService } from '@/services/interfaces/IBookmarkSearchService';
 import type { IFileService } from '@/services/interfaces/IFileService';
 import type { IPageExtrasService } from '@/services/interfaces/IPageExtrasService';
 import type { IPageMetaFiller } from '@/services/interfaces/IPageMetaFiller';
 import type { IQuickSaveFolderResolver } from '@/services/interfaces/IQuickSaveFolderResolver';
+import type { IQuickSaveBookmarkCreator } from '@/services/interfaces/IQuickSaveBookmarkCreator';
 import type { ISettingsExportImportService } from '@/services/interfaces/ISettingsExportImportService';
 
 export interface Services {
@@ -51,6 +55,7 @@ export interface Services {
   pageMetaFiller: IPageMetaFiller;
   pageExtrasService: IPageExtrasService;
   quickSaveFolderResolver: IQuickSaveFolderResolver;
+  quickSaveBookmarkCreator: IQuickSaveBookmarkCreator;
   settingsExportImportService: ISettingsExportImportService;
   bookmarkSearchService: IBookmarkSearchService;
   tagRepository: ITagRepository;
@@ -59,6 +64,7 @@ export interface Services {
   workflowRepository: IWorkflowRepository;
   workflowStatusRepository: IWorkflowStatusRepository;
   bookmarkEntityLinkRepository: IBookmarkEntityLinkRepository;
+  bookmarkQuickSaveLinksRepository: IBookmarkQuickSaveLinksRepository;
 }
 
 export const ServicesContext = createContext<Services | null>(null);
@@ -76,6 +82,9 @@ export function ServicesProvider({ children }: Props) {
     const bookmarkRepository = new BookmarkRepository();
 
     const defaultFolderSettingsRepository = new DefaultFolderSettingsRepository();
+    const tagRepository = new TagRepository();
+    const entityTypeRepository = new EntityTypeRepository();
+    const bookmarkQuickSaveLinksRepository = new BookmarkQuickSaveLinksRepository();
 
     return {
       bookmarkRepository,
@@ -89,16 +98,20 @@ export function ServicesProvider({ children }: Props) {
       pageMetaFiller: new PageMetaFiller(domainAliasRepository),
       pageExtrasService: new PageExtrasService(),
       quickSaveFolderResolver: new QuickSaveFolderResolver(bookmarkRuleRepository, defaultFolderSettingsRepository),
+      quickSaveBookmarkCreator: new QuickSaveBookmarkCreator(bookmarkRepository, bookmarkQuickSaveLinksRepository),
+      bookmarkQuickSaveLinksRepository,
       settingsExportImportService: new SettingsExportImportService(
         bookmarkRuleRepository,
         domainAliasRepository,
         pageMatchGroupRepository,
+        tagRepository,
+        entityTypeRepository,
         fileService,
       ),
       bookmarkSearchService: new BookmarkSearchService(bookmarkRepository),
-      tagRepository: new TagRepository(),
+      tagRepository,
       bookmarkTagLinkRepository: new BookmarkTagLinkRepository(),
-      entityTypeRepository: new EntityTypeRepository(),
+      entityTypeRepository,
       workflowRepository: new WorkflowRepository(),
       workflowStatusRepository: new WorkflowStatusRepository(),
       bookmarkEntityLinkRepository: new BookmarkEntityLinkRepository(),

@@ -4,17 +4,26 @@ import { useServices } from '@/hooks/useServices';
 import { debugLog } from '@/lib/debug-log';
 import { Mode } from '@/types/mode';
 import type { PageMeta } from '@/types/page-meta';
+import type { AdvancedSelection } from '@/types/quick-save';
 
 interface ActiveTab {
   title: string;
   url: string;
 }
 
+export interface RuleSuggestion {
+  ruleName: string;
+  tagIds: string[];
+  entityTypeId: string | undefined;
+  statusId: string | undefined;
+}
+
 export function useQuickSave(mode: Mode) {
-  const { pageMatchGroupRepository, pageMetaFiller, pageExtrasService, quickSaveFolderResolver, bookmarkRepository } =
+  const { pageMatchGroupRepository, pageMetaFiller, pageExtrasService, quickSaveFolderResolver, quickSaveBookmarkCreator } =
     useServices();
   const [tab, setTab] = useState<ActiveTab | undefined>(undefined);
   const [suggestedFolder, setSuggestedFolder] = useState<string | undefined>(undefined);
+  const [suggestion, setSuggestion] = useState<RuleSuggestion | undefined>(undefined);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -45,9 +54,21 @@ export function useQuickSave(mode: Mode) {
 
       const meta: PageMeta = { ...baseMeta, ...overlay };
 
-      const folder = await quickSaveFolderResolver.resolve(meta);
-      debugLog('[quick-save-debug] popup: resolved suggested folder', folder);
-      if (!cancelled) setSuggestedFolder(folder);
+      const resolution = await quickSaveFolderResolver.resolve(meta);
+      debugLog('[quick-save-debug] popup: resolved suggested folder', resolution.targetFolder);
+      if (cancelled) return;
+
+      setSuggestedFolder(resolution.targetFolder);
+      setSuggestion(
+        resolution.matchedRuleName === undefined
+          ? undefined
+          : {
+              ruleName: resolution.matchedRuleName,
+              tagIds: resolution.tagIds ?? [],
+              entityTypeId: resolution.entityTypeId,
+              statusId: resolution.statusId,
+            },
+      );
     });
 
     return () => {
@@ -56,14 +77,14 @@ export function useQuickSave(mode: Mode) {
   }, [mode, pageMatchGroupRepository, pageMetaFiller, pageExtrasService, quickSaveFolderResolver]);
 
   const save = useCallback(
-    async (targetFolder: string) => {
+    async (targetFolder: string, advanced: AdvancedSelection) => {
       if (!tab) return;
       debugLog('[quick-save-debug] popup: creating bookmark with targetFolder', targetFolder);
-      await bookmarkRepository.create(tab.title, tab.url, targetFolder);
+      await quickSaveBookmarkCreator.create(tab.title, tab.url, targetFolder, advanced);
       setSaved(true);
     },
-    [tab, bookmarkRepository],
+    [tab, quickSaveBookmarkCreator],
   );
 
-  return { tab, suggestedFolder, saved, save };
+  return { tab, suggestedFolder, suggestion, saved, save };
 }

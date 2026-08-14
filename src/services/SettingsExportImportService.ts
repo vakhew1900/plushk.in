@@ -4,6 +4,8 @@ import type { SettingsExport } from '../types/settings-export';
 import type { IBookmarkRuleRepository } from '../repository/interfaces/IBookmarkRuleRepository';
 import type { IDomainAliasRepository } from '../repository/interfaces/IDomainAliasRepository';
 import type { IPageMatchGroupRepository } from '../repository/interfaces/IPageMatchGroupRepository';
+import type { ITagRepository } from '../repository/interfaces/ITagRepository';
+import type { IEntityTypeRepository } from '../repository/interfaces/IEntityTypeRepository';
 import { MimeType } from './interfaces/IFileService';
 import type { IFileService } from './interfaces/IFileService';
 import type { ISettingsExportImportService } from './interfaces/ISettingsExportImportService';
@@ -13,6 +15,8 @@ export class SettingsExportImportService implements ISettingsExportImportService
     private readonly bookmarkRuleRepository: IBookmarkRuleRepository,
     private readonly domainAliasRepository: IDomainAliasRepository,
     private readonly pageMatchGroupRepository: IPageMatchGroupRepository,
+    private readonly tagRepository: ITagRepository,
+    private readonly entityTypeRepository: IEntityTypeRepository,
     private readonly fileService: IFileService,
   ) {}
 
@@ -22,10 +26,12 @@ export class SettingsExportImportService implements ISettingsExportImportService
   }
 
   private async buildExportData(): Promise<SettingsExport> {
-    const [rules, domainAliases, pageMatchGroups] = await Promise.all([
+    const [rules, domainAliases, pageMatchGroups, tags, entityTypes] = await Promise.all([
       this.bookmarkRuleRepository.getAll(),
       this.domainAliasRepository.getAll(),
       this.pageMatchGroupRepository.getAll(),
+      this.tagRepository.getAll(),
+      this.entityTypeRepository.getAll(),
     ]);
 
     return {
@@ -34,6 +40,8 @@ export class SettingsExportImportService implements ISettingsExportImportService
       rules,
       domainAliases,
       pageMatchGroups: pageMatchGroups.map(toExportPageMatchGroup),
+      tags,
+      entityTypes,
     };
   }
 
@@ -53,6 +61,8 @@ export class SettingsExportImportService implements ISettingsExportImportService
       ...data.pageMatchGroups.map((group) =>
         this.pageMatchGroupRepository.save(fromExportPageMatchGroup(group)),
       ),
+      ...(data.tags ?? []).map((tag) => this.tagRepository.save(tag)),
+      ...(data.entityTypes ?? []).map((entityType) => this.entityTypeRepository.save(entityType)),
     ]);
   }
 }

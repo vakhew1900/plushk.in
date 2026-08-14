@@ -1,20 +1,9 @@
-import { useEntityTypes } from '@/hooks/useEntityTypes';
-import { useWorkflows } from '@/hooks/useWorkflows';
-import { useWorkflowStatuses } from '@/hooks/useWorkflowStatuses';
+import { useEntityWorkflows } from '@/hooks/useEntityWorkflows';
 import { useBookmarkEntityLink } from '@/hooks/useBookmarkEntityLink';
-import type { WorkflowStatus } from '@/types/workflow-status';
 
 export function useBookmarkEntityEditor(bookmarkId: string) {
-  const { items: entityTypes } = useEntityTypes();
-  const { items: workflows } = useWorkflows();
-  const { items: allStatuses } = useWorkflowStatuses();
+  const { entityTypes, statusesFor } = useEntityWorkflows();
   const { link, setEntity, setStatus } = useBookmarkEntityLink(bookmarkId);
-
-  const statusesFor = (entityTypeId: string | undefined): WorkflowStatus[] => {
-    const workflow = workflows.find((w) => w.entityTypeId === entityTypeId);
-    if (!workflow) return [];
-    return allStatuses.filter((s) => s.workflowId === workflow.id).sort((a, b) => a.order - b.order);
-  };
 
   const selectedEntity = entityTypes.find((e) => e.id === link?.entityTypeId);
   const statuses = statusesFor(link?.entityTypeId);

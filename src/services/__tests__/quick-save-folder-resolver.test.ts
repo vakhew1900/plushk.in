@@ -44,6 +44,9 @@ const matchingRule = makeRule({
   id: 'youtube-rule',
   targetFolder: 'Videos',
   condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
+  tagIds: ['tag-tutorial'],
+  entityTypeId: 'entity-video',
+  statusId: 'status-to-watch',
 });
 
 const nonMatchingRule = makeRule({
@@ -53,22 +56,28 @@ const nonMatchingRule = makeRule({
 });
 
 describe('QuickSaveFolderResolver.resolve', () => {
-  it('resolves the matched rule\'s target folder', async () => {
+  it('resolves the matched rule\'s target folder plus its tag/entity suggestion', async () => {
     const resolver = new QuickSaveFolderResolver(
       new FakeBookmarkRuleRepository([nonMatchingRule, matchingRule]),
       makeDefaultFolderSettingsRepository(),
     );
 
-    expect(await resolver.resolve(meta)).toBe('Videos');
+    expect(await resolver.resolve(meta)).toEqual({
+      targetFolder: 'Videos',
+      matchedRuleName: 'youtube-rule',
+      tagIds: ['tag-tutorial'],
+      entityTypeId: 'entity-video',
+      statusId: 'status-to-watch',
+    });
   });
 
-  it('falls back to the configured default folder when nothing matches', async () => {
+  it('falls back to the configured default folder when nothing matches, with no rule suggestion', async () => {
     const resolver = new QuickSaveFolderResolver(
       new FakeBookmarkRuleRepository([nonMatchingRule]),
       makeDefaultFolderSettingsRepository('Reading/Later'),
     );
 
-    expect(await resolver.resolve(meta)).toBe('Reading/Later');
+    expect(await resolver.resolve(meta)).toEqual({ targetFolder: 'Reading/Later' });
   });
 
   it('falls back to the empty string (Bookmarks Toolbar) when nothing matches and no default is configured', async () => {
@@ -77,7 +86,7 @@ describe('QuickSaveFolderResolver.resolve', () => {
       makeDefaultFolderSettingsRepository(''),
     );
 
-    expect(await resolver.resolve(meta)).toBe('');
+    expect(await resolver.resolve(meta)).toEqual({ targetFolder: '' });
   });
 
   it('skips a disabled matching rule', async () => {
@@ -87,6 +96,15 @@ describe('QuickSaveFolderResolver.resolve', () => {
       makeDefaultFolderSettingsRepository('Reading/Later'),
     );
 
-    expect(await resolver.resolve(meta)).toBe('Reading/Later');
+    expect(await resolver.resolve(meta)).toEqual({ targetFolder: 'Reading/Later' });
+  });
+
+  it('omits a matched rule\'s tag/entity fields from the resolution when the rule leaves them unset', async () => {
+    const resolver = new QuickSaveFolderResolver(
+      new FakeBookmarkRuleRepository([nonMatchingRule, { ...matchingRule, tagIds: undefined, entityTypeId: undefined, statusId: undefined }]),
+      makeDefaultFolderSettingsRepository(),
+    );
+
+    expect(await resolver.resolve(meta)).toEqual({ targetFolder: 'Videos', matchedRuleName: 'youtube-rule' });
   });
 });

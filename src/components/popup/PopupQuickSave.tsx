@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { IconCheck, IconStar } from '@/components/icons';
 import { FolderPicker } from '@/components/bookmark/folder-tree/FolderPicker';
+import { AdvancedSection } from './AdvancedSection';
 import { useQuickSave } from '@/hooks/useQuickSave';
+import { useAdvancedSelection } from '@/hooks/useAdvancedSelection';
+import { useEntityWorkflows } from '@/hooks/useEntityWorkflows';
+import { useTags } from '@/hooks/useTags';
 import { useTranslation } from '@/hooks/useTranslation';
 import { QuickSaveView, getQuickSaveView } from '@/lib/quick-save-view';
 import type { Mode } from '@/types/mode';
@@ -28,7 +32,14 @@ function SavedView() {
 
 export function PopupQuickSave({ mode }: Props) {
   const { translate: t } = useTranslation();
-  const { suggestedFolder, saved, save } = useQuickSave(mode);
+  const { suggestedFolder, suggestion, saved, save } = useQuickSave(mode);
+  const { entityTypes, statusesFor } = useEntityWorkflows();
+  const { items: tags } = useTags();
+  const { entityTypeId, statusId, tagIds, chooseEntity, toggleTag, matchedRuleName } = useAdvancedSelection(
+    suggestion,
+    statusesFor,
+  );
+  const selectedEntity = entityTypes.find((e) => e.id === entityTypeId);
 
   const [path, setPath] = useState('');
   const [pathTouched, setPathTouched] = useState(false);
@@ -63,7 +74,23 @@ export function PopupQuickSave({ mode }: Props) {
         {view === QuickSaveView.SAVED && <SavedView />}
         {view === QuickSaveView.OFF && <OffView />}
         {view === QuickSaveView.SAVE && (
-          <FolderPicker path={path} onPathChange={handlePathChange} onSave={(value) => { void save(value); }} />
+          <FolderPicker
+            path={path}
+            onPathChange={handlePathChange}
+            onSave={(value) => {
+              void save(value, { tagIds, entityTypeId, statusId });
+            }}
+          >
+            <AdvancedSection
+              entityTypes={entityTypes}
+              selectedEntity={selectedEntity}
+              onChooseEntity={chooseEntity}
+              tags={tags}
+              selectedTagIds={tagIds}
+              onToggleTag={toggleTag}
+              matchedRuleName={matchedRuleName}
+            />
+          </FolderPicker>
         )}
       </div>
     </div>

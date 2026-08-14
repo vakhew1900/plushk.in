@@ -1,6 +1,8 @@
 import type { BookmarkRule } from './rule';
 import type { DomainAlias } from './domain-alias';
 import type { PageMatch } from './page-match';
+import type { Tag } from './tag';
+import type { EntityType } from './entity-type';
 
 // Bumped when the shape of SettingsExport changes in a way that breaks
 // reading older files (e.g. a required field is added or renamed). Kept at
@@ -24,4 +26,12 @@ export interface SettingsExport {
   rules: BookmarkRule[];
   domainAliases: DomainAlias[];
   pageMatchGroups: ExportedPageMatchGroup[];
+  // Optional — added alongside SEARCH-6's BookmarkRule.tagIds/entityTypeId so
+  // example/test configs (configs/*/settings.json) can ship the tags/category
+  // a rule references. Older export files without them are still valid;
+  // absent means "none". Workflow/WorkflowStatus aren't included — a rule's
+  // statusId always resolves to a category's first status at match time, and
+  // an EntityType with no workflow at all is already a valid state (SHELF-1).
+  tags?: Tag[];
+  entityTypes?: EntityType[];
 }
