@@ -5,7 +5,7 @@
     {
       "id": "test-it-java",
       "name": "IT-сайты — Java/JavaScript",
-      "desc": "Заголовок содержит слово Java или JavaScript (границы слова \\b, поэтому не ловит 'javadoc' как часть другого слова). Приоритет выше общего IT-правила, чтобы более специфичная папка побеждала.",
+      "desc": "Заголовок содержит слово Java или JavaScript (границы слова \\b, поэтому не ловит 'javadoc' как часть другого слова). Приоритет выше общего IT-правила, чтобы более специфичная папка побеждала. Демонстрирует tagIds/entityTypeId (SEARCH-6): при совпадении подсказывает теги «java»/«it» и категорию «Статья».",
       "condition": {
         "type": "and",
         "nodes": [
@@ -14,13 +14,15 @@
         ]
       },
       "targetFolder": "IT/Java",
+      "tagIds": ["test-tag-java", "test-tag-it"],
+      "entityTypeId": "test-entity-article",
       "priority": 40,
       "enabled": true
     },
     {
       "id": "test-it-general",
       "name": "IT-сайты — общее",
-      "desc": "Заголовок содержит слово IT именно как отдельное слово (\\bIT\\b), а не часть другого слова (напр. 'split'). Паттерн регистрозависим (только заглавные IT) — движок regex-правил не поддерживает флаг case-insensitive, а матчинг строчного 'it' как английского местоимения дал бы слишком много ложных срабатываний.",
+      "desc": "Заголовок содержит слово IT именно как отдельное слово (\\bIT\\b), а не часть другого слова (напр. 'split'). Паттерн регистрозависим (только заглавные IT) — движок regex-правил не поддерживает флаг case-insensitive, а матчинг строчного 'it' как английского местоимения дал бы слишком много ложных срабатываний. Демонстрирует tagIds/entityTypeId (SEARCH-6): подсказывает теги «it»/«habr» и категорию «Статья».",
       "condition": {
         "type": "and",
         "nodes": [
@@ -29,7 +31,20 @@
         ]
       },
       "targetFolder": "IT/General",
+      "tagIds": ["test-tag-it", "test-tag-habr"],
+      "entityTypeId": "test-entity-article",
       "priority": 30,
+      "enabled": true
+    },
+    {
+      "id": "test-it-book",
+      "name": "IT-сайты — технические книги",
+      "desc": "Простое доменное правило (без regex по заголовку) на O'Reilly — платформу технических книг. Демонстрирует категорию «Книга» (test-entity-book) — в отличие от двух правил выше (категория «Статья»), здесь сама закладка и есть книга, а не статья о ней. У «Книги» в этом наборе нет workflow/статусов (SHELF-1: категория без workflow — валидное состояние), поэтому statusId не задан.",
+      "condition": { "type": "term", "field": "domain", "value": "www.oreilly.com" },
+      "targetFolder": "IT/Books",
+      "tagIds": ["test-tag-it"],
+      "entityTypeId": "test-entity-book",
+      "priority": 35,
       "enabled": true
     }
   ],
@@ -40,5 +55,14 @@
       "domain_names": ["habr.com", "dev.to"]
     }
   ],
-  "pageMatchGroups": []
+  "pageMatchGroups": [],
+  "tags": [
+    { "id": "test-tag-java", "name": "java", "color": "orange" },
+    { "id": "test-tag-it", "name": "it", "color": "blue" },
+    { "id": "test-tag-habr", "name": "habr", "color": "green" }
+  ],
+  "entityTypes": [
+    { "id": "test-entity-article", "name": "Статья", "color": "purple" },
+    { "id": "test-entity-book", "name": "Книга", "color": "yellow" }
+  ]
 }

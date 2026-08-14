@@ -282,6 +282,8 @@ npm test        # Run all tests
 npm run test:watch  # Watch mode
 ```
 
+**`configs/*/settings.json`** are `SettingsExport`-shaped fixtures (`src/types/settings-export.ts`) the user feeds into the real Export/Import dialog (Main tab) for manual, in-browser testing of rules/tags/categories — not just Vitest fixtures. Keep them in sync whenever `BookmarkRule`/`Tag`/`EntityType`/`DomainAlias`/`PageMatchGroup` shapes change, the same way `isSettingsExport` (`src/lib/settings-export-mapping.ts`) needs to. See `configs/README.md` for what each set demonstrates.
+
 ## Theme (Obsidian-style)
 
 Dark/light toggle via `data-theme="dark"/"light"` on the root element. CSS variables defined in `assets/globals.css`, used directly in CSS Modules as `var(--accent)` etc.
