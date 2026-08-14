@@ -1,6 +1,6 @@
 import type { IBookmarkRepository } from '../repository/interfaces/IBookmarkRepository';
 import type { IBookmarkQuickSaveLinksRepository } from '../repository/interfaces/IBookmarkQuickSaveLinksRepository';
-import type { AdvancedSelection } from '../types/quick-save';
+import type { QuickSaveSelection } from '../types/quick-save';
 import type { IQuickSaveBookmarkCreator } from './interfaces/IQuickSaveBookmarkCreator';
 
 export class QuickSaveBookmarkCreator implements IQuickSaveBookmarkCreator {
@@ -9,16 +9,16 @@ export class QuickSaveBookmarkCreator implements IQuickSaveBookmarkCreator {
     private readonly bookmarkQuickSaveLinksRepository: IBookmarkQuickSaveLinksRepository,
   ) {}
 
-  async create(title: string, url: string, targetFolder: string, advanced: AdvancedSelection): Promise<void> {
-    const created = await this.bookmarkRepository.create(title, url, targetFolder);
+  async create(title: string, url: string, selection: QuickSaveSelection): Promise<void> {
+    const created = await this.bookmarkRepository.create(title, url, selection.targetFolder);
 
-    if (advanced.tagIds.length === 0 && advanced.entityTypeId === undefined) return;
+    if (selection.tagIds.length === 0 && selection.entityTypeId === undefined) return;
 
     await this.bookmarkQuickSaveLinksRepository.save({
       bookmarkId: created.id,
-      tagIds: advanced.tagIds,
-      entityTypeId: advanced.entityTypeId,
-      statusId: advanced.statusId,
+      tagIds: selection.tagIds,
+      entityTypeId: selection.entityTypeId,
+      statusId: selection.statusId,
     });
   }
 }

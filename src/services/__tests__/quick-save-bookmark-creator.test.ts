@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Browser } from 'wxt/browser';
 import type { BookmarkSearchEntry } from '../../types/bookmark-search-entry';
 import type { FolderNode } from '../../types/folder-node';
-import type { AdvancedSelection } from '../../types/quick-save';
+import type { QuickSaveSelection } from '../../types/quick-save';
 import type { IBookmarkRepository } from '../../repository/interfaces/IBookmarkRepository';
 import type { IBookmarkQuickSaveLinksRepository, QuickSaveLinks } from '../../repository/interfaces/IBookmarkQuickSaveLinksRepository';
 import { QuickSaveBookmarkCreator } from '../QuickSaveBookmarkCreator';
@@ -28,7 +28,11 @@ class FakeBookmarkQuickSaveLinksRepository implements IBookmarkQuickSaveLinksRep
   }
 }
 
-const noSelection: AdvancedSelection = { tagIds: [], entityTypeId: undefined, statusId: undefined };
+const noLinks: Pick<QuickSaveSelection, 'tagIds' | 'entityTypeId' | 'statusId'> = {
+  tagIds: [],
+  entityTypeId: undefined,
+  statusId: undefined,
+};
 
 describe('QuickSaveBookmarkCreator.create', () => {
   it('creates the bookmark and writes its tag/entity links using the id the repository returned', async () => {
@@ -36,8 +40,13 @@ describe('QuickSaveBookmarkCreator.create', () => {
     const linksRepository = new FakeBookmarkQuickSaveLinksRepository();
     const creator = new QuickSaveBookmarkCreator(bookmarkRepository, linksRepository);
 
-    const advanced: AdvancedSelection = { tagIds: ['tag-1', 'tag-2'], entityTypeId: 'entity-1', statusId: 'status-1' };
-    await creator.create('React Tutorial', 'https://youtube.com/watch?v=abc', 'Videos', advanced);
+    const selection: QuickSaveSelection = {
+      targetFolder: 'Videos',
+      tagIds: ['tag-1', 'tag-2'],
+      entityTypeId: 'entity-1',
+      statusId: 'status-1',
+    };
+    await creator.create('React Tutorial', 'https://youtube.com/watch?v=abc', selection);
 
     expect(bookmarkRepository.created).toEqual([{ title: 'React Tutorial', url: 'https://youtube.com/watch?v=abc', targetFolder: 'Videos' }]);
     expect(linksRepository.saved).toEqual([
@@ -50,7 +59,7 @@ describe('QuickSaveBookmarkCreator.create', () => {
     const linksRepository = new FakeBookmarkQuickSaveLinksRepository();
     const creator = new QuickSaveBookmarkCreator(bookmarkRepository, linksRepository);
 
-    await creator.create('Untitled', 'https://example.com', '', noSelection);
+    await creator.create('Untitled', 'https://example.com', { targetFolder: '', ...noLinks });
 
     expect(bookmarkRepository.created).toHaveLength(1);
     expect(linksRepository.saved).toEqual([]);
@@ -61,7 +70,8 @@ describe('QuickSaveBookmarkCreator.create', () => {
     const linksRepository = new FakeBookmarkQuickSaveLinksRepository();
     const creator = new QuickSaveBookmarkCreator(bookmarkRepository, linksRepository);
 
-    await creator.create('A Book', 'https://oreilly.com/book', 'IT/Books', {
+    await creator.create('A Book', 'https://oreilly.com/book', {
+      targetFolder: 'IT/Books',
       tagIds: [],
       entityTypeId: 'entity-book',
       statusId: undefined,

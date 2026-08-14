@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { IconCheck, IconStar } from '@/components/icons';
 import { FolderPicker } from '@/components/bookmark/folder-tree/FolderPicker';
 import { AdvancedSection } from './AdvancedSection';
 import { useQuickSave } from '@/hooks/useQuickSave';
-import { useAdvancedSelection } from '@/hooks/useAdvancedSelection';
+import { useQuickSaveSelection } from '@/hooks/useQuickSaveSelection';
 import { useEntityWorkflows } from '@/hooks/useEntityWorkflows';
 import { useTags } from '@/hooks/useTags';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -32,32 +32,18 @@ function SavedView() {
 
 export function PopupQuickSave({ mode }: Props) {
   const { translate: t } = useTranslation();
-  const { suggestedFolder, suggestion, saved, save } = useQuickSave(mode);
+  const { suggestion, saved, save } = useQuickSave(mode);
   const { entityTypes, statusesFor } = useEntityWorkflows();
   const { items: tags } = useTags();
-  const { entityTypeId, statusId, tagIds, chooseEntity, toggleTag, matchedRuleName } = useAdvancedSelection(
-    suggestion,
-    statusesFor,
-  );
+  const { targetFolder, entityTypeId, statusId, tagIds, setTargetFolder, chooseEntity, toggleTag, matchedRuleName } =
+    useQuickSaveSelection(suggestion, statusesFor);
   const selectedEntity = entityTypes.find((e) => e.id === entityTypeId);
-
-  const [path, setPath] = useState('');
-  const [pathTouched, setPathTouched] = useState(false);
-
-  useEffect(() => {
-    if (!pathTouched && suggestedFolder !== undefined) setPath(suggestedFolder);
-  }, [suggestedFolder, pathTouched]);
 
   useEffect(() => {
     if (!saved) return;
     const timer = setTimeout(() => window.close(), 900);
     return () => clearTimeout(timer);
   }, [saved]);
-
-  const handlePathChange = (value: string) => {
-    setPathTouched(true);
-    setPath(value);
-  };
 
   const view = getQuickSaveView(saved, mode);
 
@@ -75,10 +61,10 @@ export function PopupQuickSave({ mode }: Props) {
         {view === QuickSaveView.OFF && <OffView />}
         {view === QuickSaveView.SAVE && (
           <FolderPicker
-            path={path}
-            onPathChange={handlePathChange}
+            path={targetFolder}
+            onPathChange={setTargetFolder}
             onSave={(value) => {
-              void save(value, { tagIds, entityTypeId, statusId });
+              void save({ targetFolder: value, tagIds, entityTypeId, statusId });
             }}
           >
             <AdvancedSection
