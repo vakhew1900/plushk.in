@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import type { PageMeta } from '../../types/page-meta';
 import type { BookmarkRule } from '../../types/rule';
 import { RuleType } from '../../types/rule';
-import type { IBookmarkRuleRepository } from '../../repository/interfaces/IBookmarkRuleRepository';
 import type { IDefaultFolderSettingsRepository } from '../../repository/interfaces/IDefaultFolderSettingsRepository';
+import { FakeBookmarkRuleRepository } from '../../repository/__tests__/fakes/FakeBookmarkRuleRepository';
 import { QuickSaveFolderResolver } from '../QuickSaveFolderResolver';
 
 const meta: PageMeta = {
@@ -19,18 +19,6 @@ function makeRule(overrides: Partial<BookmarkRule> & Pick<BookmarkRule, 'id' | '
     enabled: true,
     ...overrides,
   };
-}
-
-class FakeBookmarkRuleRepository implements IBookmarkRuleRepository {
-  constructor(private rules: BookmarkRule[]) {}
-  async getAll(): Promise<BookmarkRule[]> { return this.rules; }
-  async getById(id: string): Promise<BookmarkRule | undefined> { return this.rules.find((r) => r.id === id); }
-  async save(rule: BookmarkRule): Promise<void> {
-    this.rules = [...this.rules.filter((r) => r.id !== rule.id), rule];
-  }
-  async remove(id: string): Promise<void> {
-    this.rules = this.rules.filter((r) => r.id !== id);
-  }
 }
 
 function makeDefaultFolderSettingsRepository(defaultFolder = ''): IDefaultFolderSettingsRepository {

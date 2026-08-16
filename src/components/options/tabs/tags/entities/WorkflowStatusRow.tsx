@@ -1,6 +1,6 @@
 import { ColorPicker } from '@/components/ui/color-picker';
 import { Input } from '@/components/ui/input';
-import { IconX } from '@/components/icons';
+import { RemoveIconButton } from '@/components/ui/remove-icon-button';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { PaletteColor } from '@/types/palette-color';
 import styles from './WorkflowStatusRow.module.css';
@@ -28,7 +28,7 @@ export function WorkflowStatusRow({ name, color, isStart, onNameChange, onColorC
         className={styles.nameInput}
       />
       {isStart && <span className={styles.startHint}>{t('entityDetail.startStatusHint')}</span>}
-      <button onClick={onRemove} className={styles.removeRow}><IconX size="sm" /></button>
+      <RemoveIconButton onClick={onRemove} />
     </div>
   );
 }

@@ -19,6 +19,19 @@ import { visitRule } from './rule-visitor';
 // here, not a parallel class hierarchy.
 
 export type CompoundRuleType = typeof RuleType.AND | typeof RuleType.OR | typeof RuleType.NOT;
+
+// The shape a tree "slot" (the root, or a group's child) can be switched
+// between in the visual builder: a bare leaf condition ("single" — not a
+// `RuleType` value, there's no node for "not a group"), or one of the three
+// compound types. See `StructureSwitcher` — lets a bare leaf be wrapped into
+// a group, and a single-child group be collapsed back to its one leaf.
+export const StructureType = {
+  SINGLE: 'single',
+  AND: RuleType.AND,
+  OR: RuleType.OR,
+  NOT: RuleType.NOT,
+} as const;
+export type StructureType = (typeof StructureType)[keyof typeof StructureType];
 export type LeafRuleType =
   | typeof RuleType.TERM
   | typeof RuleType.TERMS
@@ -61,6 +74,29 @@ export function withDraftChildren(node: DraftGroupNode, children: DraftRuleNode[
 
 export function withDraftGroupType(node: DraftGroupNode, type: CompoundRuleType): DraftGroupNode {
   return { ...node, type };
+}
+
+/**
+ * Applies a `StructureSwitcher` selection to any node — leaf or group — in
+ * one place, instead of `ConditionRow`/`ConditionGroup` each re-implementing
+ * "single vs. AND/OR/NOT" with their own slightly different branching:
+ *
+ * - `SINGLE`: collapses a group with exactly one child down to that child.
+ *   A leaf (already "single") or a group with 0/2+ children is returned
+ *   unchanged — the UI disables the "single" option in the latter case (see
+ *   `singleDisabled`), this is just the safe no-op if it's ever reached
+ *   anyway.
+ * - `AND`/`OR`/`NOT`: an existing group is relabeled in place (children
+ *   untouched, same as `withDraftGroupType`); a leaf is wrapped into a new
+ *   group containing just that leaf.
+ */
+export function withStructureType(node: DraftRuleNode, type: StructureType): DraftRuleNode {
+  if (type === StructureType.SINGLE) {
+    if (isDraftGroup(node) && getDraftChildren(node).length === 1) return getDraftChildren(node)[0];
+    return node;
+  }
+  if (isDraftGroup(node)) return withDraftGroupType(node, type);
+  return { id: crypto.randomUUID(), type, nodes: [node] };
 }
 
 export function makeDraftGroup(type: CompoundRuleType): DraftGroupNode {

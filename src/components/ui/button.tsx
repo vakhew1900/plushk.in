@@ -3,7 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { clsx } from 'clsx';
 import styles from './button.module.css';
 
-export type ButtonVariant = 'default' | 'outline' | 'ghost' | 'accent-soft' | 'dashed';
+export type ButtonVariant = 'default' | 'outline' | 'ghost' | 'accent-soft' | 'dashed' | 'destructive';
 export type ButtonSize = 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm';
 
 const VARIANT: Record<ButtonVariant, string> = {
@@ -12,6 +12,7 @@ const VARIANT: Record<ButtonVariant, string> = {
   'ghost':       styles.vGhost,
   'accent-soft': styles.vAccentSoft,
   'dashed':      styles.vDashed,
+  'destructive': styles.vDestructive,
 };
 
 const SIZE: Record<ButtonSize, string> = {

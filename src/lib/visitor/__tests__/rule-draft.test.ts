@@ -3,6 +3,7 @@ import { RuleType } from '../../../types/rule';
 import type { RuleNode } from '../../../types/rule';
 import {
   DraftRuleError,
+  StructureType,
   fromDraftNode,
   getDraftChildren,
   hasRuleErrors,
@@ -15,6 +16,7 @@ import {
   validateLeafNode,
   withDraftChildren,
   withDraftGroupType,
+  withStructureType,
 } from '../rule-draft';
 
 const nested: RuleNode = {
@@ -86,6 +88,56 @@ describe('withDraftGroupType', () => {
     expect(asOr.type).toBe(RuleType.OR);
     expect(asOr.id).toBe(group.id);
     expect(getDraftChildren(asOr)).toEqual(getDraftChildren(group));
+  });
+});
+
+describe('withStructureType', () => {
+  it('wraps a leaf in a new group when picking AND/OR/NOT', () => {
+    const leaf = makeDraftLeaf(RuleType.TERM);
+    const result = withStructureType(leaf, RuleType.AND);
+
+    expect(isDraftGroup(result)).toBe(true);
+    if (isDraftGroup(result)) {
+      expect(result.type).toBe(RuleType.AND);
+      expect(getDraftChildren(result)).toEqual([leaf]);
+    }
+  });
+
+  it('leaves a leaf unchanged when picking SINGLE (already single)', () => {
+    const leaf = makeDraftLeaf(RuleType.TERM);
+    expect(withStructureType(leaf, StructureType.SINGLE)).toBe(leaf);
+  });
+
+  it('relabels an existing group in place when picking AND/OR/NOT, keeping children and id', () => {
+    const leaf = makeDraftLeaf(RuleType.TERM);
+    const group = withDraftChildren(makeDraftGroup(RuleType.AND), [leaf, leaf]);
+
+    const result = withStructureType(group, RuleType.OR);
+
+    expect(isDraftGroup(result)).toBe(true);
+    if (isDraftGroup(result)) {
+      expect(result.type).toBe(RuleType.OR);
+      expect(result.id).toBe(group.id);
+      expect(getDraftChildren(result)).toEqual(getDraftChildren(group));
+    }
+  });
+
+  it('collapses a single-child group down to that child when picking SINGLE', () => {
+    const leaf = makeDraftLeaf(RuleType.TERM);
+    const group = withDraftChildren(makeDraftGroup(RuleType.AND), [leaf]);
+
+    expect(withStructureType(group, StructureType.SINGLE)).toBe(leaf);
+  });
+
+  it('leaves a group with zero children unchanged when picking SINGLE', () => {
+    const group = makeDraftGroup(RuleType.AND);
+    expect(withStructureType(group, StructureType.SINGLE)).toBe(group);
+  });
+
+  it('leaves a group with 2+ children unchanged when picking SINGLE', () => {
+    const leaf = makeDraftLeaf(RuleType.TERM);
+    const group = withDraftChildren(makeDraftGroup(RuleType.AND), [leaf, leaf]);
+    expect(withStructureType(group, StructureType.SINGLE)).toBe(group);
   });
 });
 

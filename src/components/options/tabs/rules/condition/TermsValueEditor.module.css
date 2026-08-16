@@ -22,19 +22,12 @@
   padding: 0.15rem 0;
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: var(--accent);
 }
-
-.removeChip {
-  font-size: 1.6rem;
-  line-height: 1;
-  color: var(--faint);
-  padding: 0 0.3rem;
-  transition: color 0.15s;
-}
-.removeChip:hover { color: var(--red); }
 
 .addChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   font-size: 0.75rem;
   color: var(--muted);
   border: 1px dashed var(--border);

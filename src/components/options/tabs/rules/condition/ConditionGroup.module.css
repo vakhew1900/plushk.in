@@ -1,14 +1,10 @@
 .group {
   border: 1px solid var(--border);
-  border-left: 3px solid var(--border);
+  border-left: 3px solid var(--accent);
   border-radius: 9px;
   background: var(--bg);
   padding: 12px 14px;
 }
-
-.and { border-left-color: var(--blue); }
-.or  { border-left-color: var(--accent); }
-.not { border-left-color: var(--red); background: var(--red-soft); }
 
 .header {
   display: flex;
@@ -19,14 +15,7 @@
 }
 .headerText { font-size: 11.5px; color: var(--muted); }
 
-.removeBtn {
-  margin-left: auto;
-  font-size: 1.9rem;
-  line-height: 1;
-  color: var(--faint);
-  transition: color 0.15s;
-}
-.removeBtn:hover { color: var(--red); }
+.removeBtn { margin-left: auto; padding: 0.2rem; }
 
 .rows { display: flex; flex-direction: column; gap: 7px; }
 

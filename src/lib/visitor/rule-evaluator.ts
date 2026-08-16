@@ -1,5 +1,6 @@
 import type { PageMeta } from '../../types/page-meta';
 import { getMetaField } from '../../types/page-meta';
+import { buildRuleTree, findMatchingTreeNode } from '../rule-tree';
 import type {
   AndRule,
   BookmarkRule,
@@ -60,9 +61,16 @@ export function evaluate(rule: RuleNode, meta: PageMeta): boolean {
 }
 
 // Rules are expected pre-sorted by descending priority (e.g. via
-// IBookmarkRuleRepository.getAll()) — the first enabled match wins.
+// IBookmarkRuleRepository.getAll()) — within each level of the tree (see
+// RULE-10), the first enabled sibling whose own condition matches wins; a
+// match's own children are then checked the same way for a more specific
+// result, and its own node is the fallback if none of them match. A rule
+// with no `parentId` is a child of the (unrepresented) virtual root, so a
+// fully flat rule list — the pre-RULE-10 shape — behaves exactly as before.
 export function findMatchingRule(rules: BookmarkRule[], meta: PageMeta): BookmarkRule | undefined {
-  return rules.find((rule) => rule.enabled && evaluate(rule.condition, meta));
+  const tree = buildRuleTree(rules);
+  const matched = findMatchingTreeNode(tree, (rule) => rule.enabled && evaluate(rule.condition, meta));
+  return matched?.rule;
 }
 
 class LeafCounterVisitor implements RuleVisitor<number> {

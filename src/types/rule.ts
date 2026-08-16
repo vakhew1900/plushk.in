@@ -95,6 +95,8 @@ export interface BookmarkRule {
   readonly statusId?: string;
   readonly priority: number;
   readonly enabled: boolean;
+  /** Parent rule id — absent means top-level (child of the virtual default-folder root). See RULE-10. */
+  readonly parentId?: string;
 }
 
 export const BookmarkRuleField = {
@@ -108,6 +110,7 @@ export const BookmarkRuleField = {
   STATUS_ID: "statusId",
   PRIORITY: "priority",
   ENABLED: "enabled",
+  PARENT_ID: "parentId",
 } as const;
 export type BookmarkRuleField =
   (typeof BookmarkRuleField)[keyof typeof BookmarkRuleField];

@@ -1,0 +1,53 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--shadow);
+  z-index: 60;
+}
+.overlay[data-state="open"] { animation: fadeIn 0.15s ease; }
+.overlay[data-state="closed"] { animation: fadeOut 0.15s ease; }
+
+.content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24rem;
+  max-width: calc(100vw - 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  box-shadow: 0 0.5rem 1.5rem var(--shadow);
+  z-index: 61;
+}
+.content[data-state="open"] { animation: scaleIn 0.15s ease; }
+.content[data-state="closed"] { animation: fadeOut 0.15s ease; }
+
+.title {
+  font-size: var(--fs-subheading);
+  font-weight: var(--fw-bold);
+  color: var(--text);
+}
+
+.description {
+  font-size: var(--fs-body);
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}

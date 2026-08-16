@@ -1,7 +1,8 @@
 import { ColorPicker } from '@/components/ui/color-picker';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { IconX, IconPlus } from '@/components/icons';
+import { RemoveIconButton } from '@/components/ui/remove-icon-button';
+import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntityWorkflow } from '@/hooks/useEntityWorkflow';
 import type { EntityType } from '@/types/entity-type';
@@ -37,9 +38,7 @@ export function EntityDetailPanel({ entity, onNameChange, onColorChange, onRemov
             placeholder={t('entitiesSection.namePlaceholder')}
             className={styles.nameInput}
           />
-          <button type="button" className={styles.removeEntity} onClick={onRemove}>
-            <IconX size="sm" />
-          </button>
+          <RemoveIconButton onClick={onRemove} />
         </div>
       </div>
 

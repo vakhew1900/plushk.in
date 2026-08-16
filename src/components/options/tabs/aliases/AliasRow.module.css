@@ -34,15 +34,6 @@
   padding: 2px 0;
 }
 
-.removeChip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--faint);
-  transition: color 0.15s;
-}
-.removeChip:hover { color: var(--red); }
-
 .addChip {
   color: var(--muted);
   border: 1px dashed var(--border);
@@ -57,13 +48,4 @@
 }
 .addChip:hover { color: var(--accent); border-color: var(--accent); }
 
-.removeRow {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--faint);
-  transition: color 0.15s;
-  flex-shrink: 0;
-}
-.removeRow:hover { color: var(--red); }
+.removeRow { margin-left: auto; }

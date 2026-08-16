@@ -1,0 +1,11 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--faint);
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.vDefault:hover { color: var(--accent); }
+.vDanger:hover { color: var(--red); }

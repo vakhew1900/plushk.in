@@ -1,9 +1,0 @@
-.root { flex-shrink: 0; }
-
-.item {
-  font-family: var(--font-mono);
-}
-
-.and[data-state="checked"] { color: var(--blue); }
-.or[data-state="checked"] { color: var(--accent); }
-.not[data-state="checked"] { color: var(--red); }

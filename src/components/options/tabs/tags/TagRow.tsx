@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { ColorPicker } from '@/components/ui/color-picker';
-import { IconX } from '@/components/icons';
+import { RemoveIconButton } from '@/components/ui/remove-icon-button';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { PaletteColor } from '@/types/palette-color';
 import styles from './TagRow.module.css';
@@ -26,7 +26,7 @@ export function TagRow({ name, color, onNameChange, onColorChange, onRemove }: P
         placeholder={t('tagsSection.namePlaceholder')}
         className={styles.nameInput}
       />
-      <button onClick={onRemove} className={styles.removeRow}><IconX size="sm" /></button>
+      <RemoveIconButton onClick={onRemove} />
     </div>
   );
 }

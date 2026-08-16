@@ -35,6 +35,16 @@
     "lead": "Checked top to bottom — the first match wins.",
     "addRule": "Rule"
   },
+  "ruleTree": {
+    "defaultFolderNode": "Default",
+    "addChildRule": "Add child rule",
+    "deleteRule": "Delete rule",
+    "deleteDialogTitle": "Delete rule \"{{name}}\"?",
+    "deleteDialogBody": "This rule has descendants ({{count}}). Deleting it removes the whole subtree — this can't be undone.",
+    "deleteDialogCancel": "Cancel",
+    "deleteDialogConfirm": "Delete subtree",
+    "rootPanelDesc": "Bookmarks land here when no rule matches. Change it from the Main tab."
+  },
   "ruleEditor": {
     "nameLabel": "Name",
     "descLabel": "Description",
@@ -49,13 +59,13 @@
     "saveButton": "Save"
   },
   "conditionGroup": {
+    "singleLabel": "—",
     "andLabel": "AND",
     "andDesc": "all conditions match",
     "orLabel": "OR",
     "orDesc": "any condition matches",
     "notLabel": "NOT",
     "notDesc": "no condition matches",
-    "addGroup": "Nested group",
     "emptyError": "Add at least one condition"
   },
   "conditionRow": {

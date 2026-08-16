@@ -3,16 +3,22 @@
   "exportedAt": "2026-07-24T00:00:00.000Z",
   "rules": [
     {
+      "id": "test-it-habr",
+      "name": "Habr",
+      "desc": "Родительское правило (RULE-10) для четырёх дочерних тематических правил ниже — матчит любую статью на habr.com по домену. targetFolder «IT» — запасной вариант на случай, если заголовок не содержит ни одного из распознаваемых слов (Java/JavaScript, LLM, Python, Rust); дочерние правила не наследуют ни targetFolder, ни теги, ни категорию — только condition (эффективно матчат AND(домен habr.com, своё слово в заголовке), но сами по себе проверяют только своё слово).",
+      "condition": { "type": "term", "field": "domain", "value": "habr.com" },
+      "targetFolder": "IT",
+      "tagIds": ["test-tag-it", "test-tag-habr"],
+      "entityTypeId": "test-entity-article",
+      "priority": 10,
+      "enabled": true
+    },
+    {
       "id": "test-it-java",
-      "name": "IT-сайты — Java/JavaScript",
-      "desc": "Заголовок содержит слово Java или JavaScript (границы слова \\b, поэтому не ловит 'javadoc' как часть другого слова). Приоритет выше общего IT-правила, чтобы более специфичная папка побеждала. Демонстрирует tagIds/entityTypeId (SEARCH-6): при совпадении подсказывает теги «java»/«it» и категорию «Статья».",
-      "condition": {
-        "type": "and",
-        "nodes": [
-          { "type": "terms", "field": "domain", "values": ["habr.com", "dev.to"] },
-          { "type": "regex", "field": "title", "pattern": "\\b[Jj]ava(?:[Ss]cript)?\\b" }
-        ]
-      },
+      "parentId": "test-it-habr",
+      "name": "Habr — Java/JavaScript",
+      "desc": "Дочернее правило родителя «Habr»: эффективно матчит habr.com (унаследовано через AND) со словом Java/JavaScript в заголовке (границы слова \\b, чтобы не ловить 'javadoc' как часть другого слова) — само не повторяет проверку домена. targetFolder/tagIds/entityTypeId переопределены полностью, как у любого обычного правила.",
+      "condition": { "type": "regex", "field": "title", "pattern": "\\b[Jj]ava(?:[Ss]cript)?\\b" },
       "targetFolder": "IT/Java",
       "tagIds": ["test-tag-java", "test-tag-it"],
       "entityTypeId": "test-entity-article",
@@ -20,26 +26,56 @@
       "enabled": true
     },
     {
-      "id": "test-it-general",
-      "name": "IT-сайты — общее",
-      "desc": "Заголовок содержит слово IT именно как отдельное слово (\\bIT\\b), а не часть другого слова (напр. 'split'). Паттерн регистрозависим (только заглавные IT) — движок regex-правил не поддерживает флаг case-insensitive, а матчинг строчного 'it' как английского местоимения дал бы слишком много ложных срабатываний. Демонстрирует tagIds/entityTypeId (SEARCH-6): подсказывает теги «it»/«habr» и категорию «Статья».",
-      "condition": {
-        "type": "and",
-        "nodes": [
-          { "type": "terms", "field": "domain", "values": ["habr.com", "dev.to"] },
-          { "type": "regex", "field": "title", "pattern": "\\bIT\\b" }
-        ]
-      },
-      "targetFolder": "IT/General",
-      "tagIds": ["test-tag-it", "test-tag-habr"],
+      "id": "test-it-llm",
+      "parentId": "test-it-habr",
+      "name": "Habr — LLM",
+      "desc": "Sibling у test-it-java под тем же родителем «Habr»: заголовок содержит акроним LLM как отдельное слово (\\bLLM\\b, только заглавными — паттерн регистрозависим, движок regex-правил не поддерживает флаг case-insensitive).",
+      "condition": { "type": "regex", "field": "title", "pattern": "\\bLLM\\b" },
+      "targetFolder": "IT/LLM",
+      "tagIds": ["test-tag-llm", "test-tag-it"],
+      "entityTypeId": "test-entity-article",
+      "priority": 35,
+      "enabled": true
+    },
+    {
+      "id": "test-it-python",
+      "parentId": "test-it-habr",
+      "name": "Habr — Python",
+      "desc": "Ещё один sibling под «Habr»: заголовок содержит слово Python (\\b[Pp]ython\\b, с заглавной или строчной P).",
+      "condition": { "type": "regex", "field": "title", "pattern": "\\b[Pp]ython\\b" },
+      "targetFolder": "IT/Python",
+      "tagIds": ["test-tag-python", "test-tag-it"],
       "entityTypeId": "test-entity-article",
       "priority": 30,
       "enabled": true
     },
     {
+      "id": "test-it-rust",
+      "parentId": "test-it-habr",
+      "name": "Habr — Rust",
+      "desc": "Четвёртый sibling под «Habr»: заголовок содержит слово Rust (\\b[Rr]ust\\b) — границы слова исключают ложные срабатывания на 'trust'/'rustic' и т.п.",
+      "condition": { "type": "regex", "field": "title", "pattern": "\\b[Rr]ust\\b" },
+      "targetFolder": "IT/Rust",
+      "tagIds": ["test-tag-rust", "test-tag-it"],
+      "entityTypeId": "test-entity-article",
+      "priority": 25,
+      "enabled": true
+    },
+    {
+      "id": "test-it-devto",
+      "name": "dev.to",
+      "desc": "Обычное правило без вложенности (нет parentId) — контрольный пример рядом с деревом «Habr» выше: показывает, что плоские правила по-прежнему работают как раньше, без каких-либо изменений в поведении. Простое доменное правило на dev.to, ранее покрывавшийся тем же условием, что и habr.com в общем правиле — с введением дерева выделен в отдельное независимое правило, а не сделан ещё одним потомком «Habr» (у dev.to нет собственной тематической разбивки в этом наборе).",
+      "condition": { "type": "term", "field": "domain", "value": "dev.to" },
+      "targetFolder": "IT/DevTo",
+      "tagIds": ["test-tag-it"],
+      "entityTypeId": "test-entity-article",
+      "priority": 15,
+      "enabled": true
+    },
+    {
       "id": "test-it-book",
       "name": "IT-сайты — технические книги",
-      "desc": "Простое доменное правило (без regex по заголовку) на O'Reilly — платформу технических книг. Демонстрирует категорию «Книга» (test-entity-book) — в отличие от двух правил выше (категория «Статья»), здесь сама закладка и есть книга, а не статья о ней. У «Книги» в этом наборе нет workflow/статусов (SHELF-1: категория без workflow — валидное состояние), поэтому statusId не задан.",
+      "desc": "Простое доменное правило (без regex по заголовку) на O'Reilly — платформу технических книг. Второй пример обычного правила без вложенности в этом наборе. Демонстрирует категорию «Книга» (test-entity-book) — в отличие от остальных правил выше (категория «Статья»), здесь сама закладка и есть книга, а не статья о ней. У «Книги» в этом наборе нет workflow/статусов (SHELF-1: категория без workflow — валидное состояние), поэтому statusId не задан.",
       "condition": { "type": "term", "field": "domain", "value": "www.oreilly.com" },
       "targetFolder": "IT/Books",
       "tagIds": ["test-tag-it"],
@@ -59,7 +95,10 @@
   "tags": [
     { "id": "test-tag-java", "name": "java", "color": "orange" },
     { "id": "test-tag-it", "name": "it", "color": "blue" },
-    { "id": "test-tag-habr", "name": "habr", "color": "green" }
+    { "id": "test-tag-habr", "name": "habr", "color": "green" },
+    { "id": "test-tag-llm", "name": "llm", "color": "purple" },
+    { "id": "test-tag-python", "name": "python", "color": "yellow" },
+    { "id": "test-tag-rust", "name": "rust", "color": "teal" }
   ],
   "entityTypes": [
     { "id": "test-entity-article", "name": "Статья", "color": "purple" },

@@ -1,26 +1,25 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { IconPlus } from "@/components/icons";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useBookmarkRules } from "@/hooks/useBookmarkRules";
 import { TabHeader } from "@/components/options/TabHeader";
-import { RuleListItem } from "./rules/rule/RuleListItem";
+import { RuleTree } from "./rules/tree/RuleTree";
+import { DefaultFolderPanel } from "./rules/tree/DefaultFolderPanel";
 import { RuleEditor } from "./rules/rule/RuleEditor";
 import { RuleType } from "@/types/rule";
 import type { BookmarkRule } from "@/types/rule";
 import styles from "./RulesTab.module.css";
 
 export function RulesTab() {
-  const { items: rules, save: onSave, remove: onRemove } = useBookmarkRules();
+  const { items: rules, save: onSave, remove: onRemove, removeWithDescendants } = useBookmarkRules();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { translate: t } = useTranslation();
 
-  // Derived, not synced via effect: falls back to the first rule whenever
-  // the explicitly selected id is unset or no longer present in `rules`
-  // (e.g. after a removal), without ever writing back to `selectedId` itself.
-  const effectiveSelectedId = rules.some((r) => r.id === selectedId) ? selectedId : rules[0]?.id ?? null;
+  // `null` means the virtual default-folder root — also the fallback once
+  // the previously selected rule (or an ancestor of it) no longer exists,
+  // e.g. right after a delete.
+  const effectiveSelectedId = selectedId !== null && rules.some((r) => r.id === selectedId) ? selectedId : null;
 
-  const addRule = () => {
+  const addRule = (parentId: string | undefined) => {
     const rule: BookmarkRule = {
       id: crypto.randomUUID(),
       name: "",
@@ -29,9 +28,14 @@ export function RulesTab() {
       targetFolder: "",
       priority: 0,
       enabled: true,
+      parentId,
     };
     void onSave(rule);
     setSelectedId(rule.id);
+  };
+
+  const toggleEnabled = (rule: BookmarkRule) => {
+    void onSave({ ...rule, enabled: !rule.enabled });
   };
 
   const selected = rules.find((r) => r.id === effectiveSelectedId) ?? null;
@@ -42,26 +46,18 @@ export function RulesTab() {
 
       <div className={styles.grid}>
         <div className={styles.list}>
-          {rules.map((r, i) => (
-            <RuleListItem
-              key={r.id}
-              index={i + 1}
-              name={r.name}
-              desc={r.desc ?? ""}
-              enabled={r.enabled}
-              selected={effectiveSelectedId === r.id}
-              onSelect={() => setSelectedId(r.id)}
-              onToggle={() => onSave({ ...r, enabled: !r.enabled })}
-              onRemove={() => onRemove(r.id)}
-            />
-          ))}
-          <Button variant="dashed" style={{ width: "100%" }} onClick={addRule}>
-            <IconPlus size="md" />
-            {t("rulesTab.addRule")}
-          </Button>
+          <RuleTree
+            rules={rules}
+            selectedId={effectiveSelectedId}
+            onSelect={setSelectedId}
+            onToggleEnabled={toggleEnabled}
+            onAddRule={addRule}
+            onRemove={onRemove}
+            onRemoveWithDescendants={removeWithDescendants}
+          />
         </div>
 
-        {selected && <RuleEditor key={selected.id} rule={selected} onSave={onSave} />}
+        {selected ? <RuleEditor key={selected.id} rule={selected} onSave={onSave} /> : <DefaultFolderPanel />}
       </div>
     </div>
   );

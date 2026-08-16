@@ -36,3 +36,6 @@
 
 .vDashed     { background: transparent; color: var(--muted); border: 1px dashed var(--border); }
 .vDashed:hover { background: var(--hover); }
+
+.vDestructive { background: var(--red); color: #fff; border: none; }
+.vDestructive:hover { filter: brightness(1.08); }

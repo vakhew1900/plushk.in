@@ -421,4 +421,106 @@ describe('findMatchingRule', () => {
   it('returns undefined for an empty rule list', () => {
     expect(findMatchingRule([], meta)).toBeUndefined();
   });
+
+  // ─── RULE-10: hierarchical rules ─────────────────────────────────────────
+
+  it('descends into a matching child, preferring it over its also-matching parent', () => {
+    const rules: BookmarkRule[] = [
+      makeRule({ id: 'youtube', targetFolder: 'Video', condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' } }),
+      makeRule({
+        id: 'tutorials',
+        parentId: 'youtube',
+        targetFolder: 'Video/Tutorials',
+        condition: { type: RuleType.TERM, field: 'tags', value: 'tutorial' },
+      }),
+    ];
+
+    expect(findMatchingRule(rules, meta)?.id).toBe('tutorials');
+  });
+
+  it('falls back to the parent when none of its children match', () => {
+    const rules: BookmarkRule[] = [
+      makeRule({ id: 'youtube', targetFolder: 'Video', condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' } }),
+      makeRule({
+        id: 'music',
+        parentId: 'youtube',
+        targetFolder: 'Video/Music',
+        condition: { type: RuleType.TERM, field: 'tags', value: 'music' },
+      }),
+    ];
+
+    expect(findMatchingRule(rules, meta)?.id).toBe('youtube');
+  });
+
+  it('never checks the children of a parent whose own condition does not match', () => {
+    const rules: BookmarkRule[] = [
+      makeRule({ id: 'github', condition: { type: RuleType.TERM, field: 'domain', value: 'github.com' } }),
+      // Would match `meta` on its own, but its parent ("github") never matches.
+      makeRule({ id: 'github-child', parentId: 'github', condition: { type: RuleType.TERM, field: 'tags', value: 'tutorial' } }),
+    ];
+
+    expect(findMatchingRule(rules, meta)).toBeUndefined();
+  });
+
+  it('picks the deepest match across a three-level chain', () => {
+    const rules: BookmarkRule[] = [
+      makeRule({ id: 'youtube', condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' } }),
+      makeRule({ id: 'tutorials', parentId: 'youtube', condition: { type: RuleType.TERM, field: 'tags', value: 'tutorial' } }),
+      makeRule({ id: 'react-tutorials', parentId: 'tutorials', condition: { type: RuleType.TERM, field: 'tags', value: 'react' } }),
+    ];
+
+    expect(findMatchingRule(rules, meta)?.id).toBe('react-tutorials');
+  });
+
+  it('resolves two matching siblings by (already-sorted) list order, not by depth', () => {
+    // `findMatchingRule` trusts the caller's order — same contract as the
+    // pre-RULE-10 flat behavior above — rather than re-sorting by priority
+    // itself; `BookmarkRuleRepository.queryAll()` is what actually sorts
+    // desc. Listed here in that same priority-desc order.
+    const rules: BookmarkRule[] = [
+      makeRule({ id: 'youtube', condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' } }),
+      makeRule({
+        id: 'high-priority-child',
+        parentId: 'youtube',
+        priority: 10,
+        condition: { type: RuleType.TERM, field: 'tags', value: 'tutorial' },
+      }),
+      makeRule({
+        id: 'low-priority-child',
+        parentId: 'youtube',
+        priority: 0,
+        condition: { type: RuleType.TERM, field: 'tags', value: 'tutorial' },
+      }),
+    ];
+
+    expect(findMatchingRule(rules, meta)?.id).toBe('high-priority-child');
+  });
+
+  it('skips a disabled parent along with its whole (otherwise-matching) subtree', () => {
+    const rules: BookmarkRule[] = [
+      makeRule({
+        id: 'disabled-youtube',
+        enabled: false,
+        condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' },
+      }),
+      makeRule({ id: 'disabled-child', parentId: 'disabled-youtube', condition: { type: RuleType.TERM, field: 'tags', value: 'tutorial' } }),
+      makeRule({ id: 'fallback', condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' } }),
+    ];
+
+    expect(findMatchingRule(rules, meta)?.id).toBe('fallback');
+  });
+
+  it('falls back to the enabled parent when its only matching child is disabled', () => {
+    const rules: BookmarkRule[] = [
+      makeRule({ id: 'youtube', condition: { type: RuleType.TERM, field: 'domain', value: 'youtube.com' } }),
+      makeRule({
+        id: 'disabled-tutorials',
+        parentId: 'youtube',
+        enabled: false,
+        condition: { type: RuleType.TERM, field: 'tags', value: 'tutorial' },
+      }),
+    ];
+
+    expect(findMatchingRule(rules, meta)?.id).toBe('youtube');
+  });
 });

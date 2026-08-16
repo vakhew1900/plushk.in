@@ -9,26 +9,14 @@ import type { Tag } from '../../types/tag';
 import type { EntityType } from '../../types/entity-type';
 import { SETTINGS_EXPORT_VERSION } from '../../types/settings-export';
 import type { SettingsExport } from '../../types/settings-export';
-import type { IBookmarkRuleRepository } from '../../repository/interfaces/IBookmarkRuleRepository';
 import type { IDomainAliasRepository } from '../../repository/interfaces/IDomainAliasRepository';
 import type { IPageMatchGroupRepository } from '../../repository/interfaces/IPageMatchGroupRepository';
 import type { ITagRepository } from '../../repository/interfaces/ITagRepository';
 import type { IEntityTypeRepository } from '../../repository/interfaces/IEntityTypeRepository';
 import { MimeType } from '../interfaces/IFileService';
 import type { IFileService } from '../interfaces/IFileService';
+import { FakeBookmarkRuleRepository } from '../../repository/__tests__/fakes/FakeBookmarkRuleRepository';
 import { SettingsExportImportService } from '../SettingsExportImportService';
-
-class FakeBookmarkRuleRepository implements IBookmarkRuleRepository {
-  constructor(public rules: BookmarkRule[] = []) {}
-  async getAll(): Promise<BookmarkRule[]> { return this.rules; }
-  async getById(id: string): Promise<BookmarkRule | undefined> { return this.rules.find((r) => r.id === id); }
-  async save(rule: BookmarkRule): Promise<void> {
-    this.rules = [...this.rules.filter((r) => r.id !== rule.id), rule];
-  }
-  async remove(id: string): Promise<void> {
-    this.rules = this.rules.filter((r) => r.id !== id);
-  }
-}
 
 class FakeDomainAliasRepository implements IDomainAliasRepository {
   constructor(public aliases: DomainAlias[] = []) {}

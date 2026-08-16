@@ -35,6 +35,16 @@
     "lead": "Проверяются сверху вниз — побеждает первое совпадение.",
     "addRule": "Правило"
   },
+  "ruleTree": {
+    "defaultFolderNode": "По умолчанию",
+    "addChildRule": "Добавить дочернее правило",
+    "deleteRule": "Удалить правило",
+    "deleteDialogTitle": "Удалить правило «{{name}}»?",
+    "deleteDialogBody": "У этого правила есть потомки ({{count}}). Удаление затронет правило и всё поддерево целиком — отменить будет нельзя.",
+    "deleteDialogCancel": "Отмена",
+    "deleteDialogConfirm": "Удалить поддерево",
+    "rootPanelDesc": "Сюда попадают закладки, если ни одно правило не подошло. Изменить можно на вкладке «Главное»."
+  },
   "ruleEditor": {
     "nameLabel": "Название",
     "descLabel": "Описание",
@@ -49,13 +59,13 @@
     "saveButton": "Сохранить"
   },
   "conditionGroup": {
+    "singleLabel": "—",
     "andLabel": "И · AND",
     "andDesc": "выполнены все условия",
     "orLabel": "ИЛИ · OR",
     "orDesc": "выполняется любое из условий",
     "notLabel": "НЕ · NOT",
     "notDesc": "не выполняется ни одно из условий",
-    "addGroup": "Вложенная группа",
     "emptyError": "Добавьте хотя бы одно условие"
   },
   "conditionRow": {

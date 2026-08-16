@@ -1,4 +1,6 @@
 import { Input } from '@/components/ui/input';
+import { RemoveIconButton } from '@/components/ui/remove-icon-button';
+import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { DraftTermsRule } from '@/lib/visitor/rule-draft';
 import styles from './TermsValueEditor.module.css';
@@ -22,17 +24,15 @@ export function TermsValueEditor({ node, onChange }: Props) {
             onChange={(e) => setValues(node.values.map((x, j) => (j === i ? e.target.value : x)))}
             className={styles.chipInput}
           />
-          <button
+          <RemoveIconButton
             onClick={() => setValues(node.values.filter((_, j) => j !== i))}
-            className={styles.removeChip}
             aria-label={t('conditionRow.removeValue')}
-          >
-            ×
-          </button>
+          />
         </div>
       ))}
       <button onClick={() => setValues([...node.values, ''])} className={styles.addChip}>
-        + {t('conditionRow.addValue')}
+        <IconPlus size="sm" />
+        {t('conditionRow.addValue')}
       </button>
     </div>
   );

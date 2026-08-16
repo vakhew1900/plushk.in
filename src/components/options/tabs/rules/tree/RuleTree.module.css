@@ -1,0 +1,54 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.rootRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+.rootRow:hover { background: var(--hover); }
+.rootSelected { background: var(--accent-soft); }
+.rootSelected .rootName { color: var(--accent); }
+
+.caret {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--muted);
+  transform: rotate(-90deg);
+  transition: transform 0.15s ease;
+}
+.caretExpanded { transform: rotate(0deg); }
+.caretHidden { visibility: hidden; }
+
+.rootName {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  font-style: italic;
+  color: var(--muted);
+}
+
+.rootChildren {
+  margin-left: 0.85rem;
+  padding-left: 0.85rem;
+  border-left: 1px dashed var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.addRootBtn {
+  width: 100%;
+  margin-top: 0.5rem;
+}

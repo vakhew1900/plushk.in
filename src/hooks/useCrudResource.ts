@@ -68,5 +68,14 @@ export function useCrudResource<T, K = string>(
     [repository, getId],
   );
 
-  return { items, loading, save, remove };
+  // For a write that doesn't go through `save`/`remove` above — e.g. a
+  // repository method the generic `CrudSource` shape doesn't cover (cascade
+  // delete, see RULE-10's `removeWithDescendants`) — the caller does its own
+  // repository call, then reconciles local state with a plain re-fetch.
+  const refetch = useCallback(async () => {
+    const data = await repository.getAll();
+    setItems(applyPostProcess(data));
+  }, [repository, applyPostProcess]);
+
+  return { items, loading, save, remove, refetch };
 }

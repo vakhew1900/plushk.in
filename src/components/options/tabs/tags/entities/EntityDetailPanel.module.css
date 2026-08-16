@@ -19,16 +19,6 @@
 .nameRow { display: flex; align-items: center; gap: 0.5rem; }
 .nameInput { font-family: var(--font-mono); font-size: 0.8rem; flex: 1; }
 
-.removeEntity {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--faint);
-  transition: color 0.15s;
-  flex-shrink: 0;
-}
-.removeEntity:hover { color: var(--red); }
-
 .iconRow { display: flex; align-items: center; gap: 0.5rem; }
 .iconSlot {
   width: 1.4rem;

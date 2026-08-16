@@ -1,21 +1,19 @@
 import { clsx } from 'clsx';
-import { Button } from '@/components/ui/button';
-import { IconPlus } from '@/components/icons';
+import { RemoveIconButton } from '@/components/ui/remove-icon-button';
 import { useTranslation } from '@/hooks/useTranslation';
-import type { DraftGroupNode, DraftRuleNode } from '@/lib/visitor/rule-draft';
+import type { DraftGroupNode, DraftRuleNode, StructureType } from '@/lib/visitor/rule-draft';
 import {
   getDraftChildren,
   isDraftGroup,
-  makeDraftGroup,
   makeDraftLeaf,
   subtreeHasErrors,
   withDraftChildren,
-  withDraftGroupType,
+  withStructureType,
 } from '@/lib/visitor/rule-draft';
 import type { LeafRuleType } from '@/lib/visitor/rule-draft';
 import { RuleType } from '@/types/rule';
 import type { TranslationKey } from '@/locale';
-import { GroupTypeSwitcher } from './GroupTypeSwitcher';
+import { StructureSwitcher } from './StructureSwitcher';
 import { AddConditionMenu } from './AddConditionMenu';
 import { ConditionRow } from './ConditionRow';
 import styles from './ConditionGroup.module.css';
@@ -26,15 +24,12 @@ const DESC_KEY: Record<typeof RuleType.AND | typeof RuleType.OR | typeof RuleTyp
   [RuleType.NOT]: 'conditionGroup.notDesc',
 };
 
-const BORDER_CLASS: Record<typeof RuleType.AND | typeof RuleType.OR | typeof RuleType.NOT, string> = {
-  [RuleType.AND]: styles.and,
-  [RuleType.OR]: styles.or,
-  [RuleType.NOT]: styles.not,
-};
-
 interface Props {
   node: DraftGroupNode;
-  onChange: (next: DraftGroupNode) => void;
+  // Wider than `DraftGroupNode` — switching the structure to "single" (see
+  // `StructureSwitcher`) collapses this group down to its one child leaf,
+  // so the parent has to be ready to receive a `DraftLeafNode` here too.
+  onChange: (next: DraftRuleNode) => void;
   onRemove?: () => void;
 }
 
@@ -51,19 +46,15 @@ export function ConditionGroup({ node, onChange, onRemove }: Props) {
   const addCondition = (type: LeafRuleType) => {
     onChange(withDraftChildren(node, [...children, makeDraftLeaf(type)]));
   };
-  const addGroup = () => {
-    onChange(withDraftChildren(node, [...children, makeDraftGroup(RuleType.AND)]));
-  };
+  const changeStructure = (type: StructureType) => onChange(withStructureType(node, type));
 
   return (
-    <div className={clsx(styles.group, BORDER_CLASS[node.type])}>
+    <div className={styles.group}>
       <div className={styles.header}>
-        <GroupTypeSwitcher value={node.type} onChange={(type) => onChange(withDraftGroupType(node, type))} />
+        <StructureSwitcher value={node.type} onChange={changeStructure} singleDisabled={children.length !== 1} />
         <span className={styles.headerText}>{t(DESC_KEY[node.type])}</span>
         {onRemove && (
-          <button onClick={onRemove} className={styles.removeBtn}>
-            ×
-          </button>
+          <RemoveIconButton onClick={onRemove} aria-label={t('conditionRow.removeCondition')} className={styles.removeBtn} />
         )}
       </div>
 
@@ -91,10 +82,6 @@ export function ConditionGroup({ node, onChange, onRemove }: Props) {
 
         <div className={styles.addRow}>
           <AddConditionMenu onAdd={addCondition} />
-          <Button variant="dashed" size="sm" onClick={addGroup}>
-            <IconPlus size="sm" />
-            {t('conditionGroup.addGroup')}
-          </Button>
         </div>
       </div>
     </div>

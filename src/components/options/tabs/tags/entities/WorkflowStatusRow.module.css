@@ -17,13 +17,3 @@
   color: var(--faint);
   white-space: nowrap;
 }
-
-.removeRow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--faint);
-  transition: color 0.15s;
-  flex-shrink: 0;
-}
-.removeRow:hover { color: var(--red); }
