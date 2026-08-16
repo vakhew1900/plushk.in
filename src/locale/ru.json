@@ -181,6 +181,11 @@
     "light": "Светлая",
     "system": "Системная"
   },
+  "languageSection": {
+    "title": "Язык",
+    "ru": "Русский",
+    "en": "English"
+  },
   "options": {
     "documentTitle": "plushk.in — Настройки"
   },

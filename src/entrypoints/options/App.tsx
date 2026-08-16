@@ -44,14 +44,14 @@ function AppShell() {
 
 export default function App() {
   return (
-    <LocaleProvider>
-      <ServicesProvider>
+    <ServicesProvider>
+      <LocaleProvider>
         <ThemeProvider>
           <ToastProvider>
             <AppShell />
           </ToastProvider>
         </ThemeProvider>
-      </ServicesProvider>
-    </LocaleProvider>
+      </LocaleProvider>
+    </ServicesProvider>
   );
 }

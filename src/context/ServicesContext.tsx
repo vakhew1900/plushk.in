@@ -6,6 +6,7 @@ import { DefaultFolderSettingsRepository } from '@/repository/DefaultFolderSetti
 import { DomainAliasRepository } from '@/repository/DomainAliasRepository';
 import { ModeSettingsRepository } from '@/repository/ModeSettingsRepository';
 import { ThemeSettingsRepository } from '@/repository/ThemeSettingsRepository';
+import { LocaleSettingsRepository } from '@/repository/LocaleSettingsRepository';
 import { PageMatchGroupRepository } from '@/repository/PageMatchGroupRepository';
 import { TagRepository } from '@/repository/TagRepository';
 import { BookmarkTagLinkRepository } from '@/repository/BookmarkTagLinkRepository';
@@ -21,6 +22,7 @@ import type { IDefaultFolderSettingsRepository } from '@/repository/interfaces/I
 import type { IDomainAliasRepository } from '@/repository/interfaces/IDomainAliasRepository';
 import type { IModeSettingsRepository } from '@/repository/interfaces/IModeSettingsRepository';
 import type { IThemeSettingsRepository } from '@/repository/interfaces/IThemeSettingsRepository';
+import type { ILocaleSettingsRepository } from '@/repository/interfaces/ILocaleSettingsRepository';
 import type { IPageMatchGroupRepository } from '@/repository/interfaces/IPageMatchGroupRepository';
 import type { ITagRepository } from '@/repository/interfaces/ITagRepository';
 import type { IEntityTypeRepository } from '@/repository/interfaces/IEntityTypeRepository';
@@ -50,6 +52,7 @@ export interface Services {
   domainAliasRepository: IDomainAliasRepository;
   modeSettingsRepository: IModeSettingsRepository;
   themeSettingsRepository: IThemeSettingsRepository;
+  localeSettingsRepository: ILocaleSettingsRepository;
   pageMatchGroupRepository: IPageMatchGroupRepository;
   fileService: IFileService;
   pageMetaFiller: IPageMetaFiller;
@@ -93,6 +96,7 @@ export function ServicesProvider({ children }: Props) {
       domainAliasRepository,
       modeSettingsRepository: new ModeSettingsRepository(),
       themeSettingsRepository: new ThemeSettingsRepository(),
+      localeSettingsRepository: new LocaleSettingsRepository(),
       pageMatchGroupRepository,
       fileService,
       pageMetaFiller: new PageMetaFiller(domainAliasRepository),

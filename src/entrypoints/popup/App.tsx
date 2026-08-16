@@ -34,12 +34,12 @@ function AppShell() {
 
 export default function App() {
   return (
-    <LocaleProvider>
-      <ServicesProvider>
+    <ServicesProvider>
+      <LocaleProvider>
         <ThemeProvider>
           <AppShell />
         </ThemeProvider>
-      </ServicesProvider>
-    </LocaleProvider>
+      </LocaleProvider>
+    </ServicesProvider>
   );
 }
