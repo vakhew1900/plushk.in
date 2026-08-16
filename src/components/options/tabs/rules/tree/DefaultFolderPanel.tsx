@@ -7,6 +7,7 @@ import styles from './DefaultFolderPanel.module.css';
 export function DefaultFolderPanel() {
   const { translate: t } = useTranslation();
   const { defaultFolder } = useDefaultFolder();
+  const path = defaultFolder || t('common.bookmarksBar');
 
   return (
     <div className={styles.wrap}>
@@ -14,7 +15,7 @@ export function DefaultFolderPanel() {
       <Text size="body" tone="muted">{t('ruleTree.rootPanelDesc')}</Text>
       <div className={styles.folderRow}>
         <IconFolder size="md" />
-        <span className={styles.folderPath}>{defaultFolder || t('common.bookmarksBar')}</span>
+        <span className={styles.folderPath} title={path}>{path}</span>
       </div>
     </div>
   );

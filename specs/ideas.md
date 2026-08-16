@@ -16,6 +16,20 @@ Right now (see `SEARCH-1` in `tasks.md`) clicking a bookmark card in search resu
 
 Related tradeoff accepted when choosing the hand-rolled hook over a routing library (react-router/wouter): it only works because there's exactly one query param and one page. If options ever becomes genuinely multi-page (not just one `options.html` with client-side tab switching), a real router would be needed instead of extending `useOptionsTab` further.
 
+### Google Drive images — store a link, not a full Drive integration
+
+Пользователь спросил, можно ли получить токен Google Drive, чтобы расширение могло брать оттуда изображения — при уточнении оказалось, что цель уже, чем полноценная интеграция: «я просто хотел бы там хранить ссылки на изображения и всё». То есть речь не про просмотр/выбор файлов из Drive внутри расширения, а про поле-ссылку на изображение (где именно — не решено: на закладке? на категории/`EntityType`, как обложка? где-то ещё?), которое физически может указывать на файл в Google Drive.
+
+Если файл в Drive расшарен «anyone with the link can view», ссылку можно рендерить напрямую как `<img src>` (например через `https://drive.google.com/uc?export=view&id=FILE_ID`) без какого-либо OAuth — просто текстовое поле для URL. OAuth понадобился бы только если: (а) файлы приватные и нужен авторизованный доступ для показа, или (б) хочется штатный Google Picker для выбора файла из Drive прямо в UI расширения, а не ручная вставка ссылки пользователем.
+
+Если OAuth всё же понадобится (сценарий (а) или (б) выше), technical findings из обсуждения:
+- Это не то же самое, что коннектор «claude.ai Google Drive» у Claude Code — расширению нужна собственная OAuth-интеграция.
+- Chrome: `chrome.identity.getAuthToken()`, нужен блок `oauth2` в манифесте (`client_id` + скоупы) из проекта в Google Cloud; Chrome сам показывает согласие и кэширует токен.
+- Firefox (проект собирается под оба — `dev`/`build` и `dev:firefox`/`build:firefox`): аналога `chrome.identity.getAuthToken` нет — нужен более ручной `browser.identity.launchWebAuthFlow()`.
+- Скоуп — главный компромисс: `drive.file` (только файлы, созданные самим приложением или явно открытые пользователем через пикер) — просто, без ревью Google даже при масштабировании. `drive.readonly` и шире — «restricted scope» у Google: после ~100 тестовых пользователей нужна их проверка CASA (реальные время/деньги/политика конфиденциальности), а не формальность.
+
+Не решено: где именно в модели данных живёт ссылка на изображение (закладка, категория, что-то ещё); нужен ли вообще выбор файла из Drive через Picker, или пользователь просто вставляет готовую ссылку вручную (в таком случае OAuth скорее всего не нужен вообще).
+
 ### MCP (Model Context Protocol) integration
 
 The extension itself can't host an MCP server directly — MCP needs a long-lived stdio/HTTP transport, and the MV3 service worker is event-driven and gets suspended, so it can't act as a persistent server. A feasible shape would be a separate local companion process (Node.js), similar in spirit to the existing optional Obsidian Local REST API integration, bridging Claude Desktop/Claude Code to the extension's data (`BookmarkRule`, `PageMeta`, folders) — reading/writing via `chrome.storage`/native messaging, or via the Markdown export. Motivation: the spec already reserves an `[ai]` block for LLM integration, and MCP would be the natural "reverse direction" for it — not the extension calling an LLM, but an LLM assistant getting read/write access to the user's bookmarks and rules through natural language (e.g. "find all bookmarks about X", "create a rule that sorts reddit.com into Social/Reddit", "show bookmarks that don't match any rule"). Not designed yet: the transport mechanism (native messaging vs. HTTP bridge vs. reading the Markdown export), the auth/security model for a local server touching bookmark data, and how much of the DSL should be exposed for the assistant to write vs. just read.

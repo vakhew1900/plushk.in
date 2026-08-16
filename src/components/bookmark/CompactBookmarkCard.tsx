@@ -14,7 +14,7 @@ export function CompactBookmarkCard({ title, url, onClick }: Props) {
     <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
       <BookmarkFavicon seed={domain} url={url} />
       <div className={styles.meta}>
-        <div className={styles.title}>{title}</div>
+        <div className={styles.title} title={title}>{title}</div>
         <div className={styles.url}>{url.replace(/^https?:\/\//, '')}</div>
       </div>
     </div>

@@ -26,7 +26,7 @@ export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
       <div className={styles.topRow}>
         <BookmarkFavicon seed={domain} url={url} />
         <div className={styles.meta}>
-          <div className={styles.title}>{title}</div>
+          <div className={styles.title} title={title}>{title}</div>
           <div className={styles.domain}>{domain}</div>
         </div>
         {entityTypes.length > 0 && (

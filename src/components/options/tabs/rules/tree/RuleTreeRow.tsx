@@ -51,8 +51,9 @@ export function RuleTreeRow({
           <IconChevronDown size="sm" />
         </span>
 
-        <span className={styles.name}>{node.rule.name}</span>
-        <span className={styles.folder}>{node.rule.targetFolder || '—'}</span>
+        <span className={styles.name} title={node.rule.name}>
+          {node.rule.name}
+        </span>
 
         <span onClick={(e) => e.stopPropagation()} className={styles.switchWrap}>
           <Switch checked={node.rule.enabled} onCheckedChange={() => onToggleEnabled(node)} />

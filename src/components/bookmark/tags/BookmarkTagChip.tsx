@@ -10,7 +10,7 @@ export function BookmarkTagChip({ tag }: Props) {
   return (
     <span className={styles.chip}>
       <PaletteDot color={tag.color} />
-      <span className={styles.label}>{tag.name}</span>
+      <span className={styles.label} title={tag.name}>{tag.name}</span>
     </span>
   );
 }

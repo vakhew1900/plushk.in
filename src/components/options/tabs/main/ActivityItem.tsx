@@ -17,7 +17,7 @@ export function ActivityItem({ letter, color, title, folder, rule, time }: Props
       <span className={styles.avatar} style={{ background: color }}>{letter}</span>
 
       <span className={styles.info}>
-        <span className={styles.title}>{title}</span>
+        <span className={styles.title} title={title}>{title}</span>
         <span className={styles.folder}>
           <IconFolder size="sm" />
           {folder}

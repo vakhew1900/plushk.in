@@ -12,6 +12,7 @@ interface Props {
 
 export function EntityListRow({ entity, selected, onSelect }: Props) {
   const { translate: t } = useTranslation();
+  const name = entity.name || t('entitiesSection.namePlaceholder');
 
   return (
     <button
@@ -20,7 +21,7 @@ export function EntityListRow({ entity, selected, onSelect }: Props) {
       onClick={onSelect}
     >
       <PaletteDot color={entity.color} size={PaletteDotSize.MD} />
-      <span className={styles.name}>{entity.name || t('entitiesSection.namePlaceholder')}</span>
+      <span className={styles.name} title={name}>{name}</span>
     </button>
   );
 }
