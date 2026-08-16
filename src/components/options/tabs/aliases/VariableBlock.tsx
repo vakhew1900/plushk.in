@@ -1,13 +1,31 @@
+import { css } from '@codemirror/lang-css';
+import type { Extension } from '@codemirror/state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CodeInput } from '@/components/ui/code-input';
+import { Badge } from '@/components/ui/badge';
+import type { BadgeVariant } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RemoveIconButton } from '@/components/ui/remove-icon-button';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { VariableFieldDraft } from '@/lib/page-match-mapping';
+import { PageSelectorType } from '@/types/page-match';
+import { xpathLanguage } from '@/components/options/code/xpathLanguage';
 import { SelectorTypeToggle } from './SelectorTypeToggle';
 import styles from './VariableBlock.module.css';
+
+const SELECTOR_EXTENSIONS: Record<PageSelectorType, Extension[]> = {
+  [PageSelectorType.CSS]:   [css()],
+  [PageSelectorType.XPATH]: [xpathLanguage],
+  [PageSelectorType.META]:  [],
+};
+
+const SELECTOR_BADGE_VARIANT: Record<PageSelectorType, BadgeVariant> = {
+  [PageSelectorType.CSS]:   'blue',
+  [PageSelectorType.XPATH]: 'accent',
+  [PageSelectorType.META]:  'green',
+};
 
 export interface AliasOption {
   id: string;
@@ -74,9 +92,13 @@ export function VariableBlock({
               className={styles.fieldKeyInput}
             />
             <span className={styles.fieldArrow}>→</span>
+            <Badge variant={SELECTOR_BADGE_VARIANT[f.selectorType]} className={styles.selectorBadge}>
+              {f.selectorType}
+            </Badge>
             <CodeInput
               value={f.v}
               onChange={(v) => onFieldValueChange(i, v)}
+              extensions={SELECTOR_EXTENSIONS[f.selectorType]}
               placeholder={t('variablesSection.fieldValuePlaceholder')}
               className={styles.fieldValueInput}
             />

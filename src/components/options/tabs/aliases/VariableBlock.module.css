@@ -33,4 +33,5 @@
   font-size: 12.5px;
 }
 .fieldArrow { color: var(--faint); }
+.selectorBadge { flex-shrink: 0; font-family: var(--font-mono); text-transform: uppercase; }
 .fieldValueInput { flex: 1; min-width: 0; }

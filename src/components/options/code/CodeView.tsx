@@ -1,7 +1,7 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { json as jsonLang } from '@codemirror/lang-json';
 import type { ReactNode } from 'react';
-import { obsidianDark } from './codeTheme';
+import { dracula } from './codeTheme';
 import styles from './CodeView.module.css';
 
 interface Props {
@@ -22,7 +22,7 @@ export function CodeView({ value, filename, editable = true, onChange, footer }:
       <CodeMirror
         value={value}
         extensions={[jsonLang()]}
-        theme={obsidianDark}
+        theme={dracula}
         editable={editable}
         onChange={onChange}
         minHeight="180px"
