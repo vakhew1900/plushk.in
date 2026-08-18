@@ -1,0 +1,37 @@
+.variableBlock { border: 1px solid var(--border); border-radius: 11px; overflow: hidden; }
+.variableHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.aliasSelectTrigger {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.78125rem;
+  color: var(--accent);
+  width: 8.75rem;
+  flex-shrink: 0;
+}
+.variableCount { font-size: 11px; color: var(--faint); }
+.removeBlock { margin-left: auto; }
+
+.fields { display: flex; flex-direction: column; gap: 7px; padding: 9px 14px; }
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.fieldKeyInput {
+  width: 90px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 12.5px;
+}
+.fieldArrow { color: var(--faint); }
+.selectorBadge { flex-shrink: 0; font-family: var(--font-mono); text-transform: uppercase; }
+.fieldValueInput { flex: 1; min-width: 0; }

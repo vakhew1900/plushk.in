@@ -1,0 +1,17 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.accent    { padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-size: 11.5px; }
+.secondary { padding: 2px 7px; border-radius: 5px; background: var(--bg3); color: var(--muted); font-size: 10.5px; }
+.green     { padding: 2px 8px; border-radius: 6px; background: var(--green-soft); color: var(--green); font-size: 11px; }
+.red       { padding: 2px 8px; border-radius: 6px; background: var(--red-soft); color: var(--red); font-size: 11px; }
+.blue      { padding: 2px 8px; border-radius: 6px; background: var(--blue-soft); color: var(--blue); font-size: 11px; }
+.mono      { padding: 4px 9px; border-radius: 7px; background: var(--bg3); color: var(--text); font-family: var(--font-mono); font-size: 12.5px; }
+.monoAccent { padding: 4px 9px; border-radius: 7px; background: var(--bg3); color: var(--accent); font-family: var(--font-mono); font-size: 12.5px; }
+.orBadge   { padding: 4px 11px; border-radius: 7px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); font-family: var(--font-mono); font-size: 12px; }
+.andBadge  { padding: 3px 9px; border-radius: 6px; background: var(--blue-soft); color: var(--blue); font-family: var(--font-mono); font-size: 11px; }
+.notBadge  { padding: 4px 9px; border-radius: 6px; background: var(--red-soft); color: var(--red); font-family: var(--font-mono); font-size: 11px; }

@@ -1,0 +1,40 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.title {
+  flex: 1;
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--text);
+}
+
+.body {
+  padding: 14px 16px 16px;
+}
+
+.resultsScroll {
+  max-height: 20rem;
+  overflow-y: auto;
+}

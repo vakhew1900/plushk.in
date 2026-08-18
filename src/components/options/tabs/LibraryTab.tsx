@@ -1,0 +1,49 @@
+import { browser } from 'wxt/browser';
+import { TabHeader } from '@/components/options/TabHeader';
+import { BookmarkCard } from '@/components/bookmark/BookmarkCard';
+import { useBookmarkSearch } from '@/hooks/useBookmarkSearch';
+import { useTranslation } from '@/hooks/useTranslation';
+import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
+import { SearchBar } from '@/components/bookmark/search/SearchBar';
+import { SearchResultsList } from '@/components/bookmark/search/SearchResultsList';
+import styles from './LibraryTab.module.css';
+
+export function LibraryTab() {
+  const { translate: t } = useTranslation();
+  const { query, setQuery, results, totalCount, loading } = useBookmarkSearch();
+
+  const countLabel = query.trim()
+    ? t('searchTab.foundCount', { count: results.length })
+    : t('searchTab.allCount', { count: totalCount });
+
+  const emptyMessage = query.trim() ? t('searchTab.noResults') : t('searchTab.noBookmarks');
+
+  const openBookmark = (entry: BookmarkSearchEntry) => {
+    void browser.tabs.create({ url: entry.url });
+  };
+
+  return (
+    <div className={styles.wrap}>
+      <TabHeader title={t('nav.library')} lead={t('searchTab.lead')} />
+
+      <SearchBar value={query} onChange={setQuery} placeholder={t('searchTab.placeholder')} />
+
+      {!loading && (
+        <SearchResultsList
+          entries={results}
+          countLabel={countLabel}
+          emptyMessage={emptyMessage}
+          renderEntry={(entry) => (
+            <BookmarkCard
+              id={entry.id}
+              title={entry.title}
+              url={entry.url}
+              folderPath={entry.folderPath}
+              onClick={() => openBookmark(entry)}
+            />
+          )}
+        />
+      )}
+    </div>
+  );
+}

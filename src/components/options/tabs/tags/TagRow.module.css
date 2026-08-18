@@ -1,0 +1,13 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.8rem 0.95rem;
+}
+.row:not(:last-child) { border-bottom: 1px solid var(--border); }
+
+.nameInput {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  flex: 1;
+}

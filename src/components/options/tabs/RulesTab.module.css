@@ -1,0 +1,7 @@
+.grid {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+  grid-template-columns: 300px minmax(0, 1fr);
+}
+.list { display: flex; flex-direction: column; gap: 9px; }

@@ -1,0 +1,5 @@
+@import '../../assets/globals.css';
+
+body {
+  min-width: 360px;
+}

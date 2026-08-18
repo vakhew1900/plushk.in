@@ -1,0 +1,51 @@
+.row {
+  display: flex;
+  gap: 13px;
+  padding: 13px 15px;
+  align-items: flex-start;
+}
+.row:not(:last-child) { border-bottom: 1px solid var(--border); }
+
+.nameInput {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; align-items: center; }
+
+.domainChip {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 6px 2px 8px;
+}
+
+.domainInput {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  width: 108px;
+  border: none;
+  background: transparent;
+  padding: 2px 0;
+}
+
+.addChip {
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+.addChip:hover { color: var(--accent); border-color: var(--accent); }
+
+.removeRow { margin-left: auto; }

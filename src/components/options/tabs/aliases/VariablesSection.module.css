@@ -1,0 +1,6 @@
+.section { margin-bottom: 22px; }
+
+.sectionHeader { display: flex; align-items: center; margin-bottom: 5px; }
+.sectionDesc { margin-bottom: 12px; }
+
+.variableList { display: flex; flex-direction: column; gap: 11px; }

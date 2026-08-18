@@ -1,0 +1,41 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, filter 0.15s, border-color 0.15s;
+  outline: none;
+}
+.btn:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Sizes */
+.sizeMd  { height: 36px; padding: 0 16px; border-radius: 9px; font-size: 13px; }
+.sizeSm  { height: 34px; padding: 0 15px; border-radius: 6px; font-size: 12.5px; }
+.sizeLg  { height: 42px; padding: 0 16px; border-radius: 9px; font-size: 13px; }
+.sizeIcon   { height: 36px; width: 36px; border-radius: 8px; }
+.sizeIconSm { height: 28px; width: 28px; border-radius: 6px; }
+
+/* Variants */
+.vDefault    { background: var(--accent); color: #fff; border: none; }
+.vDefault:hover { filter: brightness(1.1); }
+
+.vOutline    { background: var(--bg2); color: var(--text); border: 1px solid var(--border); }
+.vOutline:hover { background: var(--hover); }
+
+.vGhost      { background: transparent; color: var(--muted); border: none; }
+.vGhost:hover { background: var(--hover); color: var(--text); }
+
+.vAccentSoft { background: var(--accent-soft); color: var(--accent); border: none; }
+.vAccentSoft:hover { filter: brightness(1.05); }
+
+.vDashed     { background: transparent; color: var(--muted); border: 1px dashed var(--border); }
+.vDashed:hover { background: var(--hover); }
+
+.vDestructive { background: var(--red); color: #fff; border: none; }
+.vDestructive:hover { filter: brightness(1.08); }

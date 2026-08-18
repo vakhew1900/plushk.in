@@ -1,0 +1,216 @@
+{
+  "common": {
+    "modeSectionTitle": "Режим работы",
+    "condition": "Условие",
+    "noMatchFallback": "нет совпадений →",
+    "bookmarksBar": "Панель закладок",
+    "folderWillBeCreated": "будет создана"
+  },
+  "nav": {
+    "section": "Основное",
+    "main": "Главное",
+    "rules": "Правила",
+    "search": "Поиск",
+    "library": "Библиотека",
+    "mappings": "Сопоставления",
+    "categories": "Категории"
+  },
+  "modes": {
+    "on": {
+      "label": "Включён",
+      "tag": "по умолчанию",
+      "desc": "Быстрое сохранение из попапа показывает папку по правилу — можно выбрать другую и сохранить."
+    },
+    "off": {
+      "label": "Выключен",
+      "tag": "без вмешательства",
+      "desc": "Обычные закладки браузера — расширение не вмешивается."
+    }
+  },
+  "mainTab": {
+    "lead": "Определяет, что происходит, когда вы добавляете закладку. Изменяется здесь или прямо в попапе.",
+    "recentActivity": "Последние действия"
+  },
+  "rulesTab": {
+    "lead": "Проверяются сверху вниз — побеждает первое совпадение.",
+    "addRule": "Правило"
+  },
+  "ruleTree": {
+    "defaultFolderNode": "По умолчанию",
+    "addChildRule": "Добавить дочернее правило",
+    "deleteRule": "Удалить правило",
+    "deleteDialogTitle": "Удалить правило «{{name}}»?",
+    "deleteDialogBody": "У этого правила есть потомки ({{count}}). Удаление затронет правило и всё поддерево целиком — отменить будет нельзя.",
+    "deleteDialogCancel": "Отмена",
+    "deleteDialogConfirm": "Удалить поддерево",
+    "rootPanelDesc": "Сюда попадают закладки, если ни одно правило не подошло. Изменить можно на вкладке «Главное»."
+  },
+  "ruleEditor": {
+    "nameLabel": "Название",
+    "descLabel": "Описание",
+    "targetFolderLabel": "Целевая папка",
+    "priorityLabel": "Приоритет",
+    "categoryLabel": "Категория",
+    "tagsLabel": "Теги",
+    "conditionTitle": "Условие",
+    "visualViewTab": "Конструктор",
+    "jsonViewTab": "JSON",
+    "testButton": "Тест на текущей странице",
+    "saveButton": "Сохранить"
+  },
+  "conditionGroup": {
+    "singleLabel": "—",
+    "andLabel": "И · AND",
+    "andDesc": "выполнены все условия",
+    "orLabel": "ИЛИ · OR",
+    "orDesc": "выполняется любое из условий",
+    "notLabel": "НЕ · NOT",
+    "notDesc": "не выполняется ни одно из условий",
+    "emptyError": "Добавьте хотя бы одно условие"
+  },
+  "conditionRow": {
+    "fieldPlaceholder": "поле",
+    "removeCondition": "Удалить условие",
+    "addValue": "значение",
+    "removeValue": "Удалить значение",
+    "errorFieldRequired": "укажите поле",
+    "errorValueRequired": "укажите значение",
+    "errorValuesRequired": "укажите хотя бы одно значение",
+    "errorPatternRequired": "укажите паттерн"
+  },
+  "leafType": {
+    "term": "=",
+    "terms": "содержит",
+    "regex": "regex",
+    "wildcard": "wildcard",
+    "addMenuPlaceholder": "+ условие",
+    "addTerm": "Значение (=)",
+    "addTerms": "Один из списка",
+    "addRegex": "Regex",
+    "addWildcard": "Wildcard (* ?)"
+  },
+  "jsonView": {
+    "valid": "Валидный JSON · {{count}} условий",
+    "invalid": "Ошибка синтаксиса JSON"
+  },
+  "searchTab": {
+    "lead": "Ищет по заголовку, адресу и папке среди уже отсортированных закладок.",
+    "placeholder": "Например: reddit, дизайн, UI-паттерны...",
+    "allCount": "Все закладки: {{count}}",
+    "foundCount": "Найдено: {{count}}",
+    "noBookmarks": "Пока нет отсортированных закладок.",
+    "noResults": "Ничего не найдено — попробуйте другой запрос."
+  },
+  "mappingsTab": {
+    "lead": "Алиасы доменов и переменные извлечения."
+  },
+  "aliasesSection": {
+    "title": "Алиасы доменов",
+    "addAlias": "Алиас",
+    "desc": "Один псевдоним для нескольких доменов — например, региональных зеркал.",
+    "namePlaceholder": "имя",
+    "domainPlaceholder": "domain.com"
+  },
+  "categoriesTab": {
+    "lead": "Теги и категории для закладок."
+  },
+  "tagsSection": {
+    "title": "Теги",
+    "addTag": "Тег",
+    "desc": "Список тегов с цветом. Пока только определение — присвоить тег закладке можно будет позже.",
+    "namePlaceholder": "имя тега"
+  },
+  "bookmarkTagEditor": {
+    "editButton": "Теги"
+  },
+  "entitiesSection": {
+    "title": "Категории",
+    "addEntity": "Категория",
+    "desc": "Тип контента (Книга, Видео, ...) с опциональным workflow-статусом закладки.",
+    "namePlaceholder": "имя категории",
+    "noEntities": "Пока нет категорий"
+  },
+  "entityDetail": {
+    "colorLabel": "Цвет",
+    "nameLabel": "Название",
+    "iconLabel": "Иконка",
+    "iconComingSoon": "скоро",
+    "workflowLabel": "Статусы",
+    "addStatus": "Статус",
+    "statusNamePlaceholder": "имя статуса",
+    "startStatusHint": "старт"
+  },
+  "bookmarkEntityControl": {
+    "addEntity": "Категория",
+    "noEntity": "Без категории",
+    "editTooltip": "Редактировать"
+  },
+  "variablesSection": {
+    "title": "Переменные",
+    "desc": "Поля-псевдонимы для путей по HTML-дереву страницы. Используются в правилах и при экспорте.",
+    "fieldsCount": "{{count}} поля",
+    "addGroup": "Группа",
+    "addGroupDisabledHint": "Сначала добавьте алиас домена, ещё не занятый другой группой",
+    "addField": "Поле",
+    "aliasPlaceholder": "алиас",
+    "fieldKeyPlaceholder": "поле",
+    "fieldValuePlaceholder": "селектор"
+  },
+  "exportSection": {
+    "title": "Экспорт / Импорт",
+    "desc": "Резервная копия всех правил, алиасов и переменных одним файлом.",
+    "exportButton": "Экспорт .json",
+    "importButton": "Импорт",
+    "exportError": "Не удалось сохранить файл экспорта.",
+    "importError": "Не удалось импортировать файл — проверьте формат.",
+    "exportSuccessTitle": "Экспорт завершён",
+    "exportSuccessDesc": "Настройки сохранены в .json файл.",
+    "exportErrorTitle": "Экспорт не выполнен",
+    "importSuccessTitle": "Импорт завершён",
+    "importSuccessDesc": "Правила, алиасы и переменные обновлены.",
+    "importErrorTitle": "Импорт не выполнен"
+  },
+  "defaultFolderSection": {
+    "title": "Папка по умолчанию",
+    "desc": "Куда быстрое сохранение предвыбирает закладку, если ни одно правило не подошло. Оставьте пустым для панели закладок.",
+    "placeholder": "Панель закладок"
+  },
+  "themeSection": {
+    "title": "Тема",
+    "dark": "Тёмная",
+    "light": "Светлая",
+    "system": "Системная"
+  },
+  "languageSection": {
+    "title": "Язык",
+    "ru": "Русский",
+    "en": "English"
+  },
+  "options": {
+    "documentTitle": "plushk.in — Настройки"
+  },
+  "popup": {
+    "appName": "plushk.in",
+    "appSub": "Закладки",
+    "settingsButton": "Настройки",
+    "header": {
+      "openSearch": "Поиск",
+      "backToQuickSave": "Назад к быстрому сохранению"
+    },
+    "folderPicker": {
+      "pathPlaceholder": "Папка/Подпапка",
+      "save": "Сохранить"
+    },
+    "quickSave": {
+      "title": "Быстрое сохранение",
+      "saved": "Сохранено",
+      "offNote": "Быстрое сохранение выключено — режим «Выключен» не вмешивается в закладки.",
+      "advanced": {
+        "title": "Дополнительно",
+        "categoryLabel": "Категория",
+        "tagsLabel": "Теги",
+        "matchedByRule": "Подобрано правилом «{{name}}»"
+      }
+    }
+  }
+}

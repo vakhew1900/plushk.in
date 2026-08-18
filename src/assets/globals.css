@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+/* ── Runtime theme tokens (change with data-theme) ── */
+:root,
+[data-theme="dark"] {
+  --backdrop: #0c0c0e;
+  --bg: #1a1a1d;
+  --bg2: #141416;
+  --bg3: #202023;
+  --hover: #26262b;
+  --border: #2c2c31;
+  --text: #d8d8dc;
+  --muted: #8b8b94;
+  --faint: #56565f;
+  --accent: #7d6cf0;
+  --accent-soft: rgba(125, 108, 240, 0.15);
+  --green: #5cba8f;
+  --green-soft: rgba(92, 186, 143, 0.15);
+  --red: #e0746e;
+  --red-soft: rgba(224, 116, 110, 0.15);
+  --blue: #5c9ee0;
+  --blue-soft: rgba(92, 158, 224, 0.14);
+  --shadow: rgba(0, 0, 0, 0.5);
+
+  /* Fixed 8-color palette — deliberately separate from the semantic
+     --red/--green/--blue tokens above (those mean error/success/info
+     elsewhere in the UI). Shared by tags, entities, and workflow statuses —
+     a user's own color choice shouldn't borrow semantic meaning. */
+  --palette-red: #e0746e;
+  --palette-orange: #e0975c;
+  --palette-yellow: #d9c15c;
+  --palette-green: #5cba8f;
+  --palette-teal: #5cb8b0;
+  --palette-blue: #5c9ee0;
+  --palette-purple: #9c7ee0;
+  --palette-pink: #e07ec2;
+}
+
+[data-theme="light"] {
+  --backdrop: #e7e3db;
+  --bg: #fbfaf7;
+  --bg2: #f1eee8;
+  --bg3: #ffffff;
+  --hover: #eceae3;
+  --border: #e3ded4;
+  --text: #33312e;
+  --muted: #76716a;
+  --faint: #a8a298;
+  --accent: #6a57d6;
+  --accent-soft: rgba(106, 87, 214, 0.12);
+  --green: #3f9d6f;
+  --green-soft: rgba(63, 157, 111, 0.13);
+  --red: #cf5a52;
+  --red-soft: rgba(207, 90, 82, 0.12);
+  --blue: #3f7fc4;
+  --blue-soft: rgba(63, 127, 196, 0.12);
+  --shadow: rgba(0, 0, 0, 0.13);
+
+  --palette-red: #cf5a52;
+  --palette-orange: #c67a3f;
+  --palette-yellow: #b89c3f;
+  --palette-green: #3f9d6f;
+  --palette-teal: #3f9a91;
+  --palette-blue: #3f7fc4;
+  --palette-purple: #7a5cc4;
+  --palette-pink: #c45ca3;
+}
+
+/* ── Sizing tokens (icon dimensions + typography) — change here, applies everywhere ── */
+:root {
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Icon width/height. Components read the equivalent px values from
+     components/icons/icon-size.ts (SVG width/height attrs can't consume CSS vars) —
+     keep both in sync if this scale changes. */
+  --icon-size-sm: 0.875rem;
+  --icon-size-md: 1rem;
+  --icon-size-lg: 1.25rem;
+
+  --fs-heading: 1.375rem;
+  --fs-subheading: 1rem;
+  --fs-body: 0.875rem;
+  --fs-caption: 0.75rem;
+  --fs-code: 0.8125rem;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+}
+
+/* ── Base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input,
+textarea {
+  font: inherit;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--faint); }
+::-webkit-scrollbar-track { background: transparent; }

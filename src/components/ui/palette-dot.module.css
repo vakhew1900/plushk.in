@@ -1,0 +1,16 @@
+.dot {
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot[data-size='sm'] { width: 0.5rem; height: 0.5rem; }
+.dot[data-size='md'] { width: 0.6rem; height: 0.6rem; }
+
+.dot[data-color='red']    { background: var(--palette-red); }
+.dot[data-color='orange'] { background: var(--palette-orange); }
+.dot[data-color='yellow'] { background: var(--palette-yellow); }
+.dot[data-color='green']  { background: var(--palette-green); }
+.dot[data-color='teal']   { background: var(--palette-teal); }
+.dot[data-color='blue']   { background: var(--palette-blue); }
+.dot[data-color='purple'] { background: var(--palette-purple); }
+.dot[data-color='pink']   { background: var(--palette-pink); }

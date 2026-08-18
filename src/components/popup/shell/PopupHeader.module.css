@@ -1,0 +1,41 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.back {
+  transform: rotate(180deg);
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.meta { flex: 1; min-width: 0; }
+.name { font-weight: 700; font-size: 14.5px; color: var(--text); }
+.sub  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+.modeToggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.modeLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+}

@@ -1,0 +1,19 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 0.45rem;
+  text-align: left;
+  color: var(--text);
+  font-size: 0.8125rem;
+}
+.row:hover { background: var(--hover); }
+.row.selected { background: var(--accent-soft); color: var(--accent); }
+
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

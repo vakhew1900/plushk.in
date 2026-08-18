@@ -1,0 +1,13 @@
+.wrap { margin-top: 1.25rem; }
+
+.count {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}

@@ -1,0 +1,29 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  height: 18px;
+  width: 32px;
+  flex-shrink: 0;
+  cursor: pointer;
+  align-items: center;
+  border-radius: 9999px;
+  border: none;
+  transition: background-color 0.2s;
+  outline: none;
+}
+.root:disabled { cursor: not-allowed; opacity: 0.5; }
+.root[data-state="checked"]   { background: var(--accent); }
+.root[data-state="unchecked"] { background: var(--border); }
+
+.thumb {
+  pointer-events: none;
+  display: block;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+.thumb[data-state="checked"]   { transform: translateX(14px); }
+.thumb[data-state="unchecked"] { transform: translateX(2px); }

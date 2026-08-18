@@ -1,0 +1,6 @@
+.section { margin-bottom: 1.375rem; }
+
+.sectionHeader { display: flex; align-items: center; margin-bottom: 0.3rem; }
+.sectionDesc { margin-bottom: 0.75rem; }
+
+.table { border: 1px solid var(--border); border-radius: 0.7rem; overflow: hidden; }

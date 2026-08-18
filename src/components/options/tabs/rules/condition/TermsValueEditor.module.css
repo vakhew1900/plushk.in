@@ -1,0 +1,38 @@
+.chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: var(--bg3);
+  border-radius: 0.44rem;
+  padding: 0.1rem 0.2rem 0.1rem 0.5rem;
+}
+
+.chipInput {
+  width: 6rem;
+  min-width: 0;
+  border: none;
+  background: none;
+  padding: 0.15rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.addChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 0.44rem;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+.addChip:hover { color: var(--accent); border-color: var(--accent); }

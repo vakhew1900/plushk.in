@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "exportedAt": "2026-07-24T00:00:00.000Z",
+  "rules": [
+    {
+      "id": "test-social-reddit-programming",
+      "name": "Reddit — r/programming",
+      "desc": "Матчит по extras.subreddit, который заполняется через PageMatchGroup 'pmg-reddit'. Пока не сработает на живых закладках: PageExtractorService/content script ещё не подключены к background.ts (см. RULE-5 в specs/backlog.md) — extras сейчас никогда не заполняется в реальном flow создания закладки.",
+      "condition": {
+        "type": "and",
+        "nodes": [
+          { "type": "terms", "field": "domain", "values": ["reddit.com", "www.reddit.com", "old.reddit.com"] },
+          { "type": "term", "field": "subreddit", "value": "programming" }
+        ]
+      },
+      "targetFolder": "Social/Reddit/Programming",
+      "priority": 20,
+      "enabled": true
+    },
+    {
+      "id": "test-social-dtf-games",
+      "name": "DTF — хаб Игры",
+      "desc": "Матчит по extras.hub, который заполняется через PageMatchGroup 'pmg-dtf'. Тот же статус, что и у reddit-правила выше — ждёт RULE-5.",
+      "condition": {
+        "type": "and",
+        "nodes": [
+          { "type": "term", "field": "domain", "value": "dtf.ru" },
+          { "type": "term", "field": "hub", "value": "Игры" }
+        ]
+      },
+      "targetFolder": "Social/DTF/Игры",
+      "priority": 10,
+      "enabled": true
+    },
+    {
+      "id": "test-social-dtf-author-entus",
+      "name": "DTF — автор Никита Ентус",
+      "desc": "Матчит по extras.author, который заполняется через новый PageMatch 'author' в том же PageMatchGroup 'pmg-dtf' (селектор '.subsite-card__name h1'). На странице автора имя лежит в <h1> прямо внутри .subsite-card__name, рядом (sibling, не внутри) с .user-showcase — блоком с бейджем подписки (иконка 'plus'); селектор специально не заходит внутрь .user-showcase, чтобы не зацепить содержимое бейджа. Тот же статус, что и у остальных dtf/reddit-правил в этом наборе — ждёт RULE-5 (PageExtractorService ещё не подключён к реальному flow создания закладки).",
+      "condition": {
+        "type": "and",
+        "nodes": [
+          { "type": "term", "field": "domain", "value": "dtf.ru" },
+          { "type": "term", "field": "author", "value": "Никита Ентус" }
+        ]
+      },
+      "targetFolder": "Social/DTF/Никита Ентус",
+      "priority": 15,
+      "enabled": true
+    }
+  ],
+  "domainAliases": [
+    {
+      "id": "test-alias-reddit",
+      "name": "Reddit",
+      "domain_names": ["reddit.com", "www.reddit.com", "old.reddit.com"]
+    },
+    {
+      "id": "test-alias-dtf",
+      "name": "DTF",
+      "domain_names": ["dtf.ru"]
+    }
+  ],
+  "pageMatchGroups": [
+    {
+      "id": "pmg-reddit",
+      "aliasId": "test-alias-reddit",
+      "pageMatches": {
+        "subreddit": {
+          "name": "subreddit",
+          "selector": { "type": "css", "value": "h1.redditname a" }
+        }
+      }
+    },
+    {
+      "id": "pmg-dtf",
+      "aliasId": "test-alias-dtf",
+      "pageMatches": {
+        "hub": {
+          "name": "hub",
+          "selector": { "type": "css", "value": ".content-header__topic" }
+        },
+        "author": {
+          "name": "author",
+          "selector": { "type": "css", "value": ".subsite-card__name h1" }
+        }
+      }
+    }
+  ]
+}

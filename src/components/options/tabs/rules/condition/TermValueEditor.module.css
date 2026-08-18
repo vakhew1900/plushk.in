@@ -1,0 +1,6 @@
+.input {
+  width: 10rem;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}

@@ -1,0 +1,21 @@
+.text {
+  margin: 0;
+  font-family: inherit;
+}
+
+/* Sizes */
+.sizeHeading    { font-size: var(--fs-heading); }
+.sizeSubheading { font-size: var(--fs-subheading); }
+.sizeBody       { font-size: var(--fs-body); }
+.sizeCaption    { font-size: var(--fs-caption); }
+.sizeCode       { font-size: var(--fs-code); font-family: var(--font-mono); }
+
+/* Weights */
+.weightRegular { font-weight: var(--fw-regular); }
+.weightMedium  { font-weight: var(--fw-medium); }
+.weightBold    { font-weight: var(--fw-bold); }
+
+/* Tones */
+.toneDefault { color: var(--text); }
+.toneMuted   { color: var(--muted); }
+.toneAccent  { color: var(--accent); }

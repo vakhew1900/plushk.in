@@ -1,0 +1,216 @@
+{
+  "common": {
+    "modeSectionTitle": "Operating mode",
+    "condition": "Condition",
+    "noMatchFallback": "no match →",
+    "bookmarksBar": "Bookmarks Bar",
+    "folderWillBeCreated": "will be created"
+  },
+  "nav": {
+    "section": "General",
+    "main": "Home",
+    "rules": "Rules",
+    "search": "Search",
+    "library": "Library",
+    "mappings": "Mappings",
+    "categories": "Categories"
+  },
+  "modes": {
+    "on": {
+      "label": "On",
+      "tag": "default",
+      "desc": "Quick-save from the popup shows the matching rule's folder — pick a different one if needed, then save."
+    },
+    "off": {
+      "label": "Off",
+      "tag": "no intervention",
+      "desc": "Regular browser bookmarks — the extension doesn't interfere."
+    }
+  },
+  "mainTab": {
+    "lead": "Determines what happens when you add a bookmark. Change it here or right in the popup.",
+    "recentActivity": "Recent activity"
+  },
+  "rulesTab": {
+    "lead": "Checked top to bottom — the first match wins.",
+    "addRule": "Rule"
+  },
+  "ruleTree": {
+    "defaultFolderNode": "Default",
+    "addChildRule": "Add child rule",
+    "deleteRule": "Delete rule",
+    "deleteDialogTitle": "Delete rule \"{{name}}\"?",
+    "deleteDialogBody": "This rule has descendants ({{count}}). Deleting it removes the whole subtree — this can't be undone.",
+    "deleteDialogCancel": "Cancel",
+    "deleteDialogConfirm": "Delete subtree",
+    "rootPanelDesc": "Bookmarks land here when no rule matches. Change it from the Main tab."
+  },
+  "ruleEditor": {
+    "nameLabel": "Name",
+    "descLabel": "Description",
+    "targetFolderLabel": "Target folder",
+    "priorityLabel": "Priority",
+    "categoryLabel": "Category",
+    "tagsLabel": "Tags",
+    "conditionTitle": "Condition",
+    "visualViewTab": "Builder",
+    "jsonViewTab": "JSON",
+    "testButton": "Test on current page",
+    "saveButton": "Save"
+  },
+  "conditionGroup": {
+    "singleLabel": "—",
+    "andLabel": "AND",
+    "andDesc": "all conditions match",
+    "orLabel": "OR",
+    "orDesc": "any condition matches",
+    "notLabel": "NOT",
+    "notDesc": "no condition matches",
+    "emptyError": "Add at least one condition"
+  },
+  "conditionRow": {
+    "fieldPlaceholder": "field",
+    "removeCondition": "Remove condition",
+    "addValue": "value",
+    "removeValue": "Remove value",
+    "errorFieldRequired": "field is required",
+    "errorValueRequired": "value is required",
+    "errorValuesRequired": "at least one value is required",
+    "errorPatternRequired": "pattern is required"
+  },
+  "leafType": {
+    "term": "=",
+    "terms": "contains",
+    "regex": "matches regex",
+    "wildcard": "matches pattern",
+    "addMenuPlaceholder": "+ condition",
+    "addTerm": "Value (=)",
+    "addTerms": "One of a list",
+    "addRegex": "Regular expression",
+    "addWildcard": "Wildcard (* ?)"
+  },
+  "jsonView": {
+    "valid": "Valid JSON · {{count}} conditions",
+    "invalid": "JSON syntax error"
+  },
+  "searchTab": {
+    "lead": "Searches by title, URL, and folder among already sorted bookmarks.",
+    "placeholder": "E.g. reddit, design, UI patterns...",
+    "allCount": "All bookmarks: {{count}}",
+    "foundCount": "Found: {{count}}",
+    "noBookmarks": "No sorted bookmarks yet.",
+    "noResults": "Nothing found — try a different query."
+  },
+  "mappingsTab": {
+    "lead": "Domain aliases and extraction variables."
+  },
+  "aliasesSection": {
+    "title": "Domain aliases",
+    "addAlias": "Alias",
+    "desc": "One alias for multiple domains — e.g. regional mirrors.",
+    "namePlaceholder": "name",
+    "domainPlaceholder": "domain.com"
+  },
+  "categoriesTab": {
+    "lead": "Tags and categories for bookmarks."
+  },
+  "tagsSection": {
+    "title": "Tags",
+    "addTag": "Tag",
+    "desc": "The list of tags with a color. Definitions only for now — assigning a tag to a bookmark comes later.",
+    "namePlaceholder": "tag name"
+  },
+  "bookmarkTagEditor": {
+    "editButton": "Tags"
+  },
+  "entitiesSection": {
+    "title": "Categories",
+    "addEntity": "Category",
+    "desc": "A content type (Book, Video, ...) with an optional workflow status for the bookmark.",
+    "namePlaceholder": "category name",
+    "noEntities": "No categories yet"
+  },
+  "entityDetail": {
+    "colorLabel": "Color",
+    "nameLabel": "Name",
+    "iconLabel": "Icon",
+    "iconComingSoon": "coming soon",
+    "workflowLabel": "Statuses",
+    "addStatus": "Status",
+    "statusNamePlaceholder": "status name",
+    "startStatusHint": "start"
+  },
+  "bookmarkEntityControl": {
+    "addEntity": "Category",
+    "noEntity": "No category",
+    "editTooltip": "Edit"
+  },
+  "variablesSection": {
+    "title": "Variables",
+    "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",
+    "fieldsCount": "{{count}} fields",
+    "addGroup": "Group",
+    "addGroupDisabledHint": "Add a domain alias not yet claimed by another group first",
+    "addField": "Field",
+    "aliasPlaceholder": "alias",
+    "fieldKeyPlaceholder": "field",
+    "fieldValuePlaceholder": "selector"
+  },
+  "exportSection": {
+    "title": "Export / Import",
+    "desc": "A single-file backup of all rules, aliases, and variables.",
+    "exportButton": "Export .json",
+    "importButton": "Import",
+    "exportError": "Couldn't save the export file.",
+    "importError": "Couldn't import the file — check its format.",
+    "exportSuccessTitle": "Export complete",
+    "exportSuccessDesc": "Settings saved to a .json file.",
+    "exportErrorTitle": "Export failed",
+    "importSuccessTitle": "Import complete",
+    "importSuccessDesc": "Rules, aliases, and variables were updated.",
+    "importErrorTitle": "Import failed"
+  },
+  "defaultFolderSection": {
+    "title": "Default folder",
+    "desc": "Where quick-save pre-selects a bookmark when no rule matches. Leave empty for the Bookmarks Bar.",
+    "placeholder": "Bookmarks Bar"
+  },
+  "themeSection": {
+    "title": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
+  },
+  "languageSection": {
+    "title": "Language",
+    "ru": "Русский",
+    "en": "English"
+  },
+  "options": {
+    "documentTitle": "plushk.in — Settings"
+  },
+  "popup": {
+    "appName": "plushk.in",
+    "appSub": "Bookmarks",
+    "settingsButton": "Settings",
+    "header": {
+      "openSearch": "Search",
+      "backToQuickSave": "Back to quick save"
+    },
+    "folderPicker": {
+      "pathPlaceholder": "Folder/Subfolder",
+      "save": "Save"
+    },
+    "quickSave": {
+      "title": "Quick save",
+      "saved": "Saved",
+      "offNote": "Quick save is off — \"Off\" mode doesn't touch bookmarks.",
+      "advanced": {
+        "title": "Advanced",
+        "categoryLabel": "Category",
+        "tagsLabel": "Tags",
+        "matchedByRule": "Suggested by rule \"{{name}}\""
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+.root { flex-shrink: 0; }
+
+.item { font-family: var(--font-mono); }
+.item[data-disabled] { opacity: 0.35; cursor: not-allowed; }

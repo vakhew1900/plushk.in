@@ -1,0 +1,10 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem;
+  border-right: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.addButton { margin-top: 0.3rem; }

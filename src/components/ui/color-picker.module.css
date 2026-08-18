@@ -1,0 +1,23 @@
+.root {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.swatch {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 0.35rem;
+  border: 2px solid transparent;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.swatch:hover { transform: scale(1.1); }
+.swatch[data-state='checked'] { border-color: var(--text); }
+
+.swatch[data-color='red']    { background: var(--palette-red); }
+.swatch[data-color='orange'] { background: var(--palette-orange); }
+.swatch[data-color='yellow'] { background: var(--palette-yellow); }
+.swatch[data-color='green']  { background: var(--palette-green); }
+.swatch[data-color='teal']   { background: var(--palette-teal); }
+.swatch[data-color='blue']   { background: var(--palette-blue); }
+.swatch[data-color='purple'] { background: var(--palette-purple); }
+.swatch[data-color='pink']   { background: var(--palette-pink); }

@@ -14,8 +14,6 @@ stats-*.json
 .wxt
 web-ext.config.ts
 
-specs/tasks/
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

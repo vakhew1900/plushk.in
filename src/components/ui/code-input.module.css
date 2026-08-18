@@ -1,0 +1,28 @@
+.input {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.input :global(.cm-editor) {
+  outline: none;
+  background: #1a1a1d;
+}
+
+.input :global(.cm-scroller) {
+  font-family: var(--font-mono) !important;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.input :global(.cm-content) {
+  padding: 5px 8px;
+}
+
+.input :global(.cm-focused) {
+  outline: none;
+}
+
+.input :global(.cm-line) {
+  padding: 0;
+}

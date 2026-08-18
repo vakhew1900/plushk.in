@@ -1,0 +1,26 @@
+.root {
+  display: inline-flex;
+  gap: 2px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 2px;
+  width: fit-content;
+}
+
+.item {
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  transition: background-color 0.15s, color 0.15s;
+}
+.item:hover { color: var(--text); }
+.item[data-state="checked"] {
+  background: var(--bg);
+  color: var(--accent);
+  box-shadow: 0 1px 2px var(--shadow);
+}

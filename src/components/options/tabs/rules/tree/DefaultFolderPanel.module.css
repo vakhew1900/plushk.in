@@ -1,0 +1,31 @@
+.wrap {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.8125rem;
+  background: var(--bg2);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.folderRow {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.folderPath {
+  font-family: var(--font-mono);
+  font-size: var(--fs-code);
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
