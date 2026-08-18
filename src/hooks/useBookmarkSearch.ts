@@ -7,17 +7,16 @@ export function useBookmarkSearch() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<BookmarkSearchEntry[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [resolvedQuery, setResolvedQuery] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
 
     void bookmarkSearchService.search(query).then((entries) => {
       if (cancelled) return;
       setResults(entries);
       if (!query.trim()) setTotalCount(entries.length);
-      setLoading(false);
+      setResolvedQuery(query);
     });
 
     return () => {
@@ -25,5 +24,5 @@ export function useBookmarkSearch() {
     };
   }, [bookmarkSearchService, query]);
 
-  return { query, setQuery, results, totalCount, loading };
+  return { query, setQuery, results, totalCount, loading: resolvedQuery !== query };
 }
