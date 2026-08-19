@@ -1,4 +1,7 @@
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { clsx } from 'clsx';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { Select, SelectContent, SelectItem } from '@/components/ui/select';
+import { IconChevronDown } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { StructureType } from '@/lib/visitor/rule-draft';
 import type { TranslationKey } from '@/locale';
@@ -13,6 +16,15 @@ const LABEL_KEY: Record<StructureType, TranslationKey> = {
   [StructureType.NOT]: 'conditionGroup.notLabel',
 };
 
+// Shown on the collapsed trigger — short enough to fit a small fixed chip
+// even for the bilingual ru labels ("И · AND") the full `LABEL_KEY` uses.
+const SHORT_LABEL_KEY: Record<StructureType, TranslationKey> = {
+  [StructureType.SINGLE]: 'conditionGroup.singleLabel',
+  [StructureType.AND]: 'conditionGroup.andShortLabel',
+  [StructureType.OR]: 'conditionGroup.orShortLabel',
+  [StructureType.NOT]: 'conditionGroup.notShortLabel',
+};
+
 interface Props {
   value: StructureType;
   onChange: (type: StructureType) => void;
@@ -24,17 +36,27 @@ export function StructureSwitcher({ value, onChange, singleDisabled }: Props) {
   const { translate: t } = useTranslation();
 
   return (
-    <RadioGroup value={value} onValueChange={(v) => onChange(v as StructureType)} className={styles.root}>
-      {OPTIONS.map((option) => (
-        <RadioGroupItem
-          key={option}
-          value={option}
-          disabled={option === StructureType.SINGLE && singleDisabled}
-          className={styles.item}
-        >
-          {t(LABEL_KEY[option])}
-        </RadioGroupItem>
-      ))}
-    </RadioGroup>
+    <Select value={value} onValueChange={(v) => onChange(v as StructureType)}>
+      <SelectPrimitive.Trigger
+        className={clsx(styles.trigger, value !== StructureType.SINGLE && styles.active)}
+        aria-label={t(LABEL_KEY[value])}
+      >
+        <SelectPrimitive.Value>{t(SHORT_LABEL_KEY[value])}</SelectPrimitive.Value>
+        <SelectPrimitive.Icon className={styles.icon}>
+          <IconChevronDown size="sm" />
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+      <SelectContent>
+        {OPTIONS.map((option) => (
+          <SelectItem
+            key={option}
+            value={option}
+            disabled={option === StructureType.SINGLE && singleDisabled}
+          >
+            {t(LABEL_KEY[option])}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

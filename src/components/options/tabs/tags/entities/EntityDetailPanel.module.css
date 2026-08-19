@@ -16,21 +16,10 @@
   margin-bottom: 0.45rem;
 }
 
+.styleRow { display: flex; align-items: center; gap: 0.7rem; }
+
 .nameRow { display: flex; align-items: center; gap: 0.5rem; }
 .nameInput { font-family: var(--font-mono); font-size: 0.8rem; flex: 1; }
-
-.iconRow { display: flex; align-items: center; gap: 0.5rem; }
-.iconSlot {
-  width: 1.4rem;
-  height: 1.4rem;
-  border-radius: 50%;
-  border: 1px dashed var(--faint);
-  color: var(--faint);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.iconComingSoon { font-size: 0.75rem; color: var(--faint); }
 
 .statusTable {
   border: 1px solid var(--border);

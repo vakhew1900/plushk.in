@@ -1,9 +1,6 @@
 .row { display: flex; flex-direction: column; gap: 0.35rem; }
 
-.header { display: flex; align-items: center; }
-
-.main { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.op   { font-size: 0.75rem; color: var(--muted); }
+.main { display: flex; align-items: center; gap: 0.4rem; flex-wrap: nowrap; }
 
 .removeBtn { margin-left: auto; padding: 0.2rem; }
 

@@ -61,10 +61,13 @@
   "conditionGroup": {
     "singleLabel": "—",
     "andLabel": "AND",
+    "andShortLabel": "AND",
     "andDesc": "all conditions match",
     "orLabel": "OR",
+    "orShortLabel": "OR",
     "orDesc": "any condition matches",
     "notLabel": "NOT",
+    "notShortLabel": "NOT",
     "notDesc": "no condition matches",
     "emptyError": "Add at least one condition"
   },
@@ -87,7 +90,12 @@
     "addTerm": "Value (=)",
     "addTerms": "One of a list",
     "addRegex": "Regular expression",
-    "addWildcard": "Wildcard (* ?)"
+    "addWildcard": "Wildcard (* ?)",
+    "addMenuConditionGroup": "Condition",
+    "addMenuStructureGroup": "Group",
+    "addAnd": "AND (all match)",
+    "addOr": "OR (any matches)",
+    "addNot": "NOT (none match)"
   },
   "jsonView": {
     "valid": "Valid JSON · {{count}} conditions",
@@ -141,10 +149,9 @@
     "noEntities": "No categories yet"
   },
   "entityDetail": {
-    "colorLabel": "Color",
+    "styleLabel": "Color & icon",
     "nameLabel": "Name",
-    "iconLabel": "Icon",
-    "iconComingSoon": "coming soon",
+    "noIcon": "No icon",
     "workflowLabel": "Statuses",
     "addStatus": "Status",
     "statusNamePlaceholder": "status name",

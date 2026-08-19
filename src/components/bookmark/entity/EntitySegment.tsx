@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
-import { PaletteDot } from '@/components/ui/palette-dot';
+import { PaletteIconDot } from '@/components/ui/palette-icon-dot';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { EntityType } from '@/types/entity-type';
@@ -32,7 +32,7 @@ export function EntitySegment({ entityTypes, selectedEntity, onChoose }: Props) 
         >
           {selectedEntity ? (
             <>
-              <PaletteDot color={selectedEntity.color} size="md" />
+              <PaletteIconDot color={selectedEntity.color} icon={selectedEntity.icon} size="md" />
               {selectedEntity.name}
             </>
           ) : (
@@ -53,7 +53,7 @@ export function EntitySegment({ entityTypes, selectedEntity, onChoose }: Props) 
             checked={entity.id === selectedEntity?.id}
             onCheckedChange={() => onChoose(entity.id)}
           >
-            <PaletteDot color={entity.color} />
+            <PaletteIconDot color={entity.color} icon={entity.icon} />
             {entity.name}
           </DropdownMenuCheckboxItem>
         ))}

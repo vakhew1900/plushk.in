@@ -113,6 +113,48 @@ export function makeDraftLeaf(type: LeafRuleType): DraftLeafNode {
   }
 }
 
+// `AddConditionMenu`'s full option list — the 4 leaf types plus AND/OR/NOT —
+// dispatches here to build whichever kind of new child a group's "+ условие"
+// picked: an empty leaf, or an empty nested group.
+export function makeDraftNode(type: RuleType): DraftRuleNode {
+  if (type === RuleType.AND || type === RuleType.OR || type === RuleType.NOT) {
+    return makeDraftGroup(type);
+  }
+  return makeDraftLeaf(type);
+}
+
+// The one string a leaf's current value is "about" — `value` for a term,
+// the first entry for terms, `pattern` for regex/wildcard. The common
+// currency `withLeafType` carries across a type change.
+function leafPrimaryValue(node: DraftLeafNode): string {
+  switch (node.type) {
+    case RuleType.TERM: return node.value;
+    case RuleType.TERMS: return node.values[0] ?? '';
+    case RuleType.REGEX:
+    case RuleType.WILDCARD: return node.pattern;
+  }
+}
+
+/**
+ * Applies a `LeafTypeSwitcher` selection — changes which of `=` / "one of" /
+ * regex / wildcard a leaf matches with. `id` and `field` carry over as-is;
+ * the previous type's primary value carries over best-effort (a single
+ * `value`/`pattern` string maps directly onto the new type's `value`/
+ * `pattern`, or seeds a one-item `values` list for `terms`) rather than
+ * resetting to empty, since in practice a type change is usually someone
+ * realizing e.g. an exact match should've been a pattern, not a fresh start.
+ */
+export function withLeafType(node: DraftLeafNode, type: LeafRuleType): DraftLeafNode {
+  if (node.type === type) return node;
+  const primary = leafPrimaryValue(node);
+  switch (type) {
+    case RuleType.TERM: return { id: node.id, type, field: node.field, value: primary };
+    case RuleType.TERMS: return { id: node.id, type, field: node.field, values: [primary] };
+    case RuleType.REGEX: return { id: node.id, type, field: node.field, pattern: primary };
+    case RuleType.WILDCARD: return { id: node.id, type, field: node.field, pattern: primary };
+  }
+}
+
 // ─── Conversion ──────────────────────────────────────────────────────────
 // `toDraftNode` dispatches from a plain `RuleNode`, so it *can* go through
 // `RuleVisitor<DraftRuleNode>` like the rest of this codebase's recursive

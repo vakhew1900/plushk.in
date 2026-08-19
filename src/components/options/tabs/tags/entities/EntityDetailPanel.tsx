@@ -1,4 +1,5 @@
 import { ColorPicker } from '@/components/ui/color-picker';
+import { IconPicker } from '@/components/ui/icon-picker';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { RemoveIconButton } from '@/components/ui/remove-icon-button';
@@ -7,6 +8,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useEntityWorkflow } from '@/hooks/useEntityWorkflow';
 import type { EntityType } from '@/types/entity-type';
 import type { PaletteColor } from '@/types/palette-color';
+import type { IconName } from '@/types/icon-name';
 import { WorkflowStatusRow } from './WorkflowStatusRow';
 import styles from './EntityDetailPanel.module.css';
 
@@ -14,18 +16,22 @@ interface Props {
   entity: EntityType;
   onNameChange: (name: string) => void;
   onColorChange: (color: PaletteColor) => void;
+  onIconChange: (icon: IconName | undefined) => void;
   onRemove: () => void;
 }
 
-export function EntityDetailPanel({ entity, onNameChange, onColorChange, onRemove }: Props) {
+export function EntityDetailPanel({ entity, onNameChange, onColorChange, onIconChange, onRemove }: Props) {
   const { translate: t } = useTranslation();
   const { statuses, addStatus, renameStatus, recolorStatus, removeStatus } = useEntityWorkflow(entity.id);
 
   return (
     <div className={styles.panel}>
       <div className={styles.field}>
-        <span className={styles.label}>{t('entityDetail.colorLabel')}</span>
-        <ColorPicker value={entity.color} onChange={onColorChange} />
+        <span className={styles.label}>{t('entityDetail.styleLabel')}</span>
+        <div className={styles.styleRow}>
+          <IconPicker value={entity.icon} color={entity.color} onChange={onIconChange} />
+          <ColorPicker value={entity.color} onChange={onColorChange} />
+        </div>
       </div>
 
       <div className={styles.field}>
@@ -39,16 +45,6 @@ export function EntityDetailPanel({ entity, onNameChange, onColorChange, onRemov
             className={styles.nameInput}
           />
           <RemoveIconButton onClick={onRemove} />
-        </div>
-      </div>
-
-      <div className={styles.field}>
-        <span className={styles.label}>{t('entityDetail.iconLabel')}</span>
-        <div className={styles.iconRow}>
-          <span className={styles.iconSlot}>
-            <IconPlus size="sm" />
-          </span>
-          <span className={styles.iconComingSoon}>{t('entityDetail.iconComingSoon')}</span>
         </div>
       </div>
 
