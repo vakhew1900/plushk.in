@@ -1,0 +1,87 @@
+name: Release
+
+# Version bump in src/package.json is what drives a release, not the merge itself —
+# see check-version below. See CHANGELOG.md for the release-prep workflow.
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      should_release: ${{ steps.check.outputs.should_release }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version from package.json
+        id: version
+        run: echo "version=$(node -p "require('./src/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Check whether this version was already released
+        id: check
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/v${{ steps.version.outputs.version }}" > /dev/null; then
+            echo "Tag v${{ steps.version.outputs.version }} already exists — skipping release."
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  release:
+    needs: check-version
+    if: needs.check-version.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.check-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/package-lock.json
+
+      - name: Install dependencies
+        working-directory: src
+        run: npm ci
+
+      - name: Lint
+        working-directory: src
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: src
+        run: npm run compile
+
+      - name: Test
+        working-directory: src
+        run: npm test
+
+      - name: Build & zip (Chrome)
+        working-directory: src
+        run: npm run zip
+
+      - name: Build & zip (Firefox)
+        working-directory: src
+        run: npm run zip:firefox
+
+      - name: Extract changelog section for this version
+        run: node scripts/extract-changelog.mjs "$VERSION" > release-notes.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v$VERSION" \
+            --title "v$VERSION" \
+            --notes-file release-notes.md \
+            src/.output/*.zip

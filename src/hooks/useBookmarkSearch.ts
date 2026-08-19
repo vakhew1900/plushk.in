@@ -10,17 +10,10 @@ export function useBookmarkSearch() {
   const [statusId, setStatusId] = useState<string | undefined>(undefined);
   const [results, setResults] = useState<BookmarkSearchEntry[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+const [resolvedQuery, setResolvedQuery] = useState<string | null>(null);
 
-  // Reset `loading` during render (not in the effect below) when the search
-  // params change, so the spinner shows up in the same render pass instead
-  // of triggering an extra effect-driven commit (react-hooks/set-state-in-effect).
-  const filtersKey = JSON.stringify({ query, tagIds, entityTypeId, statusId });
-  const [prevFiltersKey, setPrevFiltersKey] = useState(filtersKey);
-  if (filtersKey !== prevFiltersKey) {
-    setPrevFiltersKey(filtersKey);
-    setLoading(true);
-  }
+
+
 
   useEffect(() => {
     let cancelled = false;
@@ -29,7 +22,7 @@ export function useBookmarkSearch() {
       if (cancelled) return;
       setResults(entries);
       if (!query.trim()) setTotalCount(entries.length);
-      setLoading(false);
+      setResolvedQuery(query);
     });
 
     return () => {
@@ -67,6 +60,6 @@ export function useBookmarkSearch() {
     resetFilters,
     results,
     totalCount,
-    loading,
+    loading: resolvedQuery !== query
   };
 }

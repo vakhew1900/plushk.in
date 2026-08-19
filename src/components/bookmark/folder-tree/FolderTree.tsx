@@ -103,6 +103,10 @@ export function FolderTree({ selectedPath, onSelect }: FolderTreeProps) {
   // makes this work identically in Chrome (numeric ids) and Firefox (GUIDs).
   useEffect(() => {
     if (tree.length === 0) return;
+    // Merges into `expandedIds` (add-only, see comment above) rather than mirroring
+    // a prop, so it doesn't reduce to the render-time "derive from previous props"
+    // pattern — it has to coexist with independent manual toggles via `toggle()`.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setExpandedIds((prev) => {
       const next = new Set(prev);
       let changed = false;
@@ -124,6 +128,8 @@ export function FolderTree({ selectedPath, onSelect }: FolderTreeProps) {
     const ancestorIds = collectAncestorIds(displayTree, effectiveSelectedPath);
     if (ancestorIds.size === 0) return;
 
+    // Same add-only merge as the effect above — see its comment.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setExpandedIds((prev) => {
       const next = new Set(prev);
       let changed = false;
