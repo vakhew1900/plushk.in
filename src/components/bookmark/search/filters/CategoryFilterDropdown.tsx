@@ -5,7 +5,7 @@ import {
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
 import { DropdownTriggerButton } from '@/components/ui/dropdown-trigger';
-import { PaletteDot } from '@/components/ui/palette-dot';
+import { PaletteIconDot } from '@/components/ui/palette-icon-dot';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { EntityType } from '@/types/entity-type';
 
@@ -36,7 +36,7 @@ export function CategoryFilterDropdown({ entityTypes, selectedEntityTypeId, onCh
             checked={entity.id === selectedEntityTypeId}
             onCheckedChange={() => onChange(entity.id)}
           >
-            <PaletteDot color={entity.color} />
+            <PaletteIconDot color={entity.color} icon={entity.icon} />
             {entity.name}
           </DropdownMenuCheckboxItem>
         ))}

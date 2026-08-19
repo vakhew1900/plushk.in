@@ -141,10 +141,9 @@
     "noEntities": "No categories yet"
   },
   "entityDetail": {
-    "colorLabel": "Color",
+    "styleLabel": "Color & icon",
     "nameLabel": "Name",
-    "iconLabel": "Icon",
-    "iconComingSoon": "coming soon",
+    "noIcon": "No icon",
     "workflowLabel": "Statuses",
     "addStatus": "Status",
     "statusNamePlaceholder": "status name",

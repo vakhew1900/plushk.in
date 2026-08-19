@@ -141,10 +141,9 @@
     "noEntities": "Пока нет категорий"
   },
   "entityDetail": {
-    "colorLabel": "Цвет",
+    "styleLabel": "Цвет и иконка",
     "nameLabel": "Название",
-    "iconLabel": "Иконка",
-    "iconComingSoon": "скоро",
+    "noIcon": "Без иконки",
     "workflowLabel": "Статусы",
     "addStatus": "Статус",
     "statusNamePlaceholder": "имя статуса",

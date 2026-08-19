@@ -1,0 +1,42 @@
+.trigger {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s;
+}
+.trigger:hover { transform: scale(1.06); }
+
+.trigger[data-color='red']    { background: var(--palette-red);    color: var(--palette-red-ink); }
+.trigger[data-color='orange'] { background: var(--palette-orange); color: var(--palette-orange-ink); }
+.trigger[data-color='yellow'] { background: var(--palette-yellow); color: var(--palette-yellow-ink); }
+.trigger[data-color='green']  { background: var(--palette-green);  color: var(--palette-green-ink); }
+.trigger[data-color='teal']   { background: var(--palette-teal);   color: var(--palette-teal-ink); }
+.trigger[data-color='blue']   { background: var(--palette-blue);   color: var(--palette-blue-ink); }
+.trigger[data-color='purple'] { background: var(--palette-purple); color: var(--palette-purple-ink); }
+.trigger[data-color='pink']   { background: var(--palette-pink);   color: var(--palette-pink-ink); }
+
+.content { width: 12rem; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 2rem);
+  gap: 0.3rem;
+}
+
+.item {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  border: 1px solid transparent;
+  transition: background-color 0.12s, color 0.12s, border-color 0.12s;
+}
+.item:hover { background: var(--hover); color: var(--text); }
+.item[data-state='checked'] { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }

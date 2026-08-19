@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { PaletteDot, PaletteDotSize } from '@/components/ui/palette-dot';
+import { PaletteIconDot, PaletteIconDotSize } from '@/components/ui/palette-icon-dot';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { EntityType } from '@/types/entity-type';
 import styles from './EntityListRow.module.css';
@@ -20,7 +20,7 @@ export function EntityListRow({ entity, selected, onSelect }: Props) {
       className={clsx(styles.row, selected && styles.selected)}
       onClick={onSelect}
     >
-      <PaletteDot color={entity.color} size={PaletteDotSize.MD} />
+      <PaletteIconDot color={entity.color} icon={entity.icon} size={PaletteIconDotSize.MD} />
       <span className={styles.name} title={name}>{name}</span>
     </button>
   );
