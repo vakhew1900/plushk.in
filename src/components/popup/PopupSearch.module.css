@@ -34,6 +34,21 @@
   padding: 14px 16px 16px;
 }
 
+.searchRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.searchRow > *:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.filtersPanel {
+  margin-top: 10px;
+}
+
 .resultsScroll {
   max-height: 20rem;
   overflow-y: auto;

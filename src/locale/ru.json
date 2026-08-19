@@ -99,7 +99,17 @@
     "allCount": "Все закладки: {{count}}",
     "foundCount": "Найдено: {{count}}",
     "noBookmarks": "Пока нет отсортированных закладок.",
-    "noResults": "Ничего не найдено — попробуйте другой запрос."
+    "noResults": "Ничего не найдено — попробуйте другой запрос.",
+    "filters": {
+      "toggleButton": "Фильтры",
+      "tagsLabel": "Теги",
+      "tagsLabelCount": "Теги · {{count}}",
+      "categoryLabel": "Категория",
+      "anyCategory": "Любая категория",
+      "statusLabel": "Статус",
+      "anyStatus": "Любой статус",
+      "resetAll": "Сбросить всё"
+    }
   },
   "mappingsTab": {
     "lead": "Алиасы доменов и переменные извлечения."

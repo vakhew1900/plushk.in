@@ -2,6 +2,23 @@
 
 Finished tasks, moved here from `tasks.md` when completed. Kept for history — see git log for the actual code changes. Append-only: new entries go at the end, older ones aren't reordered.
 
+### BG-1 — `bookmarks.onRemoved`: удаление закладки каскадно чистит связанные записи
+**Priority:** Medium
+**Added:** 2026-08-11
+**Completed:** 2026-08-19
+
+`entrypoints/background.ts` сейчас пустой (`defineBackground(() => {})`, см. `UI-4`) — событие `bookmarks.onRemoved` не обрабатывается вообще, хотя таблица storage в `CLAUDE.md` уже давно резервирует под него строку «Remove metadata from IndexedDB (not yet implemented)». Возникла попутно при проектировании `SHELF-1`: удаление закладки должно каскадно чистить `BookmarkEntityLink`-строку (`bookmarkEntityLinkRepository.remove(bookmarkId)` — `bookmarkId` уже является PK таблицы `bookmarkEntityLinks`, просто вызов базового `remove()`, без нового метода в интерфейсе репозитория). Симметрично чистится и таблица связи тегов с закладками (`bookmarkTags`, `SEARCH-3`) — тем же способом, `bookmarkTagLinkRepository.remove(bookmarkId)`.
+
+**Уточнение пользователя (2026-08-19), два раунда:** сначала оба вызова `remove()` вынесены из обработчика `background.ts` в отдельный сервис с названием, явно говорящим «удаляет вообще ВСЕ связи закладки», а не одну конкретную таблицу — задумано под будущий CRUD закладок из отдельного «менеджера» (список с ручным удалением), чтобы тот путь звал тот же метод, а не дублировал список `repository.remove()`-вызовов второй раз. Затем, по итогам обсуждения "а зачем отдельно, если можно в `BookmarkService`" — старый `BookmarkService` (удалён целиком в `UI-4`, координировал `Mode`-хендлеры) сейчас не существует; вместо узкого `BookmarkLinksCleanupService` заведён новый, **общий** `BookmarkService`, который со временем возьмёт на себя весь CRUD закладок (создание/удаление/т.п. поверх нескольких репозиториев разом), а не только очистку связей — сегодня в нём реализован только `removeAllLinksForBookmark`, остальное добавится по мере реальной необходимости (`IBookmarkRepository`/`chrome.bookmarks` пока не внедрён в конструктор — не нужен ни одному текущему методу).
+
+Реализовано: `IBookmarkService`/`BookmarkService` (`src/services/`) — метод `removeAllLinksForBookmark(bookmarkId)`, оркеструет `bookmarkTagLinkRepository.remove()` + `bookmarkEntityLinkRepository.remove()` через `Promise.all` (без общей Dexie-транзакции — сервис не видит `db` напрямую, только репозитории; известный, уже отслеженный этой оговоркой класс риска — `AUDIT-7`). Зарегистрирован в `ServicesContext` (`bookmarkService`) для будущего вызова из UI (менеджер закладок), и инстанцируется напрямую в `background.ts` (в service worker `ServicesContext` недоступен — React нет, как и было до `UI-4` в аналогичных местах).
+
+Рекурсивный обход поддерева при удалении **папки** целиком (`chrome.bookmarks.onRemoved` даёт одно событие на папку, `removeInfo.node` содержит вложенное поддерево) вынесен в чистую функцию `collectRemovedBookmarkIds` (`src/lib/bookmark-removed-subtree.ts`) — без побочных эффектов, только собирает id всех закладок-листьев из `BookmarkTreeNode`; `background.ts` мапит результат на вызовы сервиса. Вынесено в `lib/` специально ради юнит-тестируемости (CLAUDE.md требует тесты для `lib/`, но не для кода `entrypoints/`) — 4 теста на пустую папку, одиночную закладку, вложенные подпапки, отсутствующее поле `children`. `BookmarkService` — 2 теста (обе таблицы получают вызов; ошибка одного репозитория не проглатывается).
+
+Миграция/бэкфилл для уже накопленных осиротевших связей не делалась — расширение ещё не вышло, установленных копий с реальными данными нет.
+
+`SEARCH-8` (`backlog.md`, точечная выборка `chrome.bookmarks.get(ids)` вместо полного скана в `BookmarkSearchService`) заведена отдельно и по-прежнему не реализована — эта задача была её единственной блокирующей зависимостью, теперь снята.
+
 ### RULE-2 — Реальное выполнение chrome.bookmarks в AutoModeHandler/OffModeHandler
 **Priority:** Medium
 **Added:** 2026-07-06
