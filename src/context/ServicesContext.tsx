@@ -31,6 +31,7 @@ import type { IWorkflowStatusRepository } from '@/repository/interfaces/IWorkflo
 import type { IBookmarkEntityLinkRepository } from '@/repository/interfaces/IBookmarkEntityLinkRepository';
 import type { IBookmarkQuickSaveLinksRepository } from '@/repository/interfaces/IBookmarkQuickSaveLinksRepository';
 import { BookmarkSearchService } from '@/services/BookmarkSearchService';
+import { BookmarkService } from '@/services/BookmarkService';
 import { FileService } from '@/services/FileService';
 import { PageExtrasService } from '@/services/PageExtrasService';
 import { PageMetaFiller } from '@/services/PageMetaFiller';
@@ -38,6 +39,7 @@ import { QuickSaveFolderResolver } from '@/services/QuickSaveFolderResolver';
 import { QuickSaveBookmarkCreator } from '@/services/QuickSaveBookmarkCreator';
 import { SettingsExportImportService } from '@/services/SettingsExportImportService';
 import type { IBookmarkSearchService } from '@/services/interfaces/IBookmarkSearchService';
+import type { IBookmarkService } from '@/services/interfaces/IBookmarkService';
 import type { IFileService } from '@/services/interfaces/IFileService';
 import type { IPageExtrasService } from '@/services/interfaces/IPageExtrasService';
 import type { IPageMetaFiller } from '@/services/interfaces/IPageMetaFiller';
@@ -61,6 +63,7 @@ export interface Services {
   quickSaveBookmarkCreator: IQuickSaveBookmarkCreator;
   settingsExportImportService: ISettingsExportImportService;
   bookmarkSearchService: IBookmarkSearchService;
+  bookmarkService: IBookmarkService;
   tagRepository: ITagRepository;
   bookmarkTagLinkRepository: IBookmarkTagLinkRepository;
   entityTypeRepository: IEntityTypeRepository;
@@ -88,6 +91,8 @@ export function ServicesProvider({ children }: Props) {
     const tagRepository = new TagRepository();
     const entityTypeRepository = new EntityTypeRepository();
     const bookmarkQuickSaveLinksRepository = new BookmarkQuickSaveLinksRepository();
+    const bookmarkTagLinkRepository = new BookmarkTagLinkRepository();
+    const bookmarkEntityLinkRepository = new BookmarkEntityLinkRepository();
 
     return {
       bookmarkRepository,
@@ -112,13 +117,18 @@ export function ServicesProvider({ children }: Props) {
         entityTypeRepository,
         fileService,
       ),
-      bookmarkSearchService: new BookmarkSearchService(bookmarkRepository),
+      bookmarkSearchService: new BookmarkSearchService(
+        bookmarkRepository,
+        bookmarkTagLinkRepository,
+        bookmarkEntityLinkRepository,
+      ),
+      bookmarkService: new BookmarkService(bookmarkTagLinkRepository, bookmarkEntityLinkRepository),
       tagRepository,
-      bookmarkTagLinkRepository: new BookmarkTagLinkRepository(),
+      bookmarkTagLinkRepository,
       entityTypeRepository,
       workflowRepository: new WorkflowRepository(),
       workflowStatusRepository: new WorkflowStatusRepository(),
-      bookmarkEntityLinkRepository: new BookmarkEntityLinkRepository(),
+      bookmarkEntityLinkRepository,
     };
   }, []);
 

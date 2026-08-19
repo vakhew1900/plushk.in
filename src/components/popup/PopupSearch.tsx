@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { browser } from 'wxt/browser';
 import { IconSearch } from '@/components/icons';
 import { CompactBookmarkCard } from '@/components/bookmark/CompactBookmarkCard';
 import { SearchBar } from '@/components/bookmark/search/SearchBar';
 import { SearchResultsList } from '@/components/bookmark/search/SearchResultsList';
+import { BookmarkFiltersRow } from '@/components/bookmark/search/filters/BookmarkFiltersRow';
+import { PopupFiltersToggleButton } from './PopupFiltersToggleButton';
 import { useBookmarkSearch } from '@/hooks/useBookmarkSearch';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
@@ -10,7 +13,22 @@ import styles from './PopupSearch.module.css';
 
 export function PopupSearch() {
   const { translate: t } = useTranslation();
-  const { query, setQuery, results, totalCount, loading } = useBookmarkSearch();
+  const {
+    query,
+    setQuery,
+    tagIds,
+    toggleTagId,
+    entityTypeId,
+    setEntityTypeId,
+    statusId,
+    setStatusId,
+    resetFilters,
+    results,
+    totalCount,
+    loading,
+  } = useBookmarkSearch();
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const activeFilterCount = tagIds.length + (entityTypeId ? 1 : 0) + (statusId ? 1 : 0);
 
   const countLabel = query.trim()
     ? t('searchTab.foundCount', { count: results.length })
@@ -32,7 +50,28 @@ export function PopupSearch() {
       </div>
 
       <div className={styles.body}>
-        <SearchBar value={query} onChange={setQuery} placeholder={t('searchTab.placeholder')} />
+        <div className={styles.searchRow}>
+          <SearchBar value={query} onChange={setQuery} placeholder={t('searchTab.placeholder')} />
+          <PopupFiltersToggleButton
+            open={filtersOpen}
+            onToggle={() => setFiltersOpen((v) => !v)}
+            activeCount={activeFilterCount}
+          />
+        </div>
+
+        {filtersOpen && (
+          <div className={styles.filtersPanel}>
+            <BookmarkFiltersRow
+              tagIds={tagIds}
+              toggleTagId={toggleTagId}
+              entityTypeId={entityTypeId}
+              setEntityTypeId={setEntityTypeId}
+              statusId={statusId}
+              setStatusId={setStatusId}
+              resetFilters={resetFilters}
+            />
+          </div>
+        )}
 
         {!loading && (
           <div className={styles.resultsScroll}>

@@ -99,7 +99,17 @@
     "allCount": "All bookmarks: {{count}}",
     "foundCount": "Found: {{count}}",
     "noBookmarks": "No sorted bookmarks yet.",
-    "noResults": "Nothing found — try a different query."
+    "noResults": "Nothing found — try a different query.",
+    "filters": {
+      "toggleButton": "Filters",
+      "tagsLabel": "Tags",
+      "tagsLabelCount": "Tags · {{count}}",
+      "categoryLabel": "Category",
+      "anyCategory": "Any category",
+      "statusLabel": "Status",
+      "anyStatus": "Any status",
+      "resetAll": "Reset all"
+    }
   },
   "mappingsTab": {
     "lead": "Domain aliases and extraction variables."
