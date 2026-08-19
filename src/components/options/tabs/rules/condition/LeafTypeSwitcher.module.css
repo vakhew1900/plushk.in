@@ -1,0 +1,19 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  flex-shrink: 0;
+  padding: 0.1rem 0.3rem;
+  border: 1px solid transparent;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.75rem;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+.trigger:hover { background: var(--bg2); color: var(--text); }
+.trigger:focus-visible { border-color: var(--accent); }
+
+.icon { display: inline-flex; color: var(--faint); flex-shrink: 0; }

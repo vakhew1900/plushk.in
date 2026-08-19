@@ -5,12 +5,11 @@ import type { DraftGroupNode, DraftRuleNode, StructureType } from '@/lib/visitor
 import {
   getDraftChildren,
   isDraftGroup,
-  makeDraftLeaf,
+  makeDraftNode,
   subtreeHasErrors,
   withDraftChildren,
   withStructureType,
 } from '@/lib/visitor/rule-draft';
-import type { LeafRuleType } from '@/lib/visitor/rule-draft';
 import { RuleType } from '@/types/rule';
 import type { TranslationKey } from '@/locale';
 import { StructureSwitcher } from './StructureSwitcher';
@@ -43,8 +42,8 @@ export function ConditionGroup({ node, onChange, onRemove }: Props) {
   const removeChild = (index: number) => {
     onChange(withDraftChildren(node, children.filter((_, i) => i !== index)));
   };
-  const addCondition = (type: LeafRuleType) => {
-    onChange(withDraftChildren(node, [...children, makeDraftLeaf(type)]));
+  const addCondition = (type: RuleType) => {
+    onChange(withDraftChildren(node, [...children, makeDraftNode(type)]));
   };
   const changeStructure = (type: StructureType) => onChange(withStructureType(node, type));
 

@@ -61,10 +61,13 @@
   "conditionGroup": {
     "singleLabel": "—",
     "andLabel": "И · AND",
+    "andShortLabel": "И",
     "andDesc": "выполнены все условия",
     "orLabel": "ИЛИ · OR",
+    "orShortLabel": "ИЛИ",
     "orDesc": "выполняется любое из условий",
     "notLabel": "НЕ · NOT",
+    "notShortLabel": "НЕ",
     "notDesc": "не выполняется ни одно из условий",
     "emptyError": "Добавьте хотя бы одно условие"
   },
@@ -87,7 +90,12 @@
     "addTerm": "Значение (=)",
     "addTerms": "Один из списка",
     "addRegex": "Regex",
-    "addWildcard": "Wildcard (* ?)"
+    "addWildcard": "Wildcard (* ?)",
+    "addMenuConditionGroup": "Условие",
+    "addMenuStructureGroup": "Группа",
+    "addAnd": "И (все условия)",
+    "addOr": "ИЛИ (любое условие)",
+    "addNot": "НЕ (ни одно условие)"
   },
   "jsonView": {
     "valid": "Валидный JSON · {{count}} условий",

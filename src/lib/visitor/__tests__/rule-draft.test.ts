@@ -11,13 +11,16 @@ import {
   isDraftLeaf,
   makeDraftGroup,
   makeDraftLeaf,
+  makeDraftNode,
   subtreeHasErrors,
   toDraftNode,
   validateLeafNode,
   withDraftChildren,
   withDraftGroupType,
+  withLeafType,
   withStructureType,
 } from '../rule-draft';
+import type { DraftRegexRule, DraftTermRule, DraftTermsRule, DraftWildcardRule } from '../rule-draft';
 
 const nested: RuleNode = {
   type: RuleType.AND,
@@ -138,6 +141,65 @@ describe('withStructureType', () => {
     const leaf = makeDraftLeaf(RuleType.TERM);
     const group = withDraftChildren(makeDraftGroup(RuleType.AND), [leaf, leaf]);
     expect(withStructureType(group, StructureType.SINGLE)).toBe(group);
+  });
+});
+
+describe('withLeafType', () => {
+  it('returns the same node when picking the current type (no-op)', () => {
+    const leaf: DraftTermRule = { id: 'x', type: RuleType.TERM, field: 'domain', value: 'youtube.com' };
+    expect(withLeafType(leaf, RuleType.TERM)).toBe(leaf);
+  });
+
+  it('keeps id and field, carrying the single value into a one-item terms list', () => {
+    const leaf: DraftTermRule = { id: 'x', type: RuleType.TERM, field: 'domain', value: 'youtube.com' };
+    const result = withLeafType(leaf, RuleType.TERMS);
+
+    expect(result).toEqual({ id: 'x', type: RuleType.TERMS, field: 'domain', values: ['youtube.com'] });
+  });
+
+  it('carries the first terms value back down to a single term', () => {
+    const leaf: DraftTermsRule = { id: 'x', type: RuleType.TERMS, field: 'tags', values: ['tutorial', 'course'] };
+    const result = withLeafType(leaf, RuleType.TERM);
+
+    expect(result).toEqual({ id: 'x', type: RuleType.TERM, field: 'tags', value: 'tutorial' });
+  });
+
+  it('reinterprets the same pattern string switching between regex and wildcard', () => {
+    const leaf: DraftRegexRule = { id: 'x', type: RuleType.REGEX, field: 'url', pattern: '.*watch.*' };
+    const result = withLeafType(leaf, RuleType.WILDCARD);
+
+    expect(result).toEqual({ id: 'x', type: RuleType.WILDCARD, field: 'url', pattern: '.*watch.*' });
+  });
+
+  it('carries a pattern into a term value and back', () => {
+    const leaf: DraftWildcardRule = { id: 'x', type: RuleType.WILDCARD, field: 'title', pattern: '*tutorial*' };
+    const asTerm = withLeafType(leaf, RuleType.TERM);
+    expect(asTerm).toEqual({ id: 'x', type: RuleType.TERM, field: 'title', value: '*tutorial*' });
+    expect(withLeafType(asTerm, RuleType.REGEX)).toEqual({ id: 'x', type: RuleType.REGEX, field: 'title', pattern: '*tutorial*' });
+  });
+
+  it('seeds an empty terms list entry when the source value is empty', () => {
+    const leaf: DraftTermRule = { id: 'x', type: RuleType.TERM, field: 'domain', value: '' };
+    expect(withLeafType(leaf, RuleType.TERMS)).toEqual({ id: 'x', type: RuleType.TERMS, field: 'domain', values: [''] });
+  });
+});
+
+describe('makeDraftNode', () => {
+  it('makes an empty leaf for a leaf type', () => {
+    const result = makeDraftNode(RuleType.TERM);
+    expect(isDraftLeaf(result)).toBe(true);
+    if (isDraftLeaf(result)) {
+      expect(result.type).toBe(RuleType.TERM);
+    }
+  });
+
+  it('makes an empty group for AND/OR/NOT', () => {
+    const result = makeDraftNode(RuleType.NOT);
+    expect(isDraftGroup(result)).toBe(true);
+    if (isDraftGroup(result)) {
+      expect(result.type).toBe(RuleType.NOT);
+      expect(getDraftChildren(result)).toEqual([]);
+    }
   });
 });
 

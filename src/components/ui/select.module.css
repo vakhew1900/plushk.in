@@ -56,6 +56,7 @@
   outline: none;
 }
 .item[data-highlighted] { background: var(--hover); }
+.item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
 
 .checkMark {
   display: inline-flex;
