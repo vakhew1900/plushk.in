@@ -10,10 +10,9 @@ export function useBookmarkSearch() {
   const [statusId, setStatusId] = useState<string | undefined>(undefined);
   const [results, setResults] = useState<BookmarkSearchEntry[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-const [resolvedQuery, setResolvedQuery] = useState<string | null>(null);
+  const [resolvedFiltersKey, setResolvedFiltersKey] = useState<string | null>(null);
 
-
-
+  const filtersKey = JSON.stringify({ query, tagIds, entityTypeId, statusId });
 
   useEffect(() => {
     let cancelled = false;
@@ -22,13 +21,13 @@ const [resolvedQuery, setResolvedQuery] = useState<string | null>(null);
       if (cancelled) return;
       setResults(entries);
       if (!query.trim()) setTotalCount(entries.length);
-      setResolvedQuery(query);
+      setResolvedFiltersKey(filtersKey);
     });
 
     return () => {
       cancelled = true;
     };
-  }, [bookmarkSearchService, query, tagIds, entityTypeId, statusId]);
+  }, [bookmarkSearchService, query, tagIds, entityTypeId, statusId, filtersKey]);
 
   const toggleTagId = (tagId: string) => {
     setTagIds((prev) => (prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]));
@@ -60,6 +59,6 @@ const [resolvedQuery, setResolvedQuery] = useState<string | null>(null);
     resetFilters,
     results,
     totalCount,
-    loading: resolvedQuery !== query
+    loading: resolvedFiltersKey !== filtersKey,
   };
 }
