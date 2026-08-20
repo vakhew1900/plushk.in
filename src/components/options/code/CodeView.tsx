@@ -1,7 +1,9 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { json as jsonLang } from '@codemirror/lang-json';
 import type { ReactNode } from 'react';
-import { dracula } from './codeTheme';
+import { useTheme } from '@/hooks/useTheme';
+import { Theme } from '@/types/theme';
+import { dracula, parchment } from './codeTheme';
 import styles from './CodeView.module.css';
 
 interface Props {
@@ -13,6 +15,8 @@ interface Props {
 }
 
 export function CodeView({ value, filename, editable = true, onChange, footer }: Props) {
+  const { resolvedTheme } = useTheme();
+
   return (
     <div className={styles.wrap}>
       <div className={styles.toolbar}>
@@ -22,7 +26,7 @@ export function CodeView({ value, filename, editable = true, onChange, footer }:
       <CodeMirror
         value={value}
         extensions={[jsonLang()]}
-        theme={dracula}
+        theme={resolvedTheme === Theme.LIGHT ? parchment : dracula}
         editable={editable}
         onChange={onChange}
         minHeight="180px"

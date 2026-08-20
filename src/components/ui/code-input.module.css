@@ -6,7 +6,6 @@
 
 .input :global(.cm-editor) {
   outline: none;
-  background: #1a1a1d;
 }
 
 .input :global(.cm-scroller) {
