@@ -77,5 +77,6 @@ Every backlog/task ID starts with a category tag (see the entry format in `CLAUD
 | `BG` | Service worker (`entrypoints/background.ts`) event handling — `bookmarks.onRemoved`/`onChanged` and cross-cutting cleanup of records in other tables when a bookmark disappears or changes |
 | `AUDIT` | Findings surfaced by scanning existing code for one specific class of issue (missing tests, unsafe `as` casts, missing transactional atomicity, layering violations) — distinct from `ARCH`'s forward-looking, deliberately-chosen architecture decisions. A task belongs here when its own text says it was *discovered* by an audit pass, not designed from a feature requirement. |
 | `DOC` | Public-facing project documentation — a docs site and its content/build pipeline. Distinct from `specs/` (internal task tracking/planning, not user- or contributor-facing) and from `DEV` (dev tooling/process for this repo's own contributors, not published docs). |
+| `NOTE` | User-authored free-text notes attached to a bookmark — distinct from `Tag`/`EntityType` (`SEARCH`/`SHELF`, structured taxonomy) and from `PageMeta.description` (auto-extracted from the page, not user-written). |
 
 More categories are added as new areas of the project need one.

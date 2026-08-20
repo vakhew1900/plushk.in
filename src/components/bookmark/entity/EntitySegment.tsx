@@ -32,12 +32,12 @@ export function EntitySegment({ entityTypes, selectedEntity, onChoose }: Props) 
         >
           {selectedEntity ? (
             <>
-              <PaletteIconDot color={selectedEntity.color} icon={selectedEntity.icon} size="md" />
+              <PaletteIconDot color={selectedEntity.color} icon={selectedEntity.icon} size="sm" />
               {selectedEntity.name}
             </>
           ) : (
             <>
-              <IconPlus size="md" />
+              <IconPlus size="sm" />
               {t('bookmarkEntityControl.addEntity')}
             </>
           )}
