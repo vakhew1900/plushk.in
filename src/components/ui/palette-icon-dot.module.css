@@ -6,6 +6,7 @@
   justify-content: center;
 }
 
+.dot[data-size='sm'] { width: 1.4rem; height: 1.4rem; }
 .dot[data-size='md'] { width: 1.9rem; height: 1.9rem; }
 .dot[data-size='lg'] { width: 2.2rem; height: 2.2rem; }
 
