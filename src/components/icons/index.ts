@@ -33,4 +33,5 @@ export { IconMap }         from './IconMap';
 export { IconShoppingCart } from './IconShoppingCart';
 export { IconGamepad }     from './IconGamepad';
 export { IconLightbulb }   from './IconLightbulb';
+export { IconInfo }        from './IconInfo';
 export { ICON_REGISTRY } from './icon-registry';

@@ -80,7 +80,12 @@ export function PopupSearch() {
               countLabel={countLabel}
               emptyMessage={emptyMessage}
               renderEntry={(entry) => (
-                <CompactBookmarkCard title={entry.title} url={entry.url} onClick={() => openBookmark(entry)} />
+                <CompactBookmarkCard
+                  id={entry.id}
+                  title={entry.title}
+                  url={entry.url}
+                  onClick={() => openBookmark(entry)}
+                />
               )}
             />
           </div>

@@ -15,9 +15,11 @@ interface Props {
   entityTypes: EntityType[];
   selectedEntity: EntityType | undefined;
   onChoose: (entityTypeId: string | undefined) => void;
+  /** Tints the label text with the selected entity's palette color instead of the default neutral text color. */
+  colored?: boolean;
 }
 
-export function EntitySegment({ entityTypes, selectedEntity, onChoose }: Props) {
+export function EntitySegment({ entityTypes, selectedEntity, onChoose, colored = false }: Props) {
   const { translate: t } = useTranslation();
   const handleClick = (e: React.MouseEvent) => e.stopPropagation();
 
@@ -27,6 +29,7 @@ export function EntitySegment({ entityTypes, selectedEntity, onChoose }: Props) 
         <button
           type="button"
           className={styles.segment}
+          data-color={colored && selectedEntity ? selectedEntity.color : undefined}
           onClick={handleClick}
           title={selectedEntity ? t('bookmarkEntityControl.editTooltip') : undefined}
         >

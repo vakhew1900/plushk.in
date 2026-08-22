@@ -162,6 +162,9 @@
     "noEntity": "No category",
     "editTooltip": "Edit"
   },
+  "bookmarkCard": {
+    "detailsTooltip": "URL and folder"
+  },
   "variablesSection": {
     "title": "Variables",
     "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",

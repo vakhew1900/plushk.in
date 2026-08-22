@@ -1,7 +1,6 @@
-import { IconLink } from '@/components/icons';
 import { useBookmarkEntityEditor } from '@/hooks/useBookmarkEntityEditor';
-import { BookmarkFavicon } from './BookmarkFavicon';
-import { BookmarkFolderPath } from './BookmarkFolderPath';
+import { BookmarkDetailsPopover } from './BookmarkDetailsPopover';
+import { BookmarkFavicon, BookmarkFaviconSize } from './BookmarkFavicon';
 import { BookmarkTagList } from './tags/BookmarkTagList';
 import { EntitySegment } from './entity/EntitySegment';
 import { StatusSegment } from './entity/StatusSegment';
@@ -23,37 +22,35 @@ export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
 
   return (
     <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
-      <div className={styles.topRow}>
-        <BookmarkFavicon seed={domain} url={url} />
-        <div className={styles.meta}>
-          <div className={styles.title} title={title}>{title}</div>
-          <div className={styles.domain}>{domain}</div>
+      <BookmarkFavicon seed={domain} url={url} size={BookmarkFaviconSize.WIDE} />
+
+      <div className={styles.content}>
+        <div className={styles.headRow}>
+          <div className={styles.meta}>
+            <div className={styles.title} title={title}>{title}</div>
+            <div className={styles.domain}>{domain}</div>
+          </div>
+          {entityTypes.length > 0 && (
+            <EntitySegment
+              entityTypes={entityTypes}
+              selectedEntity={selectedEntity}
+              onChoose={(entityTypeId) => void chooseEntity(entityTypeId)}
+              colored
+            />
+          )}
         </div>
-        {entityTypes.length > 0 && (
-          <EntitySegment
-            entityTypes={entityTypes}
-            selectedEntity={selectedEntity}
-            onChoose={(entityTypeId) => void chooseEntity(entityTypeId)}
-          />
-        )}
-      </div>
 
-      <BookmarkFolderPath segments={folderPath} />
-
-      <div className={styles.urlRow}>
-        <IconLink size="sm" className={styles.urlIcon} />
-        <span className={styles.url}>{url.replace(/^https?:\/\//, '')}</span>
-      </div>
-
-      <div className={styles.bottomRow}>
-        <BookmarkTagList bookmarkId={id} />
-        {showStatus && (
-          <StatusSegment
-            statuses={statuses}
-            selectedStatus={selectedStatus}
-            onChoose={(statusId) => void chooseStatus(statusId)}
-          />
-        )}
+        <div className={styles.footRow}>
+          <BookmarkTagList bookmarkId={id} />
+          {showStatus && (
+            <StatusSegment
+              statuses={statuses}
+              selectedStatus={selectedStatus}
+              onChoose={(statusId) => void chooseStatus(statusId)}
+            />
+          )}
+          <BookmarkDetailsPopover folderPath={folderPath} url={url} />
+        </div>
       </div>
     </div>
   );

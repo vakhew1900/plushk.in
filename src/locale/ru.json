@@ -162,6 +162,9 @@
     "noEntity": "Без категории",
     "editTooltip": "Редактировать"
   },
+  "bookmarkCard": {
+    "detailsTooltip": "URL и папка"
+  },
   "variablesSection": {
     "title": "Переменные",
     "desc": "Поля-псевдонимы для путей по HTML-дереву страницы. Используются в правилах и при экспорте.",
