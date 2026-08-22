@@ -13,3 +13,12 @@
   white-space: nowrap;
 }
 .segment:hover { background: var(--hover); }
+
+.segment[data-color='red']    { color: var(--palette-red); }
+.segment[data-color='orange'] { color: var(--palette-orange); }
+.segment[data-color='yellow'] { color: var(--palette-yellow); }
+.segment[data-color='green']  { color: var(--palette-green); }
+.segment[data-color='teal']   { color: var(--palette-teal); }
+.segment[data-color='blue']   { color: var(--palette-blue); }
+.segment[data-color='purple'] { color: var(--palette-purple); }
+.segment[data-color='pink']   { color: var(--palette-pink); }

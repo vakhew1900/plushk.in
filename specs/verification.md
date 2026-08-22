@@ -6,6 +6,9 @@ Manual correctness checklist — things to verify by hand in the running extensi
 
 - [ ] Favicon display in search results: real site icon shown on Chrome (via the `_favicon` endpoint, `src/lib/browser-constants/faviconUrl.ts`); letter fallback shown on Firefox (no native favicon API available — see `FaviconUrl.FIREFOX`) and on Chrome whenever a site truly has no icon.
 - [ ] `SEARCH-3` new "Tags" sidebar tab: create a tag, rename it, change its color via the swatch picker (selected swatch shows the text-colored border), delete it — list updates immediately and survives an options-page reload (Dexie `tags` table, `db.version(2)`). Check both themes: all 8 palette colors stay legible against `--bg3` in dark and light.
+- [ ] `SEARCH-9` Library tab `BookmarkCard`: wide favicon fills the full card height on the left (letter fallback or real favicon, just bigger — no behavior change); category badge (top-right) now tints its label text with the category's palette color, not just the dot; clicking the new info icon (bottom-right of the tags/status row) opens a popover with the folder path and full URL, and the card itself doesn't navigate when that icon or popover is clicked.
+- [ ] `SEARCH-9` popup "Поиск" tab `CompactBookmarkCard`: favicon is noticeably smaller than the Library card's; category (colored, same as above) and tags show under the title, but are read-only — clicking them does nothing (no dropdown/popover opens, no `EntitySegment`/`TagPicker`); no status pill and no full URL row; a bookmark with no category and no tags shows no second row at all.
+- [ ] `SEARCH-9` both cards, long folder path or long URL in the info popover: popover content wraps/scrolls instead of overflowing the popup/options window.
 
 ## RULE
 
