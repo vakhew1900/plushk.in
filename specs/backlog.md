@@ -83,12 +83,6 @@ Tasks not yet started. When work begins on one, move it to `tasks.md`.
 - `src/services/FileService.ts` (сервисный класс) не имеет теста в `src/services/__tests__/`, хотя CLAUDE.md требует юнит-тесты для сервисов. Вероятно, пропустили из-за DOM-специфики (`Blob`/`URL.createObjectURL`/`<a download>`), но именно ради мокируемости такого рода кода и существует интерфейс `IFileService`.
 - `src/lib/utils.ts` (`cn()` — обёртка над clsx) и `src/lib/browser-constants/bookmarkRoots.ts` не имеют тестов — оба тривиальны и низкой ценности, но отмечены для полноты.
 
-### RULE-8 — Токенизация `targetFolder`: `$$field$$`-подстановки из `PageMeta` + служебные токены
-**Priority:** Medium
-**Added:** 2026-07-24
-
-Сейчас `BookmarkRule.targetFolder` — литеральная `/`-строка, используемая как есть (`BookmarkRepository.resolveFolderPath`/`splitFolderPath`/`findOrCreateFolder`). Добавить поддержку токенов вида `$$year$$/$$alias$$/test`: любое поле `PageMeta` (включая `extras.*` — тем же именем, каким оно уже используется в DSL, без префикса `extras.`, через `getMetaField`), плюс служебные токены `$$year$$`/`$$month$$`/`$$day$$`/`$$date$$` (текущая дата на момент резолвинга, не `publishedAt` страницы) и `$$alias$$` (после `RULE-9` — обычное поле `PageMeta.alias`, с одним исключением из общего правила фолбэка: если `alias` не заполнен, подставляется `meta.domain`, а не пустая строка). Глубокая спецификация: `specs/tasks/RULE-8-target-folder-tokens/`.
-
 ### AUDIT-3 — Недостающие юнит-тесты для репозиториев
 **Priority:** Low
 **Added:** 2026-07-29
