@@ -6,13 +6,6 @@
 }
 .row:not(:last-child) { border-bottom: 1px solid var(--border); }
 
-/* `Input`'s shared style sets an explicit `height: 36px` (`input.module.css`)
-   for standalone bordered fields. `.domainInput` below composes that same
-   class but only overrides `border`/`background`/`padding` — never
-   `height` — so the 36px survives onto the value chip too: measured, the
-   actual rendered chip is 42px (36px input + `.domainChip`'s own 2px
-   padding + 1px border, top and bottom), not the ~22px it looks like from
-   its padding alone. Matching *this* field to that. */
 .nameInput {
   font-family: var(--font-mono);
   font-size: 12.5px;

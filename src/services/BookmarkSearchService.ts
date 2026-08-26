@@ -17,10 +17,14 @@ export class BookmarkSearchService implements IBookmarkSearchService {
     const needle = query.trim().toLowerCase();
     const textMatched = needle ? entries.filter((entry) => this.matches(entry, needle)) : entries;
 
-    const idFilter = await this.resolveIdFilter(filters);
-    if (idFilter === null) return textMatched;
+    const folderMatched = filters?.folderPath
+      ? textMatched.filter((entry) => this.matchesFolder(entry.folderPath, filters.folderPath!))
+      : textMatched;
 
-    return textMatched.filter((entry) => idFilter.has(entry.id));
+    const idFilter = await this.resolveIdFilter(filters);
+    if (idFilter === null) return folderMatched;
+
+    return folderMatched.filter((entry) => idFilter.has(entry.id));
   }
 
   private async resolveIdFilter(filters?: BookmarkSearchFilters): Promise<Set<string> | null> {
@@ -44,6 +48,20 @@ export class BookmarkSearchService implements IBookmarkSearchService {
 
     if (facetSets.length === 0) return null;
     return facetSets.reduce((a, b) => new Set([...a].filter((id) => b.has(id))));
+  }
+
+  // `entry.folderPath` is container-prefixed (root-most segment is the fixed
+  // container's own title — see BookmarkSearchEntry's doc comment), while
+  // `filterPath` comes from FolderNode.path, which is container-agnostic
+  // (BookmarkRepository.parseFolderTree resets it under fixed containers, the
+  // same convention BookmarkRule.targetFolder is written in). Drop the
+  // leading container segment before comparing the two, then match `filterPath`
+  // as a prefix of what's left — recursive, so subfolders match too.
+  private matchesFolder(folderPath: string[], filterPath: string): boolean {
+    const filterSegments = filterPath.split('/').filter(Boolean);
+    const relativePath = folderPath.slice(1);
+    if (filterSegments.length > relativePath.length) return false;
+    return filterSegments.every((segment, i) => relativePath[i] === segment);
   }
 
   private matches(entry: BookmarkSearchEntry, needle: string): boolean {

@@ -116,6 +116,10 @@
       "anyCategory": "Любая категория",
       "statusLabel": "Статус",
       "anyStatus": "Любой статус",
+      "folderLabel": "Папка",
+      "folderClear": "Сбросить фильтр по папке",
+      "folderSearchPlaceholder": "Поиск папки…",
+      "folderNoMatches": "Ничего не найдено",
       "resetAll": "Сбросить всё"
     }
   },

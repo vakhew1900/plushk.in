@@ -116,6 +116,10 @@
       "anyCategory": "Any category",
       "statusLabel": "Status",
       "anyStatus": "Any status",
+      "folderLabel": "Folder",
+      "folderClear": "Clear folder filter",
+      "folderSearchPlaceholder": "Search folder…",
+      "folderNoMatches": "No matches",
       "resetAll": "Reset all"
     }
   },

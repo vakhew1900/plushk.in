@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { IconFolder, IconArrowRight } from '@/components/icons';
 import { debugLog } from '@/lib/debug-log';
 import { useFolderTree } from '@/hooks/useFolderTree';
-import { collectAncestorIds, resolveToolbarPath, withPendingPath } from '@/lib/folder-tree';
+import { collectAllNodeIds, collectAncestorIds, resolveToolbarPath, withPendingPath } from '@/lib/folder-tree';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { FolderNode } from '@/types/folder-node';
 import clsx from 'clsx';
@@ -75,10 +75,15 @@ function FolderTreeNode({ node, selectedPath, expandedIds, onToggle, onSelect }:
 interface FolderTreeProps {
   selectedPath: string;
   onSelect: (path: string) => void;
+  /** Overrides the live tree fetched via `useFolderTree()` — e.g. `FolderTreeSearch` passing an already-filtered tree. */
+  tree?: FolderNode[];
+  /** Expands every node currently in `tree` — e.g. `FolderTreeSearch` while a search query prunes the tree down to matches. */
+  forceExpandAll?: boolean;
 }
 
-export function FolderTree({ selectedPath, onSelect }: FolderTreeProps) {
-  const tree = useFolderTree();
+export function FolderTree({ selectedPath, onSelect, tree: treeOverride, forceExpandAll = false }: FolderTreeProps) {
+  const fetchedTree = useFolderTree();
+  const tree = treeOverride ?? fetchedTree;
   const containerRef = useRef<HTMLDivElement>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set());
 
@@ -119,6 +124,31 @@ export function FolderTree({ selectedPath, onSelect }: FolderTreeProps) {
       return changed ? next : prev;
     });
   }, [tree]);
+
+  // A pruned/filtered tree (FolderTreeSearch mid-search) only has as much
+  // depth as its matches — collapsed caret state left over from before the
+  // search would hide the very nodes the search just narrowed down to.
+  // Force every node currently in the tree open instead of just the
+  // ancestors of one selected path (the effect below).
+  useEffect(() => {
+    if (!forceExpandAll) return;
+    const allIds = collectAllNodeIds(tree);
+    if (allIds.size === 0) return;
+
+    // Same add-only merge as the effect above — see its comment.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      let changed = false;
+      for (const id of allIds) {
+        if (!next.has(id)) {
+          next.add(id);
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [tree, forceExpandAll]);
 
   // Reveal the full path to whatever is selected/suggested — a folder buried
   // three levels deep is useless to confirm if the tree never opens far

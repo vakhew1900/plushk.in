@@ -20,10 +20,11 @@ export function LibraryTab() {
     setEntityTypeId,
     statusId,
     setStatusId,
+    folderPath,
+    setFolderPath,
     resetFilters,
     results,
     totalCount,
-    loading,
   } = useBookmarkSearch();
 
   const countLabel = query.trim()
@@ -50,26 +51,26 @@ export function LibraryTab() {
           setEntityTypeId={setEntityTypeId}
           statusId={statusId}
           setStatusId={setStatusId}
+          folderPath={folderPath}
+          setFolderPath={setFolderPath}
           resetFilters={resetFilters}
         />
       </div>
 
-      {!loading && (
-        <SearchResultsList
-          entries={results}
-          countLabel={countLabel}
-          emptyMessage={emptyMessage}
-          renderEntry={(entry) => (
-            <BookmarkCard
-              id={entry.id}
-              title={entry.title}
-              url={entry.url}
-              folderPath={entry.folderPath}
-              onClick={() => openBookmark(entry)}
-            />
-          )}
-        />
-      )}
+      <SearchResultsList
+        entries={results}
+        countLabel={countLabel}
+        emptyMessage={emptyMessage}
+        renderEntry={(entry) => (
+          <BookmarkCard
+            id={entry.id}
+            title={entry.title}
+            url={entry.url}
+            folderPath={entry.folderPath}
+            onClick={() => openBookmark(entry)}
+          />
+        )}
+      />
     </div>
   );
 }
