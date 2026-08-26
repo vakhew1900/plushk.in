@@ -165,6 +165,17 @@
   "bookmarkCard": {
     "detailsTooltip": "URL and folder"
   },
+  "bookmarkSettings": {
+    "triggerTooltip": "Bookmark settings",
+    "tabSettings": "Settings",
+    "tabNotes": "Notes",
+    "editIcon": "Edit",
+    "iconLabel": "Icon",
+    "iconPlaceholder": "https://…/icon.png",
+    "categoryLabel": "Category",
+    "statusLabel": "Status",
+    "tagsLabel": "Tags"
+  },
   "variablesSection": {
     "title": "Variables",
     "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",

@@ -4,6 +4,7 @@ import { BookmarkFavicon, BookmarkFaviconSize } from './BookmarkFavicon';
 import { BookmarkTagList } from './tags/BookmarkTagList';
 import { EntitySegment } from './entity/EntitySegment';
 import { StatusSegment } from './entity/StatusSegment';
+import { BookmarkSettingsPopover } from './settings/BookmarkSettingsPopover';
 import styles from './BookmarkCard.module.css';
 
 interface Props {
@@ -52,6 +53,8 @@ export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
           <BookmarkDetailsPopover folderPath={folderPath} url={url} />
         </div>
       </div>
+
+      <BookmarkSettingsPopover bookmarkId={id} url={url} seed={domain} />
     </div>
   );
 }

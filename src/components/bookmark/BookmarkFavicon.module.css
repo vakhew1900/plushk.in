@@ -25,6 +25,13 @@
   font-size: 1.5rem;
 }
 
+.favicon[data-size='xl'] {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 1rem;
+  font-size: 2rem;
+}
+
 .red    { background: var(--red-soft);    color: var(--red); }
 .blue   { background: var(--blue-soft);   color: var(--blue); }
 .green  { background: var(--green-soft);  color: var(--green); }
@@ -38,3 +45,4 @@
 
 .favicon[data-size='sm'] .icon { width: 0.75rem; height: 0.75rem; }
 .favicon[data-size='wide'] .icon { width: 1.875rem; height: 1.875rem; }
+.favicon[data-size='xl'] .icon { width: 3.5rem; height: 3.5rem; }

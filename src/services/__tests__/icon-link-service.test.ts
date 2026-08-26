@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PageMeta } from '../../types/page-meta';
 import { IconRuleBindingType, IconSourceType, type IconRule } from '../../types/icon-rule';
 import type { IconBookmark } from '../../types/icon-bookmark';
-import type { IIconRuleRepository } from '../../repository/interfaces/IIconRuleRepository';
 import type { IIconBookmarkRepository } from '../../repository/interfaces/IIconBookmarkRepository';
+import { FakeIconRuleRepository } from '../../repository/__tests__/fakes/FakeIconRuleRepository';
 import type { IIconExtrasService } from '../interfaces/IIconExtrasService';
 import { IconLinkService } from '../IconLinkService';
 
@@ -11,14 +11,6 @@ const resolveFaviconUrlMock = vi.hoisted(() => vi.fn());
 vi.mock('../../lib/browser-constants/faviconUrl', () => ({
   resolveFaviconUrl: resolveFaviconUrlMock,
 }));
-
-class FakeIconRuleRepository implements IIconRuleRepository {
-  constructor(public rules: IconRule[] = []) {}
-  async getAll(): Promise<IconRule[]> { return this.rules; }
-  async getById(id: string): Promise<IconRule | undefined> { return this.rules.find((r) => r.id === id); }
-  async save(rule: IconRule): Promise<void> { this.rules = [...this.rules.filter((r) => r.id !== rule.id), rule]; }
-  async remove(id: string): Promise<void> { this.rules = this.rules.filter((r) => r.id !== id); }
-}
 
 class FakeIconBookmarkRepository implements IIconBookmarkRepository {
   constructor(public rows: IconBookmark[] = []) {}

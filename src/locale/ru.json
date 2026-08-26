@@ -165,6 +165,17 @@
   "bookmarkCard": {
     "detailsTooltip": "URL и папка"
   },
+  "bookmarkSettings": {
+    "triggerTooltip": "Настройки закладки",
+    "tabSettings": "Настройки",
+    "tabNotes": "Заметки",
+    "editIcon": "Изменить",
+    "iconLabel": "Иконка",
+    "iconPlaceholder": "https://…/icon.png",
+    "categoryLabel": "Категория",
+    "statusLabel": "Статус",
+    "tagsLabel": "Теги"
+  },
   "variablesSection": {
     "title": "Переменные",
     "desc": "Поля-псевдонимы для путей по HTML-дереву страницы. Используются в правилах и при экспорте.",

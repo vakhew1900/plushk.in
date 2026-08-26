@@ -6,6 +6,7 @@ import type { IDomainAliasRepository } from '../repository/interfaces/IDomainAli
 import type { IPageMatchGroupRepository } from '../repository/interfaces/IPageMatchGroupRepository';
 import type { ITagRepository } from '../repository/interfaces/ITagRepository';
 import type { IEntityTypeRepository } from '../repository/interfaces/IEntityTypeRepository';
+import type { IIconRuleRepository } from '../repository/interfaces/IIconRuleRepository';
 import { MimeType } from './interfaces/IFileService';
 import type { IFileService } from './interfaces/IFileService';
 import type { ISettingsExportImportService } from './interfaces/ISettingsExportImportService';
@@ -17,6 +18,7 @@ export class SettingsExportImportService implements ISettingsExportImportService
     private readonly pageMatchGroupRepository: IPageMatchGroupRepository,
     private readonly tagRepository: ITagRepository,
     private readonly entityTypeRepository: IEntityTypeRepository,
+    private readonly iconRuleRepository: IIconRuleRepository,
     private readonly fileService: IFileService,
   ) {}
 
@@ -26,12 +28,13 @@ export class SettingsExportImportService implements ISettingsExportImportService
   }
 
   private async buildExportData(): Promise<SettingsExport> {
-    const [rules, domainAliases, pageMatchGroups, tags, entityTypes] = await Promise.all([
+    const [rules, domainAliases, pageMatchGroups, tags, entityTypes, iconRules] = await Promise.all([
       this.bookmarkRuleRepository.getAll(),
       this.domainAliasRepository.getAll(),
       this.pageMatchGroupRepository.getAll(),
       this.tagRepository.getAll(),
       this.entityTypeRepository.getAll(),
+      this.iconRuleRepository.getAll(),
     ]);
 
     return {
@@ -42,6 +45,7 @@ export class SettingsExportImportService implements ISettingsExportImportService
       pageMatchGroups: pageMatchGroups.map(toExportPageMatchGroup),
       tags,
       entityTypes,
+      iconRules,
     };
   }
 
@@ -63,6 +67,7 @@ export class SettingsExportImportService implements ISettingsExportImportService
       ),
       ...(data.tags ?? []).map((tag) => this.tagRepository.save(tag)),
       ...(data.entityTypes ?? []).map((entityType) => this.entityTypeRepository.save(entityType)),
+      ...(data.iconRules ?? []).map((iconRule) => this.iconRuleRepository.save(iconRule)),
     ]);
   }
 }

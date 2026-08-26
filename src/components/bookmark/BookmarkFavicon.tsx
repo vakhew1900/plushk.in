@@ -13,7 +13,7 @@ function colorForSeed(seed: string): ColorVariant {
   return COLOR_VARIANTS[hash % COLOR_VARIANTS.length];
 }
 
-export const BookmarkFaviconSize = { SM: 'sm', MD: 'md', WIDE: 'wide' } as const;
+export const BookmarkFaviconSize = { SM: 'sm', MD: 'md', WIDE: 'wide', XL: 'xl' } as const;
 export type BookmarkFaviconSize = (typeof BookmarkFaviconSize)[keyof typeof BookmarkFaviconSize];
 
 interface Props {

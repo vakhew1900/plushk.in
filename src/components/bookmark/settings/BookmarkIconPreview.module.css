@@ -1,0 +1,16 @@
+.wrap {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4375rem;
+}
+
+.editLink {
+  font-size: 0.6875rem;
+  color: var(--accent);
+  cursor: pointer;
+}
+.editLink:hover {
+  text-decoration: underline;
+}

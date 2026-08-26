@@ -127,6 +127,7 @@ export function ServicesProvider({ children }: Props) {
         pageMatchGroupRepository,
         tagRepository,
         entityTypeRepository,
+        iconRuleRepository,
         fileService,
       ),
       bookmarkSearchService: new BookmarkSearchService(

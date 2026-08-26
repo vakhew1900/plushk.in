@@ -35,6 +35,14 @@ Manual correctness checklist — things to verify by hand in the running extensi
 - [ ] `RULE-13` add an `alias`-type rule bound to an existing `DomainAlias`, then delete that alias from the Aliases section: the icon rule disappears from the Иконки section too, without a manual page refresh (cascade, mirrors `RULE-12`'s alias→group cascade).
 - [ ] `RULE-13` Library tab `BookmarkCard`: a bookmark saved with a resolved/overridden icon shows that icon (not the default favicon/letter) after a full options-page reload — confirms `IconBookmark` is actually read back, not just held in popup-session state.
 - [ ] `RULE-13` delete a bookmark that has a custom icon (native delete or a future manager, whichever is available) and re-save the exact same URL fresh: no stale icon reappears — confirms `IconBookmark` cleanup on `bookmarks.onRemoved` (`BookmarkService.removeAllLinksForBookmark`) actually fired.
+- [ ] `UI-15` Library tab `BookmarkCard`: a thin gear rail with a vertical divider line shows on the right edge of every card, separate from the existing tags/status/info-icon row; clicking it opens a settings popover without also opening the bookmark (no navigation, no card-click side effect).
+- [ ] `UI-15` settings popover: left icon-only tab rail shows two tabs — "Настройки" highlighted/active with an accent indicator bar, "Заметки" visibly muted; clicking "Заметки" does nothing (no content change, "Настройки" stays shown).
+- [ ] `UI-15` settings popover: large (~80px) icon preview on the left matches whatever the card itself currently shows (rule-matched icon, manual override, or plain favicon/letter) — not a different/stale image.
+- [ ] `UI-15` click "Изменить" under the big icon: focus moves to the icon-link text field below (no popover-in-popover, no page scroll jump).
+- [ ] `UI-15` type a custom icon URL into the settings popover's icon field, then click elsewhere (blur) or press Enter: the card's icon updates immediately (same tab, no reload) to the typed URL, and outlives closing/reopening the popover.
+- [ ] `UI-15` clear that same field back to empty and blur: the card's icon reverts to whatever `IconRule`/favicon would show without an override — not a blank/broken image.
+- [ ] `UI-15` category/status segmented controls and tags inside the settings popover: changing them there updates the same card's inline `EntitySegment`/`StatusSegment`/tag chips immediately, and vice versa (edit inline, reopen the popover — it reflects the change) — confirms both surfaces share the same underlying hooks, not two independent copies.
+- [ ] `UI-15` popup "Поиск" tab `CompactBookmarkCard`: no gear icon appears there — unchanged from `SEARCH-9`.
 
 ## UI
 

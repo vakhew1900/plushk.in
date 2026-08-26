@@ -152,3 +152,14 @@ Tasks currently in progress. Moved here from `backlog.md` when work starts.
 
 Зависит от `RULE-13` (таблица `IconBookmark`). Полная спецификация — `specs/tasks/UI-15-bookmark-settings-popover/`.
 
+**Реализовано:**
+- Новый кластер `src/components/bookmark/settings/`: `BookmarkSettingsPopover` (шестерёнка + рельс с `border-left`-разделителем, `Popover` по образцу `BookmarkDetailsPopover`, `stopPropagation`), `BookmarkSettingsPanel` (композиция всего попапа), `SettingsTabRail` (icon-only рельс вкладок, «Настройки» активна/«Заметки» приглушена и неинтерактивна — задел под `NOTE-1`), `BookmarkIconPreview` (крупная иконка + текстовая ссылка «Изменить», фокусирует поле ссылки).
+- `BookmarkFavicon` получил новый размер `BookmarkFaviconSize.XL` (5rem/80px, скруглённый квадрат) — переиспользован для крупного превью в попапе вместо отдельного блока.
+- Новые иконки `IconSettings`/`IconNotebook` (`components/icons/`, тонкие обёртки над `lucide-react`, по конвенции `UI-8`).
+- Новый хук `useIconBookmarkOverride(bookmarkId)` — прямое чтение/запись `IconBookmark.iconUrl` (immediate-write по blur/Enter поля, как и остальные поля попапа; пустая строка удаляет запись, а не сохраняет пустой override).
+- Категория/статус/теги в попапе — переиспользуют те же хуки/компоненты, что и инлайн на карточке (`useBookmarkEntityEditor`, `BookmarkTagList`) — не дублируют логику, изменения видны в обоих местах одновременно.
+- `BookmarkCard.tsx` — новая шестерёнка добавлена аддитивно (сиблинг к существующему контенту), `CompactBookmarkCard` не тронут.
+- `npm run compile`/`npm run lint`/`npm test` (263/263) и `npm run build` — чисто.
+
+**Не проверено в этой итерации:** визуально в запущенном расширении (нет браузерного тулинга в этой сессии) — чек-лист нужно добавить в `specs/verification.md` и прогнать через `npm run dev:firefox` перед переносом в `changelog.md`. Канбан-доска в Obsidian тоже не обновлена в этот раз — MCP-сервер `obsidian` отключился в ходе сессии.
+

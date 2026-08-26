@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "exportedAt": "2026-08-26T00:00:00.000Z",
+  "rules": [
+    {
+      "id": "test-comics-marvel-fandom",
+      "name": "Marvel Fandom Wiki",
+      "desc": "Простое доменное правило на marvel.fandom.com — вики-статьи об отдельных выпусках комиксов Marvel (например https://marvel.fandom.com/ru/wiki/Ultimate_Spider-Man_Vol_1_½). Демонстрирует связку правило → теги/категория (SEARCH-6) наравне с новым IconRule ниже, который берёт обложку выпуска с той же страницы через xpath.",
+      "condition": { "type": "term", "field": "domain", "value": "marvel.fandom.com" },
+      "targetFolder": "Comics/Marvel",
+      "tagIds": ["test-tag-marvel", "test-tag-comics"],
+      "entityTypeId": "test-entity-comic",
+      "priority": 10,
+      "enabled": true
+    }
+  ],
+  "domainAliases": [
+    {
+      "id": "test-alias-marvel-fandom",
+      "name": "Marvel Fandom",
+      "domain_names": ["marvel.fandom.com"]
+    }
+  ],
+  "pageMatchGroups": [],
+  "tags": [
+    { "id": "test-tag-marvel", "name": "marvel", "color": "red" },
+    { "id": "test-tag-comics", "name": "comics", "color": "orange" }
+  ],
+  "entityTypes": [
+    { "id": "test-entity-comic", "name": "Комикс", "color": "purple" }
+  ],
+  "iconRules": [
+    {
+      "id": "test-icon-marvel-fandom-cover",
+      "name": "Marvel Fandom — обложка выпуска",
+      "bindingType": "domain",
+      "bindingValue": "marvel.fandom.com",
+      "source": {
+        "type": "xpath",
+        "value": "//*[@id=\"mw-content-text\"]/div/aside/section[1]/figure/a/img"
+      },
+      "enabled": true
+    }
+  ]
+}
