@@ -9,6 +9,8 @@ const entries: BookmarkSearchEntry[] = [
   { id: 'bm-1', title: 'r/webdev — Show your project', url: 'https://reddit.com/r/webdev', folderPath: ['Bookmarks bar', 'Social'] },
   { id: 'bm-2', title: 'Habr article', url: 'https://habr.com/ru/articles/1', folderPath: ['Bookmarks bar', 'Reading'] },
   { id: 'bm-3', title: 'Dribbble shots', url: 'https://dribbble.com/shots/1', folderPath: ['Bookmarks bar', 'Inspiration'] },
+  { id: 'bm-4', title: 'r/frontend deep dive', url: 'https://reddit.com/r/frontend', folderPath: ['Bookmarks bar', 'Social', 'Reddit'] },
+  { id: 'bm-5', title: 'Unrelated folder with a similar name', url: 'https://example.com', folderPath: ['Bookmarks bar', 'Social2'] },
 ];
 
 function fakeRepository(): IBookmarkRepository {
@@ -154,5 +156,46 @@ describe('BookmarkSearchService.search', () => {
     const results = await service.search('habr', { tagIds: ['t-it'], entityTypeId: undefined, statusId: undefined });
 
     expect(results).toEqual([entries[1]]);
+  });
+
+  it('filters by folder path recursively, including subfolders', async () => {
+    const service = buildService();
+
+    const results = await service.search('', {
+      tagIds: [],
+      entityTypeId: undefined,
+      statusId: undefined,
+      folderPath: 'Social',
+    });
+
+    expect(results).toEqual([entries[0], entries[3]]);
+  });
+
+  it('does not match a folder that only shares a name prefix', async () => {
+    const service = buildService();
+
+    const results = await service.search('', {
+      tagIds: [],
+      entityTypeId: undefined,
+      statusId: undefined,
+      folderPath: 'Social',
+    });
+
+    expect(results).not.toContainEqual(entries[4]);
+  });
+
+  it('combines a folder filter with a tag filter (AND)', async () => {
+    const service = buildService({
+      getBookmarkIdsByTagIds: async () => ['bm-1'],
+    });
+
+    const results = await service.search('', {
+      tagIds: ['t-web'],
+      entityTypeId: undefined,
+      statusId: undefined,
+      folderPath: 'Social',
+    });
+
+    expect(results).toEqual([entries[0]]);
   });
 });

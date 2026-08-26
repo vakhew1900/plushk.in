@@ -67,6 +67,44 @@ function replaceNode(nodes: FolderNode[], id: string, update: (node: FolderNode)
   });
 }
 
+/** Every node id in `tree`, at any depth — used to force a pruned/filtered tree fully open. */
+export function collectAllNodeIds(tree: FolderNode[]): Set<string> {
+  const ids = new Set<string>();
+
+  function walk(nodes: FolderNode[]): void {
+    for (const node of nodes) {
+      ids.add(node.id);
+      walk(node.children);
+    }
+  }
+
+  walk(tree);
+  return ids;
+}
+
+/**
+ * Prunes `tree` down to nodes whose title contains `query` (case-insensitive
+ * substring), plus every ancestor needed to reach them — a sibling subtree
+ * with no match anywhere in it is dropped entirely. An empty/whitespace-only
+ * query returns `tree` unchanged (same reference, no-op).
+ */
+export function filterFolderTree(tree: FolderNode[], query: string): FolderNode[] {
+  const needle = query.trim().toLowerCase();
+  if (!needle) return tree;
+
+  function filterLevel(nodes: FolderNode[]): FolderNode[] {
+    const kept: FolderNode[] = [];
+    for (const node of nodes) {
+      const children = filterLevel(node.children);
+      const selfMatches = node.title.toLowerCase().includes(needle);
+      if (selfMatches || children.length > 0) kept.push({ ...node, children });
+    }
+    return kept;
+  }
+
+  return filterLevel(tree);
+}
+
 /**
  * A rule's/default folder's `targetFolder` can point at a path that doesn't
  * exist in the live bookmark tree yet (`BookmarkRepository` creates missing

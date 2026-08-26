@@ -2,32 +2,41 @@ import { useEffect, useState } from 'react';
 import { useServices } from '@/hooks/useServices';
 import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
 
+const QUERY_DEBOUNCE_MS = 200;
+
 export function useBookmarkSearch() {
   const { bookmarkSearchService } = useServices();
   const [query, setQuery] = useState('');
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [entityTypeId, setEntityTypeIdState] = useState<string | undefined>(undefined);
   const [statusId, setStatusId] = useState<string | undefined>(undefined);
+  const [folderPath, setFolderPath] = useState<string | undefined>(undefined);
   const [results, setResults] = useState<BookmarkSearchEntry[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [resolvedFiltersKey, setResolvedFiltersKey] = useState<string | null>(null);
 
-  const filtersKey = JSON.stringify({ query, tagIds, entityTypeId, statusId });
+  // The input itself stays instant (bound directly to `query`) — only the
+  // actual re-scan (`IBookmarkRepository.listAll()` + filtering) and the
+  // resulting re-render lag behind by a beat, so fast typing doesn't
+  // re-search and reflow the results list on every single keystroke.
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedQuery(query), QUERY_DEBOUNCE_MS);
+    return () => clearTimeout(timeout);
+  }, [query]);
 
   useEffect(() => {
     let cancelled = false;
 
-    void bookmarkSearchService.search(query, { tagIds, entityTypeId, statusId }).then((entries) => {
+    void bookmarkSearchService.search(debouncedQuery, { tagIds, entityTypeId, statusId, folderPath }).then((entries) => {
       if (cancelled) return;
       setResults(entries);
-      if (!query.trim()) setTotalCount(entries.length);
-      setResolvedFiltersKey(filtersKey);
+      if (!debouncedQuery.trim()) setTotalCount(entries.length);
     });
 
     return () => {
       cancelled = true;
     };
-  }, [bookmarkSearchService, query, tagIds, entityTypeId, statusId, filtersKey]);
+  }, [bookmarkSearchService, debouncedQuery, tagIds, entityTypeId, statusId, folderPath]);
 
   const toggleTagId = (tagId: string) => {
     setTagIds((prev) => (prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]));
@@ -45,6 +54,7 @@ export function useBookmarkSearch() {
     setTagIds([]);
     setEntityTypeIdState(undefined);
     setStatusId(undefined);
+    setFolderPath(undefined);
   };
 
   return {
@@ -56,9 +66,10 @@ export function useBookmarkSearch() {
     setEntityTypeId,
     statusId,
     setStatusId,
+    folderPath,
+    setFolderPath,
     resetFilters,
     results,
     totalCount,
-    loading: resolvedFiltersKey !== filtersKey,
   };
 }

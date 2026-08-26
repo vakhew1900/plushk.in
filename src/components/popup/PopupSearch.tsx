@@ -22,13 +22,15 @@ export function PopupSearch() {
     setEntityTypeId,
     statusId,
     setStatusId,
+    folderPath,
+    setFolderPath,
     resetFilters,
     results,
     totalCount,
-    loading,
   } = useBookmarkSearch();
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const activeFilterCount = tagIds.length + (entityTypeId ? 1 : 0) + (statusId ? 1 : 0);
+  const activeFilterCount =
+    tagIds.length + (entityTypeId ? 1 : 0) + (statusId ? 1 : 0) + (folderPath ? 1 : 0);
 
   const countLabel = query.trim()
     ? t('searchTab.foundCount', { count: results.length })
@@ -68,28 +70,28 @@ export function PopupSearch() {
               setEntityTypeId={setEntityTypeId}
               statusId={statusId}
               setStatusId={setStatusId}
+              folderPath={folderPath}
+              setFolderPath={setFolderPath}
               resetFilters={resetFilters}
             />
           </div>
         )}
 
-        {!loading && (
-          <div className={styles.resultsScroll}>
-            <SearchResultsList
-              entries={results}
-              countLabel={countLabel}
-              emptyMessage={emptyMessage}
-              renderEntry={(entry) => (
-                <CompactBookmarkCard
-                  id={entry.id}
-                  title={entry.title}
-                  url={entry.url}
-                  onClick={() => openBookmark(entry)}
-                />
-              )}
-            />
-          </div>
-        )}
+        <div className={styles.resultsScroll}>
+          <SearchResultsList
+            entries={results}
+            countLabel={countLabel}
+            emptyMessage={emptyMessage}
+            renderEntry={(entry) => (
+              <CompactBookmarkCard
+                id={entry.id}
+                title={entry.title}
+                url={entry.url}
+                onClick={() => openBookmark(entry)}
+              />
+            )}
+          />
+        </div>
       </div>
     </div>
   );

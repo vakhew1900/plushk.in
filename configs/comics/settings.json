@@ -36,8 +36,8 @@
       "bindingType": "domain",
       "bindingValue": "marvel.fandom.com",
       "source": {
-        "type": "xpath",
-        "value": "//*[@id=\"mw-content-text\"]/div/aside/section[1]/figure/a/img"
+        "type": "css",
+        "value": ".pi-image-thumbnail"
       },
       "enabled": true
     }
