@@ -38,6 +38,9 @@ Manual correctness checklist — things to verify by hand in the running extensi
 - [ ] `UI-15` Library tab `BookmarkCard`: a thin gear rail with a vertical divider line shows on the right edge of every card, separate from the existing tags/status/info-icon row; clicking it opens a settings popover without also opening the bookmark (no navigation, no card-click side effect).
 - [ ] `UI-15` settings popover: left icon-only tab rail shows two tabs — "Настройки" highlighted/active with an accent indicator bar, "Заметки" visibly muted; clicking "Заметки" does nothing (no content change, "Настройки" stays shown).
 - [ ] `UI-15` settings popover: large (~80px) icon preview on the left matches whatever the card itself currently shows (rule-matched icon, manual override, or plain favicon/letter) — not a different/stale image.
+- [ ] `RULE-8` create a rule with `targetFolder: "$$__year$$/$$domain$$"`, quick-save a matching page: popup's folder tree pre-selects the resolved literal path (e.g. `2026/example.com`), not the raw `$$...$$` template, and saving actually creates that folder.
+- [ ] `RULE-8` same rule, but the page's domain resolves to a saved `DomainAlias` — use `$$alias$$` instead of `$$domain$$`: resolved folder uses the alias's display name.
+- [ ] `RULE-8` a rule whose `targetFolder` has no `$$...$$` tokens at all: behaves exactly as before (no regression for existing rules).
 - [ ] `UI-15` click "Изменить" under the big icon: focus moves to the icon-link text field below (no popover-in-popover, no page scroll jump).
 - [ ] `UI-15` type a custom icon URL into the settings popover's icon field, then click elsewhere (blur) or press Enter: the card's icon updates immediately (same tab, no reload) to the typed URL, and outlives closing/reopening the popover.
 - [ ] `UI-15` clear that same field back to empty and blur: the card's icon reverts to whatever `IconRule`/favicon would show without an override — not a blank/broken image.

@@ -42,6 +42,7 @@ import { IconExtrasService } from '@/services/IconExtrasService';
 import { IconLinkService } from '@/services/IconLinkService';
 import { PageMetaFiller } from '@/services/PageMetaFiller';
 import { QuickSaveFolderResolver } from '@/services/QuickSaveFolderResolver';
+import { TargetFolderTemplateService } from '@/services/TargetFolderTemplateService';
 import { QuickSaveBookmarkCreator } from '@/services/QuickSaveBookmarkCreator';
 import { SettingsExportImportService } from '@/services/SettingsExportImportService';
 import type { IBookmarkSearchService } from '@/services/interfaces/IBookmarkSearchService';
@@ -118,7 +119,7 @@ export function ServicesProvider({ children }: Props) {
       fileService,
       pageMetaFiller: new PageMetaFiller(domainAliasRepository),
       pageExtrasService: new PageExtrasService(),
-      quickSaveFolderResolver: new QuickSaveFolderResolver(bookmarkRuleRepository, defaultFolderSettingsRepository),
+      quickSaveFolderResolver: new QuickSaveFolderResolver(bookmarkRuleRepository, defaultFolderSettingsRepository, new TargetFolderTemplateService()),
       quickSaveBookmarkCreator: new QuickSaveBookmarkCreator(bookmarkRepository, bookmarkQuickSaveLinksRepository, iconBookmarkRepository),
       bookmarkQuickSaveLinksRepository,
       settingsExportImportService: new SettingsExportImportService(
