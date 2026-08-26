@@ -21,9 +21,3 @@
   background: var(--hover);
   color: var(--text);
 }
-
-.content {
-  padding: 0;
-  overflow: hidden;
-  border-radius: 0.75rem;
-}

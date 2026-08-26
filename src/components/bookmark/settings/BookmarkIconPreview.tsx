@@ -4,17 +4,16 @@ import styles from './BookmarkIconPreview.module.css';
 
 interface Props {
   seed: string;
-  url: string;
-  bookmarkId: string;
+  iconUrl: string | undefined;
   onEditClick: () => void;
 }
 
-export function BookmarkIconPreview({ seed, url, bookmarkId, onEditClick }: Props) {
+export function BookmarkIconPreview({ seed, iconUrl, onEditClick }: Props) {
   const { translate: t } = useTranslation();
 
   return (
     <div className={styles.wrap}>
-      <BookmarkFavicon seed={seed} url={url} bookmarkId={bookmarkId} size={BookmarkFaviconSize.XL} />
+      <BookmarkFavicon seed={seed} iconUrl={iconUrl} size={BookmarkFaviconSize.XL} />
       <button type="button" className={styles.editLink} onClick={onEditClick}>
         {t('bookmarkSettings.editIcon')}
       </button>

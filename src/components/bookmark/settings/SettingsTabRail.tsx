@@ -10,10 +10,10 @@ export function SettingsTabRail() {
   return (
     <div className={styles.rail}>
       <div className={styles.tab} data-active title={t('bookmarkSettings.tabSettings')}>
-        <IconSettings size="sm" />
+        <IconSettings size="md" />
       </div>
       <div className={styles.tab} data-disabled title={t('bookmarkSettings.tabNotes')}>
-        <IconNotebook size="sm" />
+        <IconNotebook size="md" />
       </div>
     </div>
   );

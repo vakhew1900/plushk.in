@@ -162,9 +162,6 @@
     "noEntity": "Без категории",
     "editTooltip": "Редактировать"
   },
-  "bookmarkCard": {
-    "detailsTooltip": "URL и папка"
-  },
   "bookmarkSettings": {
     "triggerTooltip": "Настройки закладки",
     "tabSettings": "Настройки",
@@ -174,7 +171,8 @@
     "iconPlaceholder": "https://…/icon.png",
     "categoryLabel": "Категория",
     "statusLabel": "Статус",
-    "tagsLabel": "Теги"
+    "tagsLabel": "Теги",
+    "locationLabel": "Расположение"
   },
   "variablesSection": {
     "title": "Переменные",

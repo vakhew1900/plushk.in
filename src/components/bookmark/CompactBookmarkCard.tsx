@@ -1,5 +1,6 @@
 import { useBookmarkEntityEditor } from '@/hooks/useBookmarkEntityEditor';
 import { useBookmarkTagEditor } from '@/hooks/useBookmarkTagEditor';
+import { useBookmarkIcon } from '@/hooks/useBookmarkIcon';
 import { PaletteIconDot } from '@/components/ui/palette-icon-dot';
 import { BookmarkFavicon, BookmarkFaviconSize } from './BookmarkFavicon';
 import { BookmarkTagChip } from './tags/BookmarkTagChip';
@@ -17,13 +18,14 @@ export function CompactBookmarkCard({ id, title, url, onClick }: Props) {
   const domain = new URL(url).hostname;
   const { selectedEntity } = useBookmarkEntityEditor(id);
   const { tags, tagIds } = useBookmarkTagEditor(id);
+  const { displayUrl } = useBookmarkIcon(id, url);
   const selectedTags = tags.filter((tag) => tagIds.includes(tag.id));
   const hasMeta = Boolean(selectedEntity) || selectedTags.length > 0;
 
   return (
     <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
       <div className={styles.head}>
-        <BookmarkFavicon seed={domain} url={url} bookmarkId={id} size={BookmarkFaviconSize.SM} />
+        <BookmarkFavicon seed={domain} iconUrl={displayUrl} size={BookmarkFaviconSize.SM} />
         <div className={styles.meta}>
           <div className={styles.title} title={title}>{title}</div>
           <div className={styles.domain}>{domain}</div>

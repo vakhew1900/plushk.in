@@ -26,10 +26,10 @@
 }
 
 .favicon[data-size='xl'] {
-  width: 5rem;
-  height: 5rem;
-  border-radius: 1rem;
-  font-size: 2rem;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 1.25rem;
+  font-size: 3rem;
 }
 
 .red    { background: var(--red-soft);    color: var(--red); }
@@ -44,5 +44,13 @@
 }
 
 .favicon[data-size='sm'] .icon { width: 0.75rem; height: 0.75rem; }
-.favicon[data-size='wide'] .icon { width: 1.875rem; height: 1.875rem; }
-.favicon[data-size='xl'] .icon { width: 3.5rem; height: 3.5rem; }
+
+/* 'wide' (Library card) and 'xl' (settings dialog preview) are meant to show
+   real artwork (an IconRule-resolved cover, not just a small favicon glyph)
+   — the image fills the box instead of sitting inset at a fixed small size. */
+.favicon[data-size='wide'] .icon,
+.favicon[data-size='xl'] .icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

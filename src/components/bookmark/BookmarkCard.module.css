@@ -2,13 +2,11 @@
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   background: var(--bg2);
-  cursor: pointer;
   display: flex;
   align-items: stretch;
   overflow: hidden;
   transition: background-color 0.15s, border-color 0.15s;
 }
-.card:hover { background: var(--hover); border-color: var(--faint); }
 
 .content {
   flex: 1;
@@ -37,7 +35,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
+  width: fit-content;
+  max-width: 100%;
 }
+.title:hover { color: var(--accent); text-decoration: underline; }
 
 .domain {
   font-size: 0.71875rem;

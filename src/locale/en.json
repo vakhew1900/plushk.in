@@ -162,9 +162,6 @@
     "noEntity": "No category",
     "editTooltip": "Edit"
   },
-  "bookmarkCard": {
-    "detailsTooltip": "URL and folder"
-  },
   "bookmarkSettings": {
     "triggerTooltip": "Bookmark settings",
     "tabSettings": "Settings",
@@ -174,7 +171,8 @@
     "iconPlaceholder": "https://…/icon.png",
     "categoryLabel": "Category",
     "statusLabel": "Status",
-    "tagsLabel": "Tags"
+    "tagsLabel": "Tags",
+    "locationLabel": "Location"
   },
   "variablesSection": {
     "title": "Variables",
