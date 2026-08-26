@@ -10,6 +10,7 @@ export function useQuickSaveSelection(
   const [entityTypeId, setEntityTypeId] = useState<string | undefined>(undefined);
   const [statusId, setStatusId] = useState<string | undefined>(undefined);
   const [tagIds, setTagIds] = useState<string[]>([]);
+  const [iconUrl, setIconUrlState] = useState<string | undefined>(undefined);
   const [touched, setTouched] = useState(false);
 
   // Adopts a newly-resolved suggestion (folder + tags + category, one draft)
@@ -26,6 +27,7 @@ export function useQuickSaveSelection(
     setEntityTypeId(suggestion.entityTypeId);
     setStatusId(suggestion.statusId);
     setTagIds(suggestion.tagIds);
+    setIconUrlState(suggestion.iconUrl);
   }
 
   const setTargetFolder = (value: string) => {
@@ -44,14 +46,22 @@ export function useQuickSaveSelection(
     setTagIds((prev) => (prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]));
   };
 
+  const setIconUrl = (value: string | undefined) => {
+    setTouched(true);
+    setIconUrlState(value);
+  };
+
   return {
     targetFolder,
     entityTypeId,
     statusId,
     tagIds,
+    iconUrl,
     setTargetFolder,
     chooseEntity,
     toggleTag,
+    setIconUrl,
     matchedRuleName: touched ? undefined : suggestion?.ruleName,
+    matchedIconRuleName: touched ? undefined : suggestion?.iconRuleName,
   };
 }

@@ -1,6 +1,8 @@
 import { browser } from 'wxt/browser';
 import { PageExtractorService } from '@/services/PageExtractorService';
+import { IconExtractorService } from '@/services/IconExtractorService';
 import { isPageExtractRequestMessage } from '@/types/messages/page-extract-message';
+import { isIconExtractRequestMessage } from '@/types/messages/icon-extract-message';
 import type { PageMeta } from '@/types/page-meta';
 
 export default defineContentScript({
@@ -14,16 +16,20 @@ export default defineContentScript({
   main() {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises -- returning a Promise here is intentional: it's how browser.runtime.onMessage delivers an async response (see OnMessageListenerAsync in the webextension-polyfill types).
     browser.runtime.onMessage.addListener((message: unknown) => {
-      if (!isPageExtractRequestMessage(message)) return;
+      if (isPageExtractRequestMessage(message)) {
+        return (async () => {
+          const extractor = new PageExtractorService();
+          const merged: Partial<PageMeta> = {};
+          for (const group of message.groups) {
+            Object.assign(merged, extractor.extract(group));
+          }
+          return merged;
+        })();
+      }
 
-      return (async () => {
-        const extractor = new PageExtractorService();
-        const merged: Partial<PageMeta> = {};
-        for (const group of message.groups) {
-          Object.assign(merged, extractor.extract(group));
-        }
-        return merged;
-      })();
+      if (isIconExtractRequestMessage(message)) {
+        return (async () => new IconExtractorService().extract(message.source))();
+      }
     });
   },
 });

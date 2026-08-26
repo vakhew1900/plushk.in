@@ -8,6 +8,8 @@ import { EntityTypeField, type EntityType } from '../types/entity-type';
 import { WorkflowField, type Workflow } from '../types/workflow';
 import { WorkflowStatusField, type WorkflowStatus } from '../types/workflow-status';
 import { BookmarkEntityLinkField, type BookmarkEntityLink } from '../types/bookmark-entity-link';
+import { IconRuleField, type IconRule } from '../types/icon-rule';
+import { IconBookmarkField, type IconBookmark } from '../types/icon-bookmark';
 
 // Map<string, PageMatch> → Record for safe structured-clone storage
 export type StoredPageMatchGroup = {
@@ -25,6 +27,8 @@ const { ID: etId, NAME: etName }            = EntityTypeField;
 const { ID: wId, ENTITY_TYPE_ID: wEntityTypeId } = WorkflowField;
 const { ID: wsId, WORKFLOW_ID: wsWorkflowId } = WorkflowStatusField;
 const { BOOKMARK_ID: belBookmarkId, ENTITY_TYPE_ID: belEntityTypeId } = BookmarkEntityLinkField;
+const { ID: irId, ALIAS_ID: irAliasId }     = IconRuleField;
+const { BOOKMARK_ID: ibBookmarkId }         = IconBookmarkField;
 
 class AppDb extends Dexie {
   rules!:               Table<BookmarkRule,         string>;
@@ -36,6 +40,8 @@ class AppDb extends Dexie {
   workflows!:           Table<Workflow,              string>;
   workflowStatuses!:    Table<WorkflowStatus,        string>;
   bookmarkEntityLinks!: Table<BookmarkEntityLink,    string>;
+  iconRules!:           Table<IconRule,              string>;
+  iconBookmarks!:       Table<IconBookmark,           string>;
 
   constructor() {
     super('book-manager');
@@ -52,6 +58,11 @@ class AppDb extends Dexie {
       workflows:           `${wId}, &${wEntityTypeId}`,
       workflowStatuses:    `${wsId}, ${wsWorkflowId}`,
       bookmarkEntityLinks: `${belBookmarkId}, ${belEntityTypeId}`,
+      // aliasId is optional (only set for bindingType: 'alias') — IndexedDB
+      // doesn't index records missing the key, so multiple url/domain rules
+      // with no aliasId don't collide with the uniqueness constraint.
+      iconRules:           `${irId}, &${irAliasId}`,
+      iconBookmarks:       `&${ibBookmarkId}`,
     });
   }
 }

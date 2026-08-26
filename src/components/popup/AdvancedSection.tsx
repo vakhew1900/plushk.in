@@ -8,6 +8,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { cn } from '@/lib/utils';
 import type { EntityType } from '@/types/entity-type';
 import type { Tag } from '@/types/tag';
+import { IconField } from './IconField';
 import styles from './AdvancedSection.module.css';
 
 interface Props {
@@ -18,6 +19,9 @@ interface Props {
   selectedTagIds: string[];
   onToggleTag: (tagId: string) => void;
   matchedRuleName: string | undefined;
+  iconUrl: string | undefined;
+  matchedIconRuleName: string | undefined;
+  onIconUrlChange: (value: string | undefined) => void;
 }
 
 export function AdvancedSection({
@@ -28,6 +32,9 @@ export function AdvancedSection({
   selectedTagIds,
   onToggleTag,
   matchedRuleName,
+  iconUrl,
+  matchedIconRuleName,
+  onIconUrlChange,
 }: Props) {
   const { translate: t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -40,6 +47,8 @@ export function AdvancedSection({
       </CollapsibleTrigger>
 
       <CollapsibleContent className={styles.content}>
+        <IconField iconUrl={iconUrl} iconRuleName={matchedIconRuleName} onIconUrlChange={onIconUrlChange} />
+
         {entityTypes.length > 0 && (
           <div>
             <Text as="div" size="caption" weight="bold" tone="muted" className={styles.fieldLabel}>

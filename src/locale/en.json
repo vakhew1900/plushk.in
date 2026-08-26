@@ -176,6 +176,17 @@
     "fieldKeyPlaceholder": "field",
     "fieldValuePlaceholder": "selector"
   },
+  "iconRulesSection": {
+    "title": "Icons",
+    "desc": "Bookmark icon source by URL/alias/domain — a static link or a css/xpath selector against the live page. Falls back to the plain favicon when nothing matches.",
+    "addRule": "Rule",
+    "namePlaceholder": "name",
+    "aliasPlaceholder": "alias",
+    "bindingValueUrlPlaceholder": "https://example.com/path",
+    "bindingValueDomainPlaceholder": "example.com",
+    "sourceValueStaticPlaceholder": "https://…/icon.png",
+    "sourceValueSelectorPlaceholder": "selector"
+  },
   "exportSection": {
     "title": "Export / Import",
     "desc": "A single-file backup of all rules, aliases, and variables.",
@@ -229,7 +240,13 @@
         "title": "Advanced",
         "categoryLabel": "Category",
         "tagsLabel": "Tags",
-        "matchedByRule": "Suggested by rule \"{{name}}\""
+        "matchedByRule": "Suggested by rule \"{{name}}\"",
+        "iconLabel": "Icon",
+        "iconMatchedByRule": "Suggested by rule \"{{name}}\"",
+        "iconEditTooltip": "Custom icon link",
+        "iconLinkPlaceholder": "https://…/icon.png",
+        "iconLinkCancel": "Cancel",
+        "iconLinkDone": "Done"
       }
     }
   }

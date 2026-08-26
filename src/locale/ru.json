@@ -176,6 +176,17 @@
     "fieldKeyPlaceholder": "поле",
     "fieldValuePlaceholder": "селектор"
   },
+  "iconRulesSection": {
+    "title": "Иконки",
+    "desc": "Источник иконки закладки по URL/алиасу/домену — статичная ссылка или css/xpath-селектор на живой странице. Если ничего не подошло — обычный favicon.",
+    "addRule": "Правило",
+    "namePlaceholder": "название",
+    "aliasPlaceholder": "алиас",
+    "bindingValueUrlPlaceholder": "https://example.com/path",
+    "bindingValueDomainPlaceholder": "example.com",
+    "sourceValueStaticPlaceholder": "https://…/icon.png",
+    "sourceValueSelectorPlaceholder": "селектор"
+  },
   "exportSection": {
     "title": "Экспорт / Импорт",
     "desc": "Резервная копия всех правил, алиасов и переменных одним файлом.",
@@ -229,7 +240,13 @@
         "title": "Дополнительно",
         "categoryLabel": "Категория",
         "tagsLabel": "Теги",
-        "matchedByRule": "Подобрано правилом «{{name}}»"
+        "matchedByRule": "Подобрано правилом «{{name}}»",
+        "iconLabel": "Иконка",
+        "iconMatchedByRule": "Подобрано правилом «{{name}}»",
+        "iconEditTooltip": "Своя ссылка на иконку",
+        "iconLinkPlaceholder": "https://…/icon.png",
+        "iconLinkCancel": "Отмена",
+        "iconLinkDone": "Готово"
       }
     }
   }

@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { useState } from 'react';
 import { resolveFaviconUrl } from '@/lib/browser-constants/faviconUrl';
+import { useIconLink } from '@/hooks/useIconLink';
 import styles from './BookmarkFavicon.module.css';
 
 const COLOR_VARIANTS = ['red', 'blue', 'green', 'accent'] as const;
@@ -20,13 +21,16 @@ interface Props {
   seed: string;
   /** Full bookmark URL to resolve a real favicon for. Falls back to the letter when omitted or the icon fails to load. */
   url?: string;
+  /** Id of an already-saved bookmark — enables a custom `IconRule`/manual-override icon (RULE-13/UI-15) instead of the plain favicon. Omit for not-yet-saved previews. */
+  bookmarkId?: string;
   size?: BookmarkFaviconSize;
 }
 
-export function BookmarkFavicon({ seed, url, size = BookmarkFaviconSize.MD }: Props) {
+export function BookmarkFavicon({ seed, url, bookmarkId, size = BookmarkFaviconSize.MD }: Props) {
   const [iconFailed, setIconFailed] = useState(false);
   const letter = seed.charAt(0).toUpperCase() || '?';
-  const iconUrl = url ? resolveFaviconUrl(url) : undefined;
+  const linkedIconUrl = useIconLink(bookmarkId, url);
+  const iconUrl = linkedIconUrl ?? (bookmarkId ? undefined : url ? resolveFaviconUrl(url) : undefined);
 
   return (
     <div className={clsx(styles.favicon, styles[colorForSeed(seed)])} data-size={size}>

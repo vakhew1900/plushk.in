@@ -13,11 +13,18 @@ interface ActiveTab {
 
 export interface QuickSaveSuggestion extends QuickSaveSelection {
   ruleName: string | undefined;
+  iconRuleName: string | undefined;
 }
 
 export function useQuickSave(mode: Mode) {
-  const { pageMatchGroupRepository, pageMetaFiller, pageExtrasService, quickSaveFolderResolver, quickSaveBookmarkCreator } =
-    useServices();
+  const {
+    pageMatchGroupRepository,
+    pageMetaFiller,
+    pageExtrasService,
+    quickSaveFolderResolver,
+    quickSaveBookmarkCreator,
+    iconLinkService,
+  } = useServices();
   const [tab, setTab] = useState<ActiveTab | undefined>(undefined);
   const [suggestion, setSuggestion] = useState<QuickSaveSuggestion | undefined>(undefined);
   const [saved, setSaved] = useState(false);
@@ -52,6 +59,8 @@ export function useQuickSave(mode: Mode) {
 
       const resolution = await quickSaveFolderResolver.resolve(meta);
       debugLog('[quick-save-debug] popup: resolved suggested folder', resolution.targetFolder);
+
+      const iconResult = activeTab.id !== undefined ? await iconLinkService.resolveForSave(meta, aliasId, activeTab.id) : undefined;
       if (cancelled) return;
 
       setSuggestion({
@@ -60,13 +69,15 @@ export function useQuickSave(mode: Mode) {
         tagIds: resolution.tagIds ?? [],
         entityTypeId: resolution.entityTypeId,
         statusId: resolution.statusId,
+        iconUrl: iconResult?.url,
+        iconRuleName: iconResult?.type === 'rule' ? iconResult.ruleName : undefined,
       });
     });
 
     return () => {
       cancelled = true;
     };
-  }, [mode, pageMatchGroupRepository, pageMetaFiller, pageExtrasService, quickSaveFolderResolver]);
+  }, [mode, pageMatchGroupRepository, pageMetaFiller, pageExtrasService, quickSaveFolderResolver, iconLinkService]);
 
   const save = useCallback(
     async (selection: QuickSaveSelection) => {

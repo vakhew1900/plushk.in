@@ -6,12 +6,17 @@ import { browser } from 'wxt/browser';
 import { collectRemovedBookmarkIds } from '@/lib/bookmark-removed-subtree';
 import { BookmarkTagLinkRepository } from '@/repository/BookmarkTagLinkRepository';
 import { BookmarkEntityLinkRepository } from '@/repository/BookmarkEntityLinkRepository';
+import { IconBookmarkRepository } from '@/repository/IconBookmarkRepository';
 import { BookmarkService } from '@/services/BookmarkService';
 
 export default defineBackground(() => {
   // No ServicesContext in the service worker (React isn't available) —
   // instantiated directly, as elsewhere in background.ts pre-UI-4.
-  const bookmarkService = new BookmarkService(new BookmarkTagLinkRepository(), new BookmarkEntityLinkRepository());
+  const bookmarkService = new BookmarkService(
+    new BookmarkTagLinkRepository(),
+    new BookmarkEntityLinkRepository(),
+    new IconBookmarkRepository(),
+  );
 
   browser.bookmarks.onRemoved.addListener((id, removeInfo) => {
     const bookmarkIds = collectRemovedBookmarkIds(id, removeInfo.node);

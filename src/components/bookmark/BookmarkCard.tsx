@@ -22,7 +22,7 @@ export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
 
   return (
     <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
-      <BookmarkFavicon seed={domain} url={url} size={BookmarkFaviconSize.WIDE} />
+      <BookmarkFavicon seed={domain} url={url} bookmarkId={id} size={BookmarkFaviconSize.WIDE} />
 
       <div className={styles.content}>
         <div className={styles.headRow}>

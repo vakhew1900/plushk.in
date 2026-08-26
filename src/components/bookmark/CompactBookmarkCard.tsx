@@ -23,7 +23,7 @@ export function CompactBookmarkCard({ id, title, url, onClick }: Props) {
   return (
     <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
       <div className={styles.head}>
-        <BookmarkFavicon seed={domain} url={url} size={BookmarkFaviconSize.SM} />
+        <BookmarkFavicon seed={domain} url={url} bookmarkId={id} size={BookmarkFaviconSize.SM} />
         <div className={styles.meta}>
           <div className={styles.title} title={title}>{title}</div>
           <div className={styles.domain}>{domain}</div>
