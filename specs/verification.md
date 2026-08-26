@@ -27,6 +27,14 @@ Manual correctness checklist — things to verify by hand in the running extensi
 - [ ] `RULE-12` quick-save on a page whose domain resolves to an alias with a linked `PageMatchGroup`: only that group's selectors run (check via `dev:firefox`/dev console — `PageExtrasService.extract` is called with a single-element array, not every saved group).
 - [ ] `RULE-12` quick-save on a page whose domain resolves to an alias with **no** linked group, or to no alias at all: extraction is skipped entirely (no content-script injection), same as the existing `RULE-5` "no `PageMatchGroup` saved at all" case above.
 - [ ] `RULE-12` import `configs/social-extras/settings.json` (now on `version: 3`, `pageMatchGroups[].aliasId`): import succeeds, Reddit/DTF groups show up in the Variables section each bound to their respective alias via the dropdown.
+- [ ] `RULE-13` Mappings tab, new "Иконки" section: add a `domain`-type rule (e.g. `youtube.com`) with a `static` source pointing at a real image URL — save persists, reload keeps it.
+- [ ] `RULE-13` add a `url`-type rule with a `css` source (e.g. a page's `.logo img` selector) — quick-save that exact page: the "Дополнительно" section's icon swatch shows the extracted image and the "Подобрано правилом «X»" caption, without opening dev tools.
+- [ ] `RULE-13` same as above but the css selector matches nothing on the page: icon swatch falls back to the plain favicon/letter, no error, no stuck loading state.
+- [ ] `RULE-13` in the popup's "Дополнительно" section, click the pencil next to the icon, type a custom image URL, click "Готово": the swatch updates to the typed URL; saving the bookmark and reopening the Library card shows that same custom icon (not the rule-matched one) — confirms the manual override persists and wins.
+- [ ] `RULE-13` two `url`-type rules where one's value is a prefix of the other (e.g. `https://habr.com` and `https://habr.com/ru/posts`) — quick-save a page under the longer path: the more specific (longer-prefix) rule's icon is used, not the shorter one.
+- [ ] `RULE-13` add an `alias`-type rule bound to an existing `DomainAlias`, then delete that alias from the Aliases section: the icon rule disappears from the Иконки section too, without a manual page refresh (cascade, mirrors `RULE-12`'s alias→group cascade).
+- [ ] `RULE-13` Library tab `BookmarkCard`: a bookmark saved with a resolved/overridden icon shows that icon (not the default favicon/letter) after a full options-page reload — confirms `IconBookmark` is actually read back, not just held in popup-session state.
+- [ ] `RULE-13` delete a bookmark that has a custom icon (native delete or a future manager, whichever is available) and re-save the exact same URL fresh: no stale icon reappears — confirms `IconBookmark` cleanup on `bookmarks.onRemoved` (`BookmarkService.removeAllLinksForBookmark`) actually fired.
 
 ## UI
 
