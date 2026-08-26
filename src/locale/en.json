@@ -176,7 +176,15 @@
     "categoryLabel": "Category",
     "statusLabel": "Status",
     "tagsLabel": "Tags",
-    "locationLabel": "Location"
+    "locationLabel": "Location",
+    "deleteButton": "Delete bookmark",
+    "deleteDialogTitle": "Delete \"{{title}}\"?",
+    "deleteDialogBody": "The bookmark and its related data (tags, category, icon) will be removed. This can't be undone.",
+    "deleteDialogCancel": "Cancel",
+    "deleteDialogConfirm": "Delete",
+    "editLocationTooltip": "Edit location",
+    "moveButton": "Move",
+    "moveCancelButton": "Cancel"
   },
   "variablesSection": {
     "title": "Variables",

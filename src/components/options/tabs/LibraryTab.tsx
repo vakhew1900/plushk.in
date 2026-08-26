@@ -25,6 +25,7 @@ export function LibraryTab() {
     resetFilters,
     results,
     totalCount,
+    refresh,
   } = useBookmarkSearch();
 
   const countLabel = query.trim()
@@ -68,6 +69,7 @@ export function LibraryTab() {
             url={entry.url}
             folderPath={entry.folderPath}
             onClick={() => openBookmark(entry)}
+            onChanged={refresh}
           />
         )}
       />

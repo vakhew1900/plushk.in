@@ -176,7 +176,15 @@
     "categoryLabel": "Категория",
     "statusLabel": "Статус",
     "tagsLabel": "Теги",
-    "locationLabel": "Расположение"
+    "locationLabel": "Расположение",
+    "deleteButton": "Удалить закладку",
+    "deleteDialogTitle": "Удалить закладку «{{title}}»?",
+    "deleteDialogBody": "Закладка и связанные с ней данные (теги, категория, иконка) будут удалены. Отменить это будет нельзя.",
+    "deleteDialogCancel": "Отмена",
+    "deleteDialogConfirm": "Удалить",
+    "editLocationTooltip": "Изменить расположение",
+    "moveButton": "Переместить",
+    "moveCancelButton": "Отмена"
   },
   "variablesSection": {
     "title": "Переменные",

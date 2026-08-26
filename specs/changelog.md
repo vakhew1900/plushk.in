@@ -543,3 +543,23 @@ Finished tasks, moved here from `tasks.md` when completed. Kept for history — 
 - Юнит-тесты: `service-tokens.test.ts`, `target-folder-template.test.ts`, `target-folder-template-service.test.ts` (13 кейсов, включая приоритет служебного токена над одноимённым `extras`-ключом и то, что неизвестное `__`-имя не проваливается в `extras`), плюс новый кейс в `quick-save-folder-resolver.test.ts`.
 - `npm run compile`/`npm run lint`/`npm test` и `npm run build` — чисто. Чек-лист ручной проверки — `specs/verification.md` (`RULE-8`).
 
+### UI-16 — Каскадное удаление и редактирование расположения закладки (карточка + панель настроек)
+**Priority:** Medium
+**Added:** 2026-08-26
+**Completed:** 2026-08-26
+
+Добавляет удаление закладки (с каскадной очисткой тегов/категории/статуса/иконки) и смену её папки прямо из `BookmarkCard`/`BookmarkSettingsPanel` (`UI-15`) — раньше единственным способом было переключиться на нативный UI браузера. Направление согласовано через наброски в Claude Design (3 кейса × 3 варианта, во всех выбран вариант C): https://claude.ai/code/artifact/a862836c-8f4c-468c-980f-2b4f78fe4085. Полная спецификация и протокол интервью — `specs/tasks/UI-16-bookmark-delete-move/`.
+
+**Найдено при разборе:** каскадная очистка Dexie-связей при удалении закладки уже реализована реактивно — `BG-1` (выше), слушатель `browser.bookmarks.onRemoved` в `background.ts` сам вызывает `BookmarkService.removeAllLinksForBookmark()` для любого удаления. Это сняло необходимость оркестровать очистку из UI-пути — `removeWithCascade()` оказался тонкой обёрткой над `browser.bookmarks.remove()`. Заодно поправлена устаревшая строка в таблице Service Worker в `CLAUDE.md` (всё ещё помечала `onRemoved` как «not yet implemented», хотя `BG-1` давно завершена).
+
+**Реализовано:**
+- `IBookmarkRepository.removeWithCascade(id)` (+ `BookmarkRepository`) — рядом с `move()`, не трогая его; `await browser.bookmarks.remove(id)`, без явного вызова `removeAllLinksForBookmark()` (полагается на `BG-1`'s listener). Два новых теста в `bookmark-repository.test.ts` (успешный вызов + проброс ошибки, не проглатывается).
+- Два новых тонких хука: `useBookmarkDelete(bookmarkId)` → `remove()`, `useBookmarkMove(bookmarkId)` → `moveTo(path)` — оба просто делегируют в `bookmarkRepository` через `useServices()`, по образцу `useFolderTree`/`useBookmarkIcon`.
+- `useBookmarkSearch` — добавлен `refresh()` (инкрементирующий `refreshToken` в зависимостях эффекта поиска), т.к. до этой задачи список не имел механизма форс-рефреша после мутации вне query/фильтров. `LibraryTab` прокидывает его в `BookmarkCard` новым обязательным пропом `onChanged`.
+- `BookmarkSettingsDialog`/`.module.css` — рейл на карточке (`UI-15`) расширен второй ячейкой сверху (`IconTrash`, разделена тонкой линией от шестерёнки), новые пропы `onRequestDelete`/`onMoved`. Кнопка корзины — вне `Dialog`, открывает диалог подтверждения напрямую, минуя настройки.
+- Новый `BookmarkDeleteDialog` (`src/components/bookmark/settings/`) — общий для обеих точек входа (рейл + панель), по образцу `RuleDeleteDialog`: `AlertDialog` + `Button variant="destructive"`. Текст — общая формулировка без перечисления реально привязанных тегов/категории (решено в preliminary interview, макет `DeleteConfirm.dc.html` их перечислял, от этого отказались).
+- Блок «Расположение» вынесен из `BookmarkSettingsPanel` в новый кластер `src/components/bookmark/settings/location/` (по образцу `options/tabs/rules/{tree,condition,...}/` — 2+ компонента, имеющих смысл только вместе): `BookmarkLocationSection` (стейт `isEditing`/`draftPath`, один `moveTo`) переключает между `BookmarkLocationView` (лейбл + `IconButton icon={IconEdit}` + текстовая кнопка удаления, `BookmarkFolderPath` + url) и `BookmarkLocationEditor` (лейбл без действий, путь-`Input` + `FolderTree` — тот же компонент, что в `FolderPicker` попапа quick-save — + «Переместить»/«Отмена»), каждый компонент со своим `.module.css`. «Переместить» вызывает `useBookmarkMove().moveTo()`, затем сворачивает блок и зовёт `onMoved` (= `onChanged` из `LibraryTab`).
+- Новые i18n-строки — в существующий неймспейс `bookmarkSettings.*` (`ru.json`/`en.json`): `deleteButton`, `deleteDialogTitle`/`Body`/`Cancel`/`Confirm`, `editLocationTooltip`, `moveButton`, `moveCancelButton`.
+- `CompactBookmarkCard` (попап «Поиск») не тронут — там нет ни рейла, ни панели настроек.
+- `npm run compile`/`npm run lint`/`npm test` и `npm run build` — чисто (34 test files, 303 tests). Чек-лист ручной проверки — `specs/verification.md` (`UI-16`, добавить при ручной проверке в браузере).
+

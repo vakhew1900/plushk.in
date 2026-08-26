@@ -14,6 +14,12 @@ export function useBookmarkSearch() {
   const [results, setResults] = useState<BookmarkSearchEntry[]>([]);
   const [totalCount, setTotalCount] = useState(0);
 
+  // Bumped after a mutation outside the filter/query inputs below (delete,
+  // move via UI-16) to force the search effect to re-run — those don't
+  // change any of the effect's other dependencies on their own.
+  const [refreshToken, setRefreshToken] = useState(0);
+  const refresh = () => setRefreshToken((token) => token + 1);
+
   // The input itself stays instant (bound directly to `query`) — only the
   // actual re-scan (`IBookmarkRepository.listAll()` + filtering) and the
   // resulting re-render lag behind by a beat, so fast typing doesn't
@@ -36,7 +42,7 @@ export function useBookmarkSearch() {
     return () => {
       cancelled = true;
     };
-  }, [bookmarkSearchService, debouncedQuery, tagIds, entityTypeId, statusId, folderPath]);
+  }, [bookmarkSearchService, debouncedQuery, tagIds, entityTypeId, statusId, folderPath, refreshToken]);
 
   const toggleTagId = (tagId: string) => {
     setTagIds((prev) => (prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]));
@@ -71,5 +77,6 @@ export function useBookmarkSearch() {
     resetFilters,
     results,
     totalCount,
+    refresh,
   };
 }

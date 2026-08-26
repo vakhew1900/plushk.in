@@ -1,0 +1,31 @@
+.fieldLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.editBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--accent);
+  background: var(--bg2);
+}
+
+.pathRow {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.pathIcon {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.editActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

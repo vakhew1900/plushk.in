@@ -1,4 +1,4 @@
-import { IconSettings } from '@/components/icons';
+import { IconSettings, IconTrash } from '@/components/icons';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { EntityType } from '@/types/entity-type';
@@ -24,25 +24,40 @@ interface Props {
   tags: Tag[];
   selectedTagIds: string[];
   onToggleTag: (tagId: string) => Promise<void>;
+  onRequestDelete: () => void;
+  onMoved: () => void;
 }
 
-/** Gear-icon rail on `BookmarkCard` opening the full bookmark settings dialog — see UI-15. */
+/** Gear-icon rail on `BookmarkCard` opening the full bookmark settings dialog — see UI-15. Also carries the standalone delete trigger (UI-16) — a separate cell above the gear, outside the `Dialog` so it opens `BookmarkDeleteDialog` directly instead of the settings dialog. */
 export function BookmarkSettingsDialog(props: Props) {
   const { translate: t } = useTranslation();
 
   return (
     <div className={styles.rail}>
-      <Dialog>
-        <DialogTrigger asChild>
-          <button type="button" className={styles.trigger} title={t('bookmarkSettings.triggerTooltip')}>
-            <IconSettings size="sm" />
-          </button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogTitle>{t('bookmarkSettings.triggerTooltip')}</DialogTitle>
-          <BookmarkSettingsPanel {...props} />
-        </DialogContent>
-      </Dialog>
+      <div className={styles.cell}>
+        <button
+          type="button"
+          className={styles.deleteTrigger}
+          title={t('bookmarkSettings.deleteButton')}
+          onClick={props.onRequestDelete}
+        >
+          <IconTrash size="sm" />
+        </button>
+      </div>
+      <div className={styles.divider} />
+      <div className={styles.cell}>
+        <Dialog>
+          <DialogTrigger asChild>
+            <button type="button" className={styles.trigger} title={t('bookmarkSettings.triggerTooltip')}>
+              <IconSettings size="sm" />
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogTitle>{t('bookmarkSettings.triggerTooltip')}</DialogTitle>
+            <BookmarkSettingsPanel {...props} />
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }

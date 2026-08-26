@@ -54,7 +54,7 @@ Rule matching and folder resolution happen **only** in the extension's own popup
 
 | Event | Action |
 |---|---|
-| `bookmarks.onRemoved` | Remove metadata from IndexedDB (not yet implemented) |
+| `bookmarks.onRemoved` | Cascade-removes the bookmark's Dexie links (tags, category/status, icon override) via `BookmarkService.removeAllLinksForBookmark()` — see `BG-1` |
 
 `bookmarks.onCreated`/`onImportBegan`/`onChanged` are intentionally not handled — see above. The extension only **creates** bookmarks directly in the resolved target folder — it never moves or duplicates bookmarks it didn't itself just create.
 
