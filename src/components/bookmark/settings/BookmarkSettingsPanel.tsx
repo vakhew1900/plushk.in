@@ -4,11 +4,12 @@ import { Text } from '@/components/ui/text';
 import { EntitySegment } from '@/components/bookmark/entity/EntitySegment';
 import { StatusSegment } from '@/components/bookmark/entity/StatusSegment';
 import { TagPicker } from '@/components/bookmark/tags/TagPicker';
+import { BookmarkNotesTab } from '@/components/bookmark/settings/notes/BookmarkNotesTab';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { EntityType } from '@/types/entity-type';
 import type { WorkflowStatus } from '@/types/workflow-status';
 import type { Tag } from '@/types/tag';
-import { SettingsTabRail } from './SettingsTabRail';
+import { SettingsTabRail, SettingsTab } from './SettingsTabRail';
 import { BookmarkIconPreview } from './BookmarkIconPreview';
 import { BookmarkLocationSection } from './location/BookmarkLocationSection';
 import styles from './BookmarkSettingsPanel.module.css';
@@ -57,6 +58,7 @@ export function BookmarkSettingsPanel({
   const { translate: t } = useTranslation();
   const iconInputRef = useRef<HTMLInputElement>(null);
   const showStatus = Boolean(selectedEntity) && statuses.length > 0;
+  const [activeTab, setActiveTab] = useState<SettingsTab>(SettingsTab.SETTINGS);
 
   // Controlled, not defaultValue — overrideUrl loads asynchronously (useBookmarkIcon's
   // own effect, up in BookmarkCard), so the input must pick up the fetched value once
@@ -71,76 +73,82 @@ export function BookmarkSettingsPanel({
 
   return (
     <div className={styles.panel}>
-      <SettingsTabRail />
+      <SettingsTabRail activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <div className={styles.content}>
-        <BookmarkIconPreview
-          seed={seed}
-          iconUrl={displayUrl}
-          onEditClick={() => iconInputRef.current?.focus()}
-        />
-
-        <div className={styles.fields}>
-          <div>
-            <Text as="div" size="caption" weight="bold" tone="muted" className={styles.fieldLabel}>
-              {t('bookmarkSettings.iconLabel')}
-            </Text>
-            <Input
-              ref={iconInputRef}
-              value={iconDraft}
-              placeholder={t('bookmarkSettings.iconPlaceholder')}
-              onChange={(e) => setIconDraft(e.target.value)}
-              onBlur={(e) => void onOverrideChange(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') e.currentTarget.blur();
-              }}
+      {activeTab === SettingsTab.NOTES ? (
+        <BookmarkNotesTab bookmarkId={bookmarkId} />
+      ) : (
+        <div className={styles.content}>
+          <div className={styles.frame}>
+            <BookmarkIconPreview
+              seed={seed}
+              iconUrl={displayUrl}
+              onEditClick={() => iconInputRef.current?.focus()}
             />
-          </div>
 
-          <div className={styles.row}>
-            {entityTypes.length > 0 && (
-              <div className={styles.half}>
+            <div className={styles.fields}>
+              <div>
                 <Text as="div" size="caption" weight="bold" tone="muted" className={styles.fieldLabel}>
-                  {t('bookmarkSettings.categoryLabel')}
+                  {t('bookmarkSettings.iconLabel')}
                 </Text>
-                <EntitySegment
-                  entityTypes={entityTypes}
-                  selectedEntity={selectedEntity}
-                  onChoose={(entityTypeId) => void onChooseEntity(entityTypeId)}
-                  colored
+                <Input
+                  ref={iconInputRef}
+                  value={iconDraft}
+                  placeholder={t('bookmarkSettings.iconPlaceholder')}
+                  onChange={(e) => setIconDraft(e.target.value)}
+                  onBlur={(e) => void onOverrideChange(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.currentTarget.blur();
+                  }}
                 />
               </div>
-            )}
-            {showStatus && (
-              <div className={styles.half}>
-                <Text as="div" size="caption" weight="bold" tone="muted" className={styles.fieldLabel}>
-                  {t('bookmarkSettings.statusLabel')}
-                </Text>
-                <StatusSegment
-                  statuses={statuses}
-                  selectedStatus={selectedStatus}
-                  onChoose={(statusId) => void onChooseStatus(statusId)}
-                />
+
+              <div className={styles.row}>
+                {entityTypes.length > 0 && (
+                  <div className={styles.half}>
+                    <Text as="div" size="caption" weight="bold" tone="muted" className={styles.fieldLabel}>
+                      {t('bookmarkSettings.categoryLabel')}
+                    </Text>
+                    <EntitySegment
+                      entityTypes={entityTypes}
+                      selectedEntity={selectedEntity}
+                      onChoose={(entityTypeId) => void onChooseEntity(entityTypeId)}
+                      colored
+                    />
+                  </div>
+                )}
+                {showStatus && (
+                  <div className={styles.half}>
+                    <Text as="div" size="caption" weight="bold" tone="muted" className={styles.fieldLabel}>
+                      {t('bookmarkSettings.statusLabel')}
+                    </Text>
+                    <StatusSegment
+                      statuses={statuses}
+                      selectedStatus={selectedStatus}
+                      onChoose={(statusId) => void onChooseStatus(statusId)}
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          <div>
-            <Text as="div" size="caption" weight="bold" tone="muted" className={styles.fieldLabel}>
-              {t('bookmarkSettings.tagsLabel')}
-            </Text>
-            <TagPicker tags={tags} selectedTagIds={selectedTagIds} onToggle={(tagId) => void onToggleTag(tagId)} />
-          </div>
+              <div>
+                <Text as="div" size="caption" weight="bold" tone="muted" className={styles.fieldLabel}>
+                  {t('bookmarkSettings.tagsLabel')}
+                </Text>
+                <TagPicker tags={tags} selectedTagIds={selectedTagIds} onToggle={(tagId) => void onToggleTag(tagId)} />
+              </div>
 
-          <BookmarkLocationSection
-            bookmarkId={bookmarkId}
-            folderPath={folderPath}
-            url={url}
-            onRequestDelete={onRequestDelete}
-            onMoved={onMoved}
-          />
+              <BookmarkLocationSection
+                bookmarkId={bookmarkId}
+                folderPath={folderPath}
+                url={url}
+                onRequestDelete={onRequestDelete}
+                onMoved={onMoved}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

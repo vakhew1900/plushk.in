@@ -7,6 +7,7 @@ import { collectRemovedBookmarkIds } from '@/lib/bookmark-removed-subtree';
 import { BookmarkTagLinkRepository } from '@/repository/BookmarkTagLinkRepository';
 import { BookmarkEntityLinkRepository } from '@/repository/BookmarkEntityLinkRepository';
 import { IconBookmarkRepository } from '@/repository/IconBookmarkRepository';
+import { NoteRepository } from '@/repository/NoteRepository';
 import { BookmarkService } from '@/services/BookmarkService';
 
 export default defineBackground(() => {
@@ -16,6 +17,7 @@ export default defineBackground(() => {
     new BookmarkTagLinkRepository(),
     new BookmarkEntityLinkRepository(),
     new IconBookmarkRepository(),
+    new NoteRepository(),
   );
 
   browser.bookmarks.onRemoved.addListener((id, removeInfo) => {

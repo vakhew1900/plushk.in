@@ -184,7 +184,14 @@
     "deleteDialogConfirm": "Delete",
     "editLocationButton": "Edit",
     "moveButton": "Move",
-    "moveCancelButton": "Cancel"
+    "moveCancelButton": "Cancel",
+    "notesCount": "Notes: {{count}}",
+    "addNote": "Note",
+    "notesEmpty": "No notes yet",
+    "noteTitlePlaceholder": "Untitled",
+    "noteTextPlaceholder": "Note text…",
+    "allNotes": "All notes: {{count}}",
+    "noteUpdatedAt": "updated {{date}}"
   },
   "variablesSection": {
     "title": "Variables",

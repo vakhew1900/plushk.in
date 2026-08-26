@@ -78,3 +78,16 @@ Manual correctness checklist — things to verify by hand in the running extensi
 - [ ] `UI-9` "+ Тег"/"+ Категория"/"+ Правило" buttons: taller and less rounded than before.
 - [ ] `UI-9` bookmark card with an assigned category and workflow status: category pill top-right of the card, status pill on the same line as the tags row, bottom-right — check both themes and a long category/status name doesn't overlap the title.
 - [ ] `UI-9` bookmark card tag row: "Теги" button (icon + label) opens the tag popover, replacing the old icon-only pencil button.
+
+## NOTE
+
+- [ ] `NOTE-1` bookmark settings popup, "Заметки" tab is now clickable (not the old disabled/greyed-out placeholder) and shows the active-tab accent bar same as "Настройки".
+- [ ] `NOTE-1` popup is noticeably wider than before (`60rem`) on both the "Настройки" and "Заметки" tabs — check the Settings tab's icon+fields layout still looks fine at the new width, not stretched oddly.
+- [ ] `NOTE-1` bookmark with zero notes: "Заметки" tab shows an empty-state message, not a blank area.
+- [ ] `NOTE-1` click "+ Заметка": a new empty note opens immediately in the detail view, title field focused and ready to type.
+- [ ] `NOTE-1` type a title and some text, click "← Все заметки" to go back: the grid shows the new card with that title/snippet — reopen the card, the text is still there (round-trips through Dexie, not just local state).
+- [ ] `NOTE-1` two or more notes: grid lays out as a 2-column masonry (Google Keep style, uneven card heights), sorted by most-recently-edited first.
+- [ ] `NOTE-1` trash icon on a card: note disappears immediately, no confirmation dialog.
+- [ ] `NOTE-1` trash icon inside the detail view: note is deleted and the view returns to the grid.
+- [ ] `NOTE-1` delete the bookmark itself (gear icon rail's trash, or the panel's "Удалить закладку", per `UI-16`): reopening a bookmark card for a *different* bookmark still shows its own notes untouched; the deleted bookmark's notes don't reappear anywhere (cascade via `BG-1`).
+- [ ] `NOTE-1` check both themes (dark/light) — card background/border/text colors read correctly in Light theme too, not just the dark default.

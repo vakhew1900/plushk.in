@@ -19,14 +19,17 @@
   align-items: center;
   justify-content: center;
   color: var(--muted);
+  transition: color 0.15s, background-color 0.15s;
 }
+.tab:hover { color: var(--text); }
 
-.tab[data-active] {
+.tab.active {
   background: var(--bg2);
   color: var(--accent);
 }
+.tab.active:hover { color: var(--accent); }
 
-.tab[data-active]::before {
+.tab.active::before {
   content: '';
   position: absolute;
   left: -0.625rem;
@@ -35,9 +38,4 @@
   width: 0.1875rem;
   border-radius: 0.1875rem;
   background: var(--accent);
-}
-
-.tab[data-disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
 }

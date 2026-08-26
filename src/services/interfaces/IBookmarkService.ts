@@ -8,8 +8,9 @@
 export interface IBookmarkService {
   /**
    * Deletes every cross-table link tied to one bookmark id — tag links,
-   * category+status link, and any future link table — not just one of them.
-   * Safe to call for a bookmark with no links at all (a no-op).
+   * category+status link, icon override, notes, and any future link table —
+   * not just one of them. Safe to call for a bookmark with no links at all
+   * (a no-op).
    */
   removeAllLinksForBookmark(bookmarkId: string): Promise<void>;
 }
