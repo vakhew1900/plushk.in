@@ -1,4 +1,4 @@
-import { IconButton } from '@/components/ui/icon-button';
+import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { BookmarkFolderPath } from '@/components/bookmark/BookmarkFolderPath';
 import { IconLink, IconEdit, IconTrash } from '@/components/icons';
@@ -23,16 +23,16 @@ export function BookmarkLocationView({ folderPath, url, onEdit, onRequestDelete 
           {t('bookmarkSettings.locationLabel')}
         </Text>
         <div className={styles.headerActions}>
-          <IconButton
-            icon={IconEdit}
-            iconSize="sm"
-            onClick={onEdit}
-            title={t('bookmarkSettings.editLocationTooltip')}
-          />
-          <button type="button" className={styles.deleteLink} onClick={onRequestDelete}>
-            <IconTrash size="sm" />
-            {t('bookmarkSettings.deleteButton')}
-          </button>
+          <Button variant="outline" size="sm" onClick={onEdit} className={styles.actionButton}>
+            <IconEdit size="md" />
+            {t('bookmarkSettings.editLocationButton')}
+          </Button>
+          <Button variant="outline" size="sm" onClick={onRequestDelete} className={styles.actionButton}>
+            <span className={styles.deleteContent}>
+              <IconTrash size="md" />
+              {t('bookmarkSettings.deleteButton')}
+            </span>
+          </Button>
         </div>
       </div>
       <BookmarkFolderPath segments={folderPath} />
