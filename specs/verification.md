@@ -56,6 +56,15 @@ Manual correctness checklist — things to verify by hand in the running extensi
 - [ ] `UI-15` clear that same field back to empty and blur: the card's icon reverts to whatever `IconRule`/favicon would show without an override — not a blank/broken image.
 - [ ] `UI-15` category/status segmented controls and tags inside the settings popover: changing them there updates the same card's inline `EntitySegment`/`StatusSegment`/tag chips immediately, and vice versa (edit inline, reopen the popover — it reflects the change) — confirms both surfaces share the same underlying hooks, not two independent copies.
 - [ ] `UI-15` popup "Поиск" tab `CompactBookmarkCard`: no gear icon appears there — unchanged from `SEARCH-9`.
+- [ ] `UI-16` Library tab `BookmarkCard`: the settings rail now shows two stacked cells separated by a thin line — a trash icon on top, the existing gear below. Clicking the trash opens the delete-confirmation dialog directly, **without** opening the settings dialog.
+- [ ] `UI-16` delete-confirmation dialog (either entry point): shows the bookmark's title in the heading, a generic body (no enumerated tag/category list), "Отмена"/"Удалить" buttons. "Отмена" closes it with no effect; "Удалить" removes the bookmark from `chrome://bookmarks` (or Firefox's Library) and it disappears from the "Библиотека" list without a manual reload.
+- [ ] `UI-16` after deleting a bookmark that had tags/a category/a custom icon: those Dexie-side links are gone too — re-saving the exact same URL doesn't resurrect the old tags/category/icon (same `BG-1` cascade check as `RULE-13`'s equivalent item above, now exercised via the new UI path instead of native delete).
+- [ ] `UI-16` settings dialog → "Расположение" block: pencil icon next to the label, plus a "Удалить закладку" text link with a trash icon — clicking the link opens the same confirmation dialog as the rail's trash icon.
+- [ ] `UI-16` click the pencil: the block expands in place into an accent-bordered box with a path input (pre-filled with the current folder) and a `FolderTree` — no popover, no second dialog on top of the settings dialog.
+- [ ] `UI-16` in the expanded box, click a different folder in the tree (or type a new path) then "Переместить": the box collapses back to the read-only view showing the new path, and the bookmark's folder actually changed in the browser's native bookmarks (check via `chrome://bookmarks`/Firefox Library).
+- [ ] `UI-16` in the expanded box, click "Отмена" instead: box collapses, path is unchanged — no `move()` call happened (folder in the browser stayed the same).
+- [ ] `UI-16` move to a folder path that doesn't exist yet (type a new nested path by hand): missing folder segments get created, same as the popup quick-save flow's existing behavior.
+- [ ] `UI-16` popup "Поиск" tab `CompactBookmarkCard`: unchanged — no trash icon, no pencil, no delete/move affordance anywhere (there's no settings rail there to begin with).
 
 ## UI
 

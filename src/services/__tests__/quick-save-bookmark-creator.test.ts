@@ -21,6 +21,7 @@ class FakeBookmarkRepository implements IBookmarkRepository {
   async getByTitle(): Promise<Browser.bookmarks.BookmarkTreeNode[]> { return []; }
   async listAll(): Promise<BookmarkSearchEntry[]> { return []; }
   async getFolderTree(): Promise<FolderNode[]> { return []; }
+  async removeWithCascade(): Promise<void> {}
 }
 
 class FakeBookmarkQuickSaveLinksRepository implements IBookmarkQuickSaveLinksRepository {

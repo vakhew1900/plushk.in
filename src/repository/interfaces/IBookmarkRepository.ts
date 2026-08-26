@@ -20,6 +20,14 @@ export interface IBookmarkRepository {
   /** Finds bookmarks (not folders) whose title matches exactly. */
   getByTitle(title: string): Promise<Browser.bookmarks.BookmarkTreeNode[]>;
 
+  /**
+   * Removes a bookmark. Cascade cleanup of its Dexie links (tags/category-
+   * status/icon override) is not done here — it happens reactively via the
+   * `browser.bookmarks.onRemoved` listener in `background.ts` (BG-1), which
+   * fires for this call the same as for any native removal.
+   */
+  removeWithCascade(id: string): Promise<void>;
+
   /** Lists every saved bookmark (leaf nodes only) with the folder path it currently lives in. */
   listAll(): Promise<BookmarkSearchEntry[]>;
 

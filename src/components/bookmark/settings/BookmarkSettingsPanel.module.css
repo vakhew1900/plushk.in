@@ -38,29 +38,3 @@
   flex: 1;
   min-width: 0;
 }
-
-.location {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.urlRow {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  color: var(--faint);
-  min-width: 0;
-}
-
-.urlIcon {
-  flex-shrink: 0;
-}
-
-.url {
-  font-size: 0.8125rem;
-  font-family: var(--font-mono);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
