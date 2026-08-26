@@ -26,10 +26,10 @@
 }
 
 .favicon[data-size='xl'] {
-  width: 8rem;
-  height: 8rem;
-  border-radius: 1.25rem;
-  font-size: 3rem;
+  width: 11rem;
+  height: 11rem;
+  border-radius: 1.5rem;
+  font-size: 3.875rem;
 }
 
 .red    { background: var(--red-soft);    color: var(--red); }

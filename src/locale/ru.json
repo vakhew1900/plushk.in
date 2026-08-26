@@ -184,7 +184,14 @@
     "deleteDialogConfirm": "Удалить",
     "editLocationButton": "Изменить",
     "moveButton": "Переместить",
-    "moveCancelButton": "Отмена"
+    "moveCancelButton": "Отмена",
+    "notesCount": "Заметки: {{count}}",
+    "addNote": "Заметка",
+    "notesEmpty": "Пока нет заметок",
+    "noteTitlePlaceholder": "Без названия",
+    "noteTextPlaceholder": "Текст заметки…",
+    "allNotes": "Все заметки: {{count}}",
+    "noteUpdatedAt": "изменено {{date}}"
   },
   "variablesSection": {
     "title": "Переменные",

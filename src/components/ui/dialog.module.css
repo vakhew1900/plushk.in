@@ -12,7 +12,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 50rem;
+  width: 64rem;
+  height: 44rem;
   max-width: calc(100vw - 3rem);
   max-height: calc(100vh - 3rem);
   overflow: hidden;

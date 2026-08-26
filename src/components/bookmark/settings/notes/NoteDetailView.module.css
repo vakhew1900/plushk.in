@@ -1,0 +1,49 @@
+.wrap {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.backLink:hover { color: var(--text); }
+
+.titleInput {
+  font-size: 1.25rem;
+  font-weight: 700;
+  height: auto;
+  padding: 0.25rem 0;
+  border: none;
+  background: transparent;
+}
+
+.timestamp {
+  font-family: var(--font-mono);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.textArea {
+  flex: 1;
+  min-height: 0;
+  resize: none;
+  color: var(--text);
+  font-size: 0.84375rem;
+  line-height: 1.65;
+}

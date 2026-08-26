@@ -17,6 +17,7 @@ import { BookmarkEntityLinkRepository } from '@/repository/BookmarkEntityLinkRep
 import { BookmarkQuickSaveLinksRepository } from '@/repository/BookmarkQuickSaveLinksRepository';
 import { IconRuleRepository } from '@/repository/IconRuleRepository';
 import { IconBookmarkRepository } from '@/repository/IconBookmarkRepository';
+import { NoteRepository } from '@/repository/NoteRepository';
 import type { IBookmarkRepository } from '@/repository/interfaces/IBookmarkRepository';
 import type { IBookmarkTagLinkRepository } from '@/repository/interfaces/IBookmarkTagLinkRepository';
 import type { IBookmarkRuleRepository } from '@/repository/interfaces/IBookmarkRuleRepository';
@@ -34,6 +35,7 @@ import type { IBookmarkEntityLinkRepository } from '@/repository/interfaces/IBoo
 import type { IBookmarkQuickSaveLinksRepository } from '@/repository/interfaces/IBookmarkQuickSaveLinksRepository';
 import type { IIconRuleRepository } from '@/repository/interfaces/IIconRuleRepository';
 import type { IIconBookmarkRepository } from '@/repository/interfaces/IIconBookmarkRepository';
+import type { INoteRepository } from '@/repository/interfaces/INoteRepository';
 import { BookmarkSearchService } from '@/services/BookmarkSearchService';
 import { BookmarkService } from '@/services/BookmarkService';
 import { FileService } from '@/services/FileService';
@@ -82,6 +84,7 @@ export interface Services {
   iconRuleRepository: IIconRuleRepository;
   iconBookmarkRepository: IIconBookmarkRepository;
   iconLinkService: IIconLinkService;
+  noteRepository: INoteRepository;
 }
 
 export const ServicesContext = createContext<Services | null>(null);
@@ -106,6 +109,7 @@ export function ServicesProvider({ children }: Props) {
     const bookmarkEntityLinkRepository = new BookmarkEntityLinkRepository();
     const iconRuleRepository = new IconRuleRepository();
     const iconBookmarkRepository = new IconBookmarkRepository();
+    const noteRepository = new NoteRepository();
 
     return {
       bookmarkRepository,
@@ -136,7 +140,7 @@ export function ServicesProvider({ children }: Props) {
         bookmarkTagLinkRepository,
         bookmarkEntityLinkRepository,
       ),
-      bookmarkService: new BookmarkService(bookmarkTagLinkRepository, bookmarkEntityLinkRepository, iconBookmarkRepository),
+      bookmarkService: new BookmarkService(bookmarkTagLinkRepository, bookmarkEntityLinkRepository, iconBookmarkRepository, noteRepository),
       tagRepository,
       bookmarkTagLinkRepository,
       entityTypeRepository,
@@ -146,6 +150,7 @@ export function ServicesProvider({ children }: Props) {
       iconRuleRepository,
       iconBookmarkRepository,
       iconLinkService: new IconLinkService(iconRuleRepository, iconBookmarkRepository, new IconExtrasService()),
+      noteRepository,
     };
   }, []);
 

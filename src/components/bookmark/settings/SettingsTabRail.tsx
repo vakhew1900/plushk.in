@@ -1,20 +1,37 @@
+import { clsx } from 'clsx';
 import { IconSettings, IconNotebook } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './SettingsTabRail.module.css';
 
-// "Заметки" is a visual placeholder for the future NOTE-1 — deliberately
-// inert (no click handler) until that task gives it real content.
-export function SettingsTabRail() {
+export const SettingsTab = { SETTINGS: 'settings', NOTES: 'notes' } as const;
+export type SettingsTab = typeof SettingsTab[keyof typeof SettingsTab];
+
+interface Props {
+  activeTab: SettingsTab;
+  onTabChange: (tab: SettingsTab) => void;
+}
+
+export function SettingsTabRail({ activeTab, onTabChange }: Props) {
   const { translate: t } = useTranslation();
 
   return (
     <div className={styles.rail}>
-      <div className={styles.tab} data-active title={t('bookmarkSettings.tabSettings')}>
+      <button
+        type="button"
+        className={clsx(styles.tab, activeTab === SettingsTab.SETTINGS && styles.active)}
+        title={t('bookmarkSettings.tabSettings')}
+        onClick={() => onTabChange(SettingsTab.SETTINGS)}
+      >
         <IconSettings size="md" />
-      </div>
-      <div className={styles.tab} data-disabled title={t('bookmarkSettings.tabNotes')}>
+      </button>
+      <button
+        type="button"
+        className={clsx(styles.tab, activeTab === SettingsTab.NOTES && styles.active)}
+        title={t('bookmarkSettings.tabNotes')}
+        onClick={() => onTabChange(SettingsTab.NOTES)}
+      >
         <IconNotebook size="md" />
-      </div>
+      </button>
     </div>
   );
 }

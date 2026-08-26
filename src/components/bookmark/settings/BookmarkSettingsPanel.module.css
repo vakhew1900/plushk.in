@@ -1,17 +1,25 @@
 .panel {
   display: flex;
-  min-height: 24rem;
-  max-height: calc(100vh - 3rem);
+  height: 100%;
   overflow-y: auto;
 }
 
 .content {
   flex: 1;
   min-width: 0;
-  display: flex;
-  gap: 2rem;
   padding: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.frame {
+  width: 100%;
+  padding: 2.25rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
   align-items: flex-start;
+  gap: 2.5rem;
 }
 
 .fields {
@@ -19,8 +27,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  padding-top: 0.5rem;
+  gap: 1.5rem;
 }
 
 .fieldLabel {
