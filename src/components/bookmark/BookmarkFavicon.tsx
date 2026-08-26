@@ -12,28 +12,39 @@ function colorForSeed(seed: string): ColorVariant {
   return COLOR_VARIANTS[hash % COLOR_VARIANTS.length];
 }
 
-export const BookmarkFaviconSize = { SM: 'sm', MD: 'md', WIDE: 'wide' } as const;
+export const BookmarkFaviconSize = { SM: 'sm', MD: 'md', WIDE: 'wide', XL: 'xl' } as const;
 export type BookmarkFaviconSize = (typeof BookmarkFaviconSize)[keyof typeof BookmarkFaviconSize];
 
 interface Props {
   /** Text the initial and color are derived from — typically the domain. */
   seed: string;
-  /** Full bookmark URL to resolve a real favicon for. Falls back to the letter when omitted or the icon fails to load. */
+  /** Full bookmark URL to resolve a real favicon for. Only used when `iconUrl` is omitted. */
   url?: string;
+  /** Already-resolved icon to show (from `useBookmarkIcon` — RULE-13/UI-15's IconRule/manual-override result), taking precedence over `url`. */
+  iconUrl?: string;
   size?: BookmarkFaviconSize;
 }
 
-export function BookmarkFavicon({ seed, url, size = BookmarkFaviconSize.MD }: Props) {
-  const [iconFailed, setIconFailed] = useState(false);
+export function BookmarkFavicon({ seed, url, iconUrl, size = BookmarkFaviconSize.MD }: Props) {
   const letter = seed.charAt(0).toUpperCase() || '?';
-  const iconUrl = url ? resolveFaviconUrl(url) : undefined;
+  const resolvedIconUrl = iconUrl ?? (url ? resolveFaviconUrl(url) : undefined);
+
+  // Reset the broken-image flag when the icon actually changes (e.g. the
+  // settings dialog just wrote a new override) — otherwise a previous
+  // failure would stick and mask a since-fixed, perfectly valid url.
+  const [iconFailed, setIconFailed] = useState(false);
+  const [lastIconUrl, setLastIconUrl] = useState(resolvedIconUrl);
+  if (resolvedIconUrl !== lastIconUrl) {
+    setLastIconUrl(resolvedIconUrl);
+    setIconFailed(false);
+  }
 
   return (
     <div className={clsx(styles.favicon, styles[colorForSeed(seed)])} data-size={size}>
-      {iconUrl && !iconFailed ? (
+      {resolvedIconUrl && !iconFailed ? (
         <img
           className={styles.icon}
-          src={iconUrl}
+          src={resolvedIconUrl}
           alt=""
           onError={() => setIconFailed(true)}
         />

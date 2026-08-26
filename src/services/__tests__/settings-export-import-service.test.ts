@@ -7,6 +7,7 @@ import type { DomainAlias } from '../../types/domain-alias';
 import { PaletteColor } from '../../types/palette-color';
 import type { Tag } from '../../types/tag';
 import type { EntityType } from '../../types/entity-type';
+import { IconRuleBindingType, IconSourceType, type IconRule } from '../../types/icon-rule';
 import { SETTINGS_EXPORT_VERSION } from '../../types/settings-export';
 import type { SettingsExport } from '../../types/settings-export';
 import type { IDomainAliasRepository } from '../../repository/interfaces/IDomainAliasRepository';
@@ -16,6 +17,7 @@ import type { IEntityTypeRepository } from '../../repository/interfaces/IEntityT
 import { MimeType } from '../interfaces/IFileService';
 import type { IFileService } from '../interfaces/IFileService';
 import { FakeBookmarkRuleRepository } from '../../repository/__tests__/fakes/FakeBookmarkRuleRepository';
+import { FakeIconRuleRepository } from '../../repository/__tests__/fakes/FakeIconRuleRepository';
 import { SettingsExportImportService } from '../SettingsExportImportService';
 
 class FakeDomainAliasRepository implements IDomainAliasRepository {
@@ -94,18 +96,29 @@ const tag: Tag = { id: 'tag-1', name: 'tutorial', color: PaletteColor.TEAL };
 
 const entityType: EntityType = { id: 'entity-1', name: 'Видео', color: PaletteColor.BLUE };
 
+const iconRule: IconRule = {
+  id: 'icon-rule-1',
+  name: 'youtube icon',
+  bindingType: IconRuleBindingType.DOMAIN,
+  bindingValue: 'youtube.com',
+  source: { type: IconSourceType.STATIC, value: 'https://x/icon.png' },
+  enabled: true,
+};
+
 function makeService(seed?: {
   rules?: BookmarkRule[];
   aliases?: DomainAlias[];
   groups?: PageMatchGroup[];
   tags?: Tag[];
   entityTypes?: EntityType[];
+  iconRules?: IconRule[];
 }) {
   const ruleRepository = new FakeBookmarkRuleRepository(seed?.rules);
   const aliasRepository = new FakeDomainAliasRepository(seed?.aliases);
   const groupRepository = new FakePageMatchGroupRepository(seed?.groups);
   const tagRepository = new FakeTagRepository(seed?.tags);
   const entityTypeRepository = new FakeEntityTypeRepository(seed?.entityTypes);
+  const iconRuleRepository = new FakeIconRuleRepository(seed?.iconRules);
   const fileService = new FakeFileService();
   const service = new SettingsExportImportService(
     ruleRepository,
@@ -113,19 +126,30 @@ function makeService(seed?: {
     groupRepository,
     tagRepository,
     entityTypeRepository,
+    iconRuleRepository,
     fileService,
   );
-  return { service, ruleRepository, aliasRepository, groupRepository, tagRepository, entityTypeRepository, fileService };
+  return {
+    service,
+    ruleRepository,
+    aliasRepository,
+    groupRepository,
+    tagRepository,
+    entityTypeRepository,
+    iconRuleRepository,
+    fileService,
+  };
 }
 
 describe('SettingsExportImportService.exportSettings', () => {
-  it('gathers rules, aliases, page match groups, tags, and entity types and downloads them as a versioned JSON file', async () => {
+  it('gathers rules, aliases, page match groups, tags, entity types, and icon rules and downloads them as a versioned JSON file', async () => {
     const { service, fileService } = makeService({
       rules: [rule],
       aliases: [alias],
       groups: [group],
       tags: [tag],
       entityTypes: [entityType],
+      iconRules: [iconRule],
     });
     await service.exportSettings();
 
@@ -141,6 +165,7 @@ describe('SettingsExportImportService.exportSettings', () => {
     ]);
     expect(data.tags).toEqual([tag]);
     expect(data.entityTypes).toEqual([entityType]);
+    expect(data.iconRules).toEqual([iconRule]);
     expect(typeof data.exportedAt).toBe('string');
   });
 });
@@ -148,7 +173,7 @@ describe('SettingsExportImportService.exportSettings', () => {
 describe('SettingsExportImportService.importSettings', () => {
   it('upserts by id, leaving existing rows not present in the file untouched', async () => {
     const existingRule: BookmarkRule = { ...rule, id: 'rule-existing', name: 'existing' };
-    const { service, ruleRepository, aliasRepository, groupRepository, tagRepository, entityTypeRepository } =
+    const { service, ruleRepository, aliasRepository, groupRepository, tagRepository, entityTypeRepository, iconRuleRepository } =
       makeService({ rules: [existingRule] });
 
     await service.importSettings({
@@ -161,6 +186,7 @@ describe('SettingsExportImportService.importSettings', () => {
       ],
       tags: [tag],
       entityTypes: [entityType],
+      iconRules: [iconRule],
     });
 
     expect(ruleRepository.rules).toEqual(expect.arrayContaining([existingRule, rule]));
@@ -168,10 +194,11 @@ describe('SettingsExportImportService.importSettings', () => {
     expect(groupRepository.groups).toEqual([group]);
     expect(tagRepository.tags).toEqual([tag]);
     expect(entityTypeRepository.entityTypes).toEqual([entityType]);
+    expect(iconRuleRepository.rules).toEqual([iconRule]);
   });
 
-  it('treats missing tags/entityTypes fields as empty, for backward compatibility with older export files', async () => {
-    const { service, ruleRepository, tagRepository, entityTypeRepository } = makeService();
+  it('treats missing tags/entityTypes/iconRules fields as empty, for backward compatibility with older export files', async () => {
+    const { service, ruleRepository, tagRepository, entityTypeRepository, iconRuleRepository } = makeService();
 
     await service.importSettings({
       version: SETTINGS_EXPORT_VERSION,
@@ -184,6 +211,7 @@ describe('SettingsExportImportService.importSettings', () => {
     expect(ruleRepository.rules).toEqual([rule]);
     expect(tagRepository.tags).toEqual([]);
     expect(entityTypeRepository.entityTypes).toEqual([]);
+    expect(iconRuleRepository.rules).toEqual([]);
   });
 
   it('overwrites an existing row that shares an id with an imported one', async () => {

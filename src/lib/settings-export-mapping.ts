@@ -33,6 +33,7 @@ export function isSettingsExport(value: unknown): value is SettingsExport {
     Array.isArray(value.domainAliases) &&
     Array.isArray(value.pageMatchGroups) &&
     (value.tags === undefined || Array.isArray(value.tags)) &&
-    (value.entityTypes === undefined || Array.isArray(value.entityTypes))
+    (value.entityTypes === undefined || Array.isArray(value.entityTypes)) &&
+    (value.iconRules === undefined || Array.isArray(value.iconRules))
   );
 }

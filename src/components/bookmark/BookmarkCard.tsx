@@ -1,9 +1,11 @@
 import { useBookmarkEntityEditor } from '@/hooks/useBookmarkEntityEditor';
-import { BookmarkDetailsPopover } from './BookmarkDetailsPopover';
+import { useBookmarkTagEditor } from '@/hooks/useBookmarkTagEditor';
+import { useBookmarkIcon } from '@/hooks/useBookmarkIcon';
 import { BookmarkFavicon, BookmarkFaviconSize } from './BookmarkFavicon';
-import { BookmarkTagList } from './tags/BookmarkTagList';
+import { TagPicker } from './tags/TagPicker';
 import { EntitySegment } from './entity/EntitySegment';
 import { StatusSegment } from './entity/StatusSegment';
+import { BookmarkSettingsDialog } from './settings/BookmarkSettingsDialog';
 import styles from './BookmarkCard.module.css';
 
 interface Props {
@@ -14,20 +16,31 @@ interface Props {
   onClick: () => void;
 }
 
+// Every piece of per-bookmark editable state (entity/status, tags, icon) is
+// fetched exactly once here and threaded down as props to both the inline
+// controls on the card face AND BookmarkSettingsDialog's panel — two
+// independent hook calls for the same bookmarkId (one inline, one inside the
+// dialog) would each hold their own stale local copy and never see each
+// other's writes, same root cause as ARCH-12 (see useBookmarkIcon's docs for
+// the icon case this was first found in).
 export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
   const domain = new URL(url).hostname;
   const { entityTypes, selectedEntity, statuses, selectedStatus, chooseEntity, chooseStatus } =
     useBookmarkEntityEditor(id);
+  const { tags, tagIds, toggleTag } = useBookmarkTagEditor(id);
+  const { displayUrl, overrideUrl, setOverride } = useBookmarkIcon(id, url);
   const showStatus = Boolean(selectedEntity) && statuses.length > 0;
 
   return (
-    <div className={styles.card} onClick={onClick} role="button" tabIndex={0}>
-      <BookmarkFavicon seed={domain} url={url} size={BookmarkFaviconSize.WIDE} />
+    <div className={styles.card}>
+      <BookmarkFavicon seed={domain} iconUrl={displayUrl} size={BookmarkFaviconSize.WIDE} />
 
       <div className={styles.content}>
         <div className={styles.headRow}>
           <div className={styles.meta}>
-            <div className={styles.title} title={title}>{title}</div>
+            <div className={styles.title} title={title} onClick={onClick} role="button" tabIndex={0}>
+              {title}
+            </div>
             <div className={styles.domain}>{domain}</div>
           </div>
           {entityTypes.length > 0 && (
@@ -41,7 +54,7 @@ export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
         </div>
 
         <div className={styles.footRow}>
-          <BookmarkTagList bookmarkId={id} />
+          <TagPicker tags={tags} selectedTagIds={tagIds} onToggle={(tagId) => void toggleTag(tagId)} />
           {showStatus && (
             <StatusSegment
               statuses={statuses}
@@ -49,9 +62,27 @@ export function BookmarkCard({ id, title, url, folderPath, onClick }: Props) {
               onChoose={(statusId) => void chooseStatus(statusId)}
             />
           )}
-          <BookmarkDetailsPopover folderPath={folderPath} url={url} />
         </div>
       </div>
+
+      <BookmarkSettingsDialog
+        bookmarkId={id}
+        seed={domain}
+        url={url}
+        folderPath={folderPath}
+        displayUrl={displayUrl}
+        overrideUrl={overrideUrl}
+        onOverrideChange={setOverride}
+        entityTypes={entityTypes}
+        selectedEntity={selectedEntity}
+        onChooseEntity={chooseEntity}
+        statuses={statuses}
+        selectedStatus={selectedStatus}
+        onChooseStatus={chooseStatus}
+        tags={tags}
+        selectedTagIds={tagIds}
+        onToggleTag={toggleTag}
+      />
     </div>
   );
 }

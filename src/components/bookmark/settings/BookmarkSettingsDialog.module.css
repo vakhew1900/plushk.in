@@ -1,0 +1,23 @@
+.rail {
+  width: 2.375rem;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  color: var(--muted);
+  transition: background-color 0.15s, color 0.15s;
+}
+.trigger:hover {
+  background: var(--hover);
+  color: var(--text);
+}

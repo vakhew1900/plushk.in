@@ -1,5 +1,6 @@
 import type { IBookmarkRepository } from '../repository/interfaces/IBookmarkRepository';
 import type { IBookmarkQuickSaveLinksRepository } from '../repository/interfaces/IBookmarkQuickSaveLinksRepository';
+import type { IIconBookmarkRepository } from '../repository/interfaces/IIconBookmarkRepository';
 import type { QuickSaveSelection } from '../types/quick-save';
 import type { IQuickSaveBookmarkCreator } from './interfaces/IQuickSaveBookmarkCreator';
 
@@ -7,10 +8,15 @@ export class QuickSaveBookmarkCreator implements IQuickSaveBookmarkCreator {
   constructor(
     private readonly bookmarkRepository: IBookmarkRepository,
     private readonly bookmarkQuickSaveLinksRepository: IBookmarkQuickSaveLinksRepository,
+    private readonly iconBookmarkRepository: IIconBookmarkRepository,
   ) {}
 
   async create(title: string, url: string, selection: QuickSaveSelection): Promise<void> {
     const created = await this.bookmarkRepository.create(title, url, selection.targetFolder);
+
+    if (selection.iconUrl) {
+      await this.iconBookmarkRepository.save({ bookmarkId: created.id, iconUrl: selection.iconUrl });
+    }
 
     if (selection.tagIds.length === 0 && selection.entityTypeId === undefined) return;
 

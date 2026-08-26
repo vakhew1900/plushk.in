@@ -8,4 +8,5 @@ export interface QuickSaveSelection {
   tagIds: string[];
   entityTypeId: string | undefined;
   statusId: string | undefined;
+  iconUrl: string | undefined;
 }

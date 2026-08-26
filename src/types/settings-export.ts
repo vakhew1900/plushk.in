@@ -3,6 +3,7 @@ import type { DomainAlias } from './domain-alias';
 import type { PageMatch } from './page-match';
 import type { Tag } from './tag';
 import type { EntityType } from './entity-type';
+import type { IconRule } from './icon-rule';
 
 // Bumped when the shape of SettingsExport changes in a way that breaks
 // reading older files (e.g. a required field is added or renamed). Kept at
@@ -34,4 +35,9 @@ export interface SettingsExport {
   // an EntityType with no workflow at all is already a valid state (SHELF-1).
   tags?: Tag[];
   entityTypes?: EntityType[];
+  // Optional — added alongside RULE-13. IconBookmark (the per-bookmark resolved-
+  // icon cache) is deliberately NOT exported: like BookmarkTagLink/BookmarkEntityLink,
+  // it's per-bookmark instance data tied to specific browser bookmarks, not portable
+  // "settings" — only the IconRule vocabulary itself is.
+  iconRules?: IconRule[];
 }
