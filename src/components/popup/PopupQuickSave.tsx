@@ -35,8 +35,19 @@ export function PopupQuickSave({ mode }: Props) {
   const { suggestion, saved, save } = useQuickSave(mode);
   const { entityTypes, statusesFor } = useEntityWorkflows();
   const { items: tags } = useTags();
-  const { targetFolder, entityTypeId, statusId, tagIds, setTargetFolder, chooseEntity, toggleTag, matchedRuleName } =
-    useQuickSaveSelection(suggestion, statusesFor);
+  const {
+    targetFolder,
+    entityTypeId,
+    statusId,
+    tagIds,
+    iconUrl,
+    setTargetFolder,
+    chooseEntity,
+    toggleTag,
+    setIconUrl,
+    matchedRuleName,
+    matchedIconRuleName,
+  } = useQuickSaveSelection(suggestion, statusesFor);
   const selectedEntity = entityTypes.find((e) => e.id === entityTypeId);
 
   useEffect(() => {
@@ -64,7 +75,7 @@ export function PopupQuickSave({ mode }: Props) {
             path={targetFolder}
             onPathChange={setTargetFolder}
             onSave={(value) => {
-              void save({ targetFolder: value, tagIds, entityTypeId, statusId });
+              void save({ targetFolder: value, tagIds, entityTypeId, statusId, iconUrl });
             }}
           >
             <AdvancedSection
@@ -75,6 +86,9 @@ export function PopupQuickSave({ mode }: Props) {
               selectedTagIds={tagIds}
               onToggleTag={toggleTag}
               matchedRuleName={matchedRuleName}
+              iconUrl={iconUrl}
+              matchedIconRuleName={matchedIconRuleName}
+              onIconUrlChange={setIconUrl}
             />
           </FolderPicker>
         )}

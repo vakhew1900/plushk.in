@@ -61,10 +61,13 @@
   "conditionGroup": {
     "singleLabel": "—",
     "andLabel": "AND",
+    "andShortLabel": "AND",
     "andDesc": "all conditions match",
     "orLabel": "OR",
+    "orShortLabel": "OR",
     "orDesc": "any condition matches",
     "notLabel": "NOT",
+    "notShortLabel": "NOT",
     "notDesc": "no condition matches",
     "emptyError": "Add at least one condition"
   },
@@ -87,7 +90,12 @@
     "addTerm": "Value (=)",
     "addTerms": "One of a list",
     "addRegex": "Regular expression",
-    "addWildcard": "Wildcard (* ?)"
+    "addWildcard": "Wildcard (* ?)",
+    "addMenuConditionGroup": "Condition",
+    "addMenuStructureGroup": "Group",
+    "addAnd": "AND (all match)",
+    "addOr": "OR (any matches)",
+    "addNot": "NOT (none match)"
   },
   "jsonView": {
     "valid": "Valid JSON · {{count}} conditions",
@@ -99,7 +107,21 @@
     "allCount": "All bookmarks: {{count}}",
     "foundCount": "Found: {{count}}",
     "noBookmarks": "No sorted bookmarks yet.",
-    "noResults": "Nothing found — try a different query."
+    "noResults": "Nothing found — try a different query.",
+    "filters": {
+      "toggleButton": "Filters",
+      "tagsLabel": "Tags",
+      "tagsLabelCount": "Tags · {{count}}",
+      "categoryLabel": "Category",
+      "anyCategory": "Any category",
+      "statusLabel": "Status",
+      "anyStatus": "Any status",
+      "folderLabel": "Folder",
+      "folderClear": "Clear folder filter",
+      "folderSearchPlaceholder": "Search folder…",
+      "folderNoMatches": "No matches",
+      "resetAll": "Reset all"
+    }
   },
   "mappingsTab": {
     "lead": "Domain aliases and extraction variables."
@@ -131,10 +153,9 @@
     "noEntities": "No categories yet"
   },
   "entityDetail": {
-    "colorLabel": "Color",
+    "styleLabel": "Color & icon",
     "nameLabel": "Name",
-    "iconLabel": "Icon",
-    "iconComingSoon": "coming soon",
+    "noIcon": "No icon",
     "workflowLabel": "Statuses",
     "addStatus": "Status",
     "statusNamePlaceholder": "status name",
@@ -144,6 +165,33 @@
     "addEntity": "Category",
     "noEntity": "No category",
     "editTooltip": "Edit"
+  },
+  "bookmarkSettings": {
+    "triggerTooltip": "Bookmark settings",
+    "tabSettings": "Settings",
+    "tabNotes": "Notes",
+    "editIcon": "Edit",
+    "iconLabel": "Icon",
+    "iconPlaceholder": "https://…/icon.png",
+    "categoryLabel": "Category",
+    "statusLabel": "Status",
+    "tagsLabel": "Tags",
+    "locationLabel": "Location",
+    "deleteButton": "Delete",
+    "deleteDialogTitle": "Delete \"{{title}}\"?",
+    "deleteDialogBody": "The bookmark and its related data (tags, category, icon) will be removed. This can't be undone.",
+    "deleteDialogCancel": "Cancel",
+    "deleteDialogConfirm": "Delete",
+    "editLocationButton": "Edit",
+    "moveButton": "Move",
+    "moveCancelButton": "Cancel",
+    "notesCount": "Notes: {{count}}",
+    "addNote": "Note",
+    "notesEmpty": "No notes yet",
+    "noteTitlePlaceholder": "Untitled",
+    "noteTextPlaceholder": "Note text…",
+    "allNotes": "All notes: {{count}}",
+    "noteUpdatedAt": "updated {{date}}"
   },
   "variablesSection": {
     "title": "Variables",
@@ -155,6 +203,17 @@
     "aliasPlaceholder": "alias",
     "fieldKeyPlaceholder": "field",
     "fieldValuePlaceholder": "selector"
+  },
+  "iconRulesSection": {
+    "title": "Icons",
+    "desc": "Bookmark icon source by URL/alias/domain — a static link or a css/xpath selector against the live page. Falls back to the plain favicon when nothing matches.",
+    "addRule": "Rule",
+    "namePlaceholder": "name",
+    "aliasPlaceholder": "alias",
+    "bindingValueUrlPlaceholder": "https://example.com/path",
+    "bindingValueDomainPlaceholder": "example.com",
+    "sourceValueStaticPlaceholder": "https://…/icon.png",
+    "sourceValueSelectorPlaceholder": "selector"
   },
   "exportSection": {
     "title": "Export / Import",
@@ -209,7 +268,13 @@
         "title": "Advanced",
         "categoryLabel": "Category",
         "tagsLabel": "Tags",
-        "matchedByRule": "Suggested by rule \"{{name}}\""
+        "matchedByRule": "Suggested by rule \"{{name}}\"",
+        "iconLabel": "Icon",
+        "iconMatchedByRule": "Suggested by rule \"{{name}}\"",
+        "iconEditTooltip": "Custom icon link",
+        "iconLinkPlaceholder": "https://…/icon.png",
+        "iconLinkCancel": "Cancel",
+        "iconLinkDone": "Done"
       }
     }
   }

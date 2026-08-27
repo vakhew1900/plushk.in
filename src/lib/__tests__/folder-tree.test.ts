@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { FolderNode } from '../../types/folder-node';
-import { collectAncestorIds, resolveToolbarPath, withPendingPath } from '../folder-tree';
+import { collectAllNodeIds, collectAncestorIds, filterFolderTree, resolveToolbarPath, withPendingPath } from '../folder-tree';
 
 function node(overrides: Partial<FolderNode> & Pick<FolderNode, 'id' | 'title' | 'path'>): FolderNode {
   return { children: [], ...overrides };
@@ -133,5 +133,48 @@ describe('withPendingPath', () => {
     const original = JSON.parse(JSON.stringify(tree)) as FolderNode[];
     withPendingPath(tree, 'Social/NewTopic');
     expect(tree).toEqual(original);
+  });
+});
+
+describe('collectAllNodeIds', () => {
+  it('collects every node id at every depth', () => {
+    expect(collectAllNodeIds(tree)).toEqual(new Set(['1', 'social', 'reddit', '2']));
+  });
+
+  it('returns an empty set for an empty tree', () => {
+    expect(collectAllNodeIds([])).toEqual(new Set());
+  });
+});
+
+describe('filterFolderTree', () => {
+  it('returns the tree unchanged (same reference) for an empty query', () => {
+    expect(filterFolderTree(tree, '')).toBe(tree);
+  });
+
+  it('returns the tree unchanged (same reference) for a whitespace-only query', () => {
+    expect(filterFolderTree(tree, '   ')).toBe(tree);
+  });
+
+  it('keeps a matching node plus its full ancestor chain, case-insensitively, dropping siblings with no match', () => {
+    const result = filterFolderTree(tree, 'RED');
+    expect(result).toEqual([
+      {
+        id: '1',
+        title: 'Bookmarks bar',
+        path: 'Bookmarks bar',
+        children: [
+          {
+            id: 'social',
+            title: 'Social',
+            path: 'Social',
+            children: [{ id: 'reddit', title: 'Reddit', path: 'Social/Reddit', children: [] }],
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('returns an empty array when nothing matches', () => {
+    expect(filterFolderTree(tree, 'zzz-no-match')).toEqual([]);
   });
 });

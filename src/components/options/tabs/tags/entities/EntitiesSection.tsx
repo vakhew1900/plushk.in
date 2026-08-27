@@ -3,6 +3,7 @@ import { Text } from '@/components/ui/text';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntityTypes } from '@/hooks/useEntityTypes';
 import { PaletteColor } from '@/types/palette-color';
+import type { IconName } from '@/types/icon-name';
 import { EntityList } from './EntityList';
 import { EntityDetailPanel } from './EntityDetailPanel';
 import styles from './EntitiesSection.module.css';
@@ -30,6 +31,11 @@ export function EntitiesSection() {
     if (entity) void save({ ...entity, color });
   };
 
+  const reiconEntity = (id: string, icon: IconName | undefined) => {
+    const entity = entityTypes.find((e) => e.id === id);
+    if (entity) void save({ ...entity, icon });
+  };
+
   const removeEntity = (id: string) => {
     void remove(id);
     if (selected?.id === id) setSelectedId(undefined);
@@ -54,6 +60,7 @@ export function EntitiesSection() {
             entity={selected}
             onNameChange={(name) => renameEntity(selected.id, name)}
             onColorChange={(color) => recolorEntity(selected.id, color)}
+            onIconChange={(icon) => reiconEntity(selected.id, icon)}
             onRemove={() => removeEntity(selected.id)}
           />
         ) : (

@@ -76,6 +76,10 @@ export class BookmarkRepository implements IBookmarkRepository {
     return results.filter((node) => node.title === title && node.url !== undefined);
   }
 
+  async removeWithCascade(id: string): Promise<void> {
+    await browser.bookmarks.remove(id);
+  }
+
   async listAll(): Promise<BookmarkSearchEntry[]> {
     const [root] = await browser.bookmarks.getTree();
     return this.collectBookmarks(root.children ?? [], []);

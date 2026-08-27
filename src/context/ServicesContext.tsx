@@ -15,6 +15,9 @@ import { WorkflowRepository } from '@/repository/WorkflowRepository';
 import { WorkflowStatusRepository } from '@/repository/WorkflowStatusRepository';
 import { BookmarkEntityLinkRepository } from '@/repository/BookmarkEntityLinkRepository';
 import { BookmarkQuickSaveLinksRepository } from '@/repository/BookmarkQuickSaveLinksRepository';
+import { IconRuleRepository } from '@/repository/IconRuleRepository';
+import { IconBookmarkRepository } from '@/repository/IconBookmarkRepository';
+import { NoteRepository } from '@/repository/NoteRepository';
 import type { IBookmarkRepository } from '@/repository/interfaces/IBookmarkRepository';
 import type { IBookmarkTagLinkRepository } from '@/repository/interfaces/IBookmarkTagLinkRepository';
 import type { IBookmarkRuleRepository } from '@/repository/interfaces/IBookmarkRuleRepository';
@@ -30,16 +33,25 @@ import type { IWorkflowRepository } from '@/repository/interfaces/IWorkflowRepos
 import type { IWorkflowStatusRepository } from '@/repository/interfaces/IWorkflowStatusRepository';
 import type { IBookmarkEntityLinkRepository } from '@/repository/interfaces/IBookmarkEntityLinkRepository';
 import type { IBookmarkQuickSaveLinksRepository } from '@/repository/interfaces/IBookmarkQuickSaveLinksRepository';
+import type { IIconRuleRepository } from '@/repository/interfaces/IIconRuleRepository';
+import type { IIconBookmarkRepository } from '@/repository/interfaces/IIconBookmarkRepository';
+import type { INoteRepository } from '@/repository/interfaces/INoteRepository';
 import { BookmarkSearchService } from '@/services/BookmarkSearchService';
+import { BookmarkService } from '@/services/BookmarkService';
 import { FileService } from '@/services/FileService';
 import { PageExtrasService } from '@/services/PageExtrasService';
+import { IconExtrasService } from '@/services/IconExtrasService';
+import { IconLinkService } from '@/services/IconLinkService';
 import { PageMetaFiller } from '@/services/PageMetaFiller';
 import { QuickSaveFolderResolver } from '@/services/QuickSaveFolderResolver';
+import { TargetFolderTemplateService } from '@/services/TargetFolderTemplateService';
 import { QuickSaveBookmarkCreator } from '@/services/QuickSaveBookmarkCreator';
 import { SettingsExportImportService } from '@/services/SettingsExportImportService';
 import type { IBookmarkSearchService } from '@/services/interfaces/IBookmarkSearchService';
+import type { IBookmarkService } from '@/services/interfaces/IBookmarkService';
 import type { IFileService } from '@/services/interfaces/IFileService';
 import type { IPageExtrasService } from '@/services/interfaces/IPageExtrasService';
+import type { IIconLinkService } from '@/services/interfaces/IIconLinkService';
 import type { IPageMetaFiller } from '@/services/interfaces/IPageMetaFiller';
 import type { IQuickSaveFolderResolver } from '@/services/interfaces/IQuickSaveFolderResolver';
 import type { IQuickSaveBookmarkCreator } from '@/services/interfaces/IQuickSaveBookmarkCreator';
@@ -61,6 +73,7 @@ export interface Services {
   quickSaveBookmarkCreator: IQuickSaveBookmarkCreator;
   settingsExportImportService: ISettingsExportImportService;
   bookmarkSearchService: IBookmarkSearchService;
+  bookmarkService: IBookmarkService;
   tagRepository: ITagRepository;
   bookmarkTagLinkRepository: IBookmarkTagLinkRepository;
   entityTypeRepository: IEntityTypeRepository;
@@ -68,6 +81,10 @@ export interface Services {
   workflowStatusRepository: IWorkflowStatusRepository;
   bookmarkEntityLinkRepository: IBookmarkEntityLinkRepository;
   bookmarkQuickSaveLinksRepository: IBookmarkQuickSaveLinksRepository;
+  iconRuleRepository: IIconRuleRepository;
+  iconBookmarkRepository: IIconBookmarkRepository;
+  iconLinkService: IIconLinkService;
+  noteRepository: INoteRepository;
 }
 
 export const ServicesContext = createContext<Services | null>(null);
@@ -88,6 +105,11 @@ export function ServicesProvider({ children }: Props) {
     const tagRepository = new TagRepository();
     const entityTypeRepository = new EntityTypeRepository();
     const bookmarkQuickSaveLinksRepository = new BookmarkQuickSaveLinksRepository();
+    const bookmarkTagLinkRepository = new BookmarkTagLinkRepository();
+    const bookmarkEntityLinkRepository = new BookmarkEntityLinkRepository();
+    const iconRuleRepository = new IconRuleRepository();
+    const iconBookmarkRepository = new IconBookmarkRepository();
+    const noteRepository = new NoteRepository();
 
     return {
       bookmarkRepository,
@@ -101,8 +123,8 @@ export function ServicesProvider({ children }: Props) {
       fileService,
       pageMetaFiller: new PageMetaFiller(domainAliasRepository),
       pageExtrasService: new PageExtrasService(),
-      quickSaveFolderResolver: new QuickSaveFolderResolver(bookmarkRuleRepository, defaultFolderSettingsRepository),
-      quickSaveBookmarkCreator: new QuickSaveBookmarkCreator(bookmarkRepository, bookmarkQuickSaveLinksRepository),
+      quickSaveFolderResolver: new QuickSaveFolderResolver(bookmarkRuleRepository, defaultFolderSettingsRepository, new TargetFolderTemplateService()),
+      quickSaveBookmarkCreator: new QuickSaveBookmarkCreator(bookmarkRepository, bookmarkQuickSaveLinksRepository, iconBookmarkRepository),
       bookmarkQuickSaveLinksRepository,
       settingsExportImportService: new SettingsExportImportService(
         bookmarkRuleRepository,
@@ -110,15 +132,25 @@ export function ServicesProvider({ children }: Props) {
         pageMatchGroupRepository,
         tagRepository,
         entityTypeRepository,
+        iconRuleRepository,
         fileService,
       ),
-      bookmarkSearchService: new BookmarkSearchService(bookmarkRepository),
+      bookmarkSearchService: new BookmarkSearchService(
+        bookmarkRepository,
+        bookmarkTagLinkRepository,
+        bookmarkEntityLinkRepository,
+      ),
+      bookmarkService: new BookmarkService(bookmarkTagLinkRepository, bookmarkEntityLinkRepository, iconBookmarkRepository, noteRepository),
       tagRepository,
-      bookmarkTagLinkRepository: new BookmarkTagLinkRepository(),
+      bookmarkTagLinkRepository,
       entityTypeRepository,
       workflowRepository: new WorkflowRepository(),
       workflowStatusRepository: new WorkflowStatusRepository(),
-      bookmarkEntityLinkRepository: new BookmarkEntityLinkRepository(),
+      bookmarkEntityLinkRepository,
+      iconRuleRepository,
+      iconBookmarkRepository,
+      iconLinkService: new IconLinkService(iconRuleRepository, iconBookmarkRepository, new IconExtrasService()),
+      noteRepository,
     };
   }, []);
 

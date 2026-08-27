@@ -1,7 +1,9 @@
 import CodeMirror from '@uiw/react-codemirror';
 import type { Extension } from '@codemirror/state';
 import { clsx } from 'clsx';
-import { obsidianDark } from '@/components/options/code/codeTheme';
+import { obsidianDark, obsidianLight } from '@/components/options/code/codeTheme';
+import { useTheme } from '@/hooks/useTheme';
+import { Theme } from '@/types/theme';
 import styles from './code-input.module.css';
 
 interface Props {
@@ -13,12 +15,14 @@ interface Props {
 }
 
 export function CodeInput({ value, onChange, extensions = [], placeholder, className }: Props) {
+  const { resolvedTheme } = useTheme();
+
   return (
     <CodeMirror
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      theme={obsidianDark}
+      theme={resolvedTheme === Theme.LIGHT ? obsidianLight : obsidianDark}
       extensions={extensions}
       className={clsx(styles.input, className)}
       basicSetup={{

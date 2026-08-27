@@ -1,14 +1,36 @@
+/* Single line, scrolling instead of wrapping — flex:1 so it's the one
+   element in the row that absorbs leftover width (see ConditionRow's
+   `.main`, which is nowrap so the field/op/remove stay put either side). */
 .chips {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  flex-wrap: nowrap;
+  gap: 0.3rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 2px;
+}
+.chips::-webkit-scrollbar { height: 4px; }
+.chips::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.chips::-webkit-scrollbar-track { background: transparent; }
+
+/* Fades the strip's own pixels to transparent rather than painting a
+   gradient toward a hardcoded background color — so it reads correctly
+   against any surface in both dark and light theme. Only applied once
+   the strip actually overflows (see the `overflowing` check in the
+   component) so short lists never lose their last chip to the mask. */
+.chips.fade {
+  mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent 100%);
 }
 
 .chip {
   display: flex;
   align-items: center;
   gap: 0.2rem;
+  flex-shrink: 0;
   background: var(--bg3);
   border-radius: 0.44rem;
   padding: 0.1rem 0.2rem 0.1rem 0.5rem;
@@ -28,6 +50,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
+  flex-shrink: 0;
+  white-space: nowrap;
   font-size: 0.75rem;
   color: var(--muted);
   border: 1px dashed var(--border);

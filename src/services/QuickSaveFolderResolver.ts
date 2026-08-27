@@ -3,11 +3,13 @@ import type { PageMeta } from '../types/page-meta';
 import type { IBookmarkRuleRepository } from '../repository/interfaces/IBookmarkRuleRepository';
 import type { IDefaultFolderSettingsRepository } from '../repository/interfaces/IDefaultFolderSettingsRepository';
 import type { IQuickSaveFolderResolver, QuickSaveResolution } from './interfaces/IQuickSaveFolderResolver';
+import type { ITargetFolderTemplateService } from './interfaces/ITargetFolderTemplateService';
 
 export class QuickSaveFolderResolver implements IQuickSaveFolderResolver {
   constructor(
     private readonly bookmarkRuleRepository: IBookmarkRuleRepository,
     private readonly defaultFolderSettingsRepository: IDefaultFolderSettingsRepository,
+    private readonly targetFolderTemplateService: ITargetFolderTemplateService,
   ) {}
 
   async resolve(meta: PageMeta): Promise<QuickSaveResolution> {
@@ -19,7 +21,7 @@ export class QuickSaveFolderResolver implements IQuickSaveFolderResolver {
     }
 
     return {
-      targetFolder: matchedRule.targetFolder,
+      targetFolder: await this.targetFolderTemplateService.resolve(matchedRule.targetFolder, meta),
       matchedRuleName: matchedRule.name,
       tagIds: matchedRule.tagIds,
       entityTypeId: matchedRule.entityTypeId,

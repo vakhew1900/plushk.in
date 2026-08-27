@@ -1,0 +1,60 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--shadow);
+  z-index: 60;
+}
+.overlay[data-state='open'] { animation: fadeIn 0.15s ease; }
+.overlay[data-state='closed'] { animation: fadeOut 0.15s ease; }
+
+.content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64rem;
+  height: 44rem;
+  max-width: calc(100vw - 3rem);
+  max-height: calc(100vh - 3rem);
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  box-shadow: 0 0.75rem 2rem var(--shadow);
+  z-index: 61;
+}
+.content[data-state='open'] { animation: scaleIn 0.15s ease; }
+.content[data-state='closed'] { animation: fadeOut 0.15s ease; }
+.content:focus-visible { outline: none; }
+
+.close {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+  z-index: 1;
+}
+
+.title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.97); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}

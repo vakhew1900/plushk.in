@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
-import { PaletteDot } from '@/components/ui/palette-dot';
+import { PaletteIconDot } from '@/components/ui/palette-icon-dot';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { EntityType } from '@/types/entity-type';
@@ -15,9 +15,11 @@ interface Props {
   entityTypes: EntityType[];
   selectedEntity: EntityType | undefined;
   onChoose: (entityTypeId: string | undefined) => void;
+  /** Tints the label text with the selected entity's palette color instead of the default neutral text color. */
+  colored?: boolean;
 }
 
-export function EntitySegment({ entityTypes, selectedEntity, onChoose }: Props) {
+export function EntitySegment({ entityTypes, selectedEntity, onChoose, colored = false }: Props) {
   const { translate: t } = useTranslation();
   const handleClick = (e: React.MouseEvent) => e.stopPropagation();
 
@@ -27,17 +29,18 @@ export function EntitySegment({ entityTypes, selectedEntity, onChoose }: Props) 
         <button
           type="button"
           className={styles.segment}
+          data-color={colored && selectedEntity ? selectedEntity.color : undefined}
           onClick={handleClick}
           title={selectedEntity ? t('bookmarkEntityControl.editTooltip') : undefined}
         >
           {selectedEntity ? (
             <>
-              <PaletteDot color={selectedEntity.color} size="md" />
+              <PaletteIconDot color={selectedEntity.color} icon={selectedEntity.icon} size="sm" />
               {selectedEntity.name}
             </>
           ) : (
             <>
-              <IconPlus size="md" />
+              <IconPlus size="sm" />
               {t('bookmarkEntityControl.addEntity')}
             </>
           )}
@@ -53,7 +56,7 @@ export function EntitySegment({ entityTypes, selectedEntity, onChoose }: Props) 
             checked={entity.id === selectedEntity?.id}
             onCheckedChange={() => onChoose(entity.id)}
           >
-            <PaletteDot color={entity.color} />
+            <PaletteIconDot color={entity.color} icon={entity.icon} />
             {entity.name}
           </DropdownMenuCheckboxItem>
         ))}

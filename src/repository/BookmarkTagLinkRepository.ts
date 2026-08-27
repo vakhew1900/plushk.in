@@ -10,4 +10,10 @@ export class BookmarkTagLinkRepository
   constructor() {
     super(db.bookmarkTags);
   }
+
+  async getBookmarkIdsByTagIds(tagIds: string[]): Promise<string[]> {
+    if (tagIds.length === 0) return [];
+    const links = await db.bookmarkTags.where('tagIds').anyOf(tagIds).toArray();
+    return [...new Set(links.map((link) => link.bookmarkId))];
+  }
 }

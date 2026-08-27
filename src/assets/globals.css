@@ -34,6 +34,17 @@
   --palette-blue: #5c9ee0;
   --palette-purple: #9c7ee0;
   --palette-pink: #e07ec2;
+
+  /* Icon tone to use on top of each --palette-* background above (WCAG-picked
+     per color per theme, not computed at runtime — see UI-8 deep spec). */
+  --palette-red-ink: #000;
+  --palette-orange-ink: #000;
+  --palette-yellow-ink: #000;
+  --palette-green-ink: #000;
+  --palette-teal-ink: #000;
+  --palette-blue-ink: #000;
+  --palette-purple-ink: #000;
+  --palette-pink-ink: #000;
 }
 
 [data-theme="light"] {
@@ -64,6 +75,15 @@
   --palette-blue: #3f7fc4;
   --palette-purple: #7a5cc4;
   --palette-pink: #c45ca3;
+
+  --palette-red-ink: #000;
+  --palette-orange-ink: #000;
+  --palette-yellow-ink: #000;
+  --palette-green-ink: #000;
+  --palette-teal-ink: #000;
+  --palette-blue-ink: #000;
+  --palette-purple-ink: #fff;
+  --palette-pink-ink: #000;
 }
 
 /* ── Sizing tokens (icon dimensions + typography) — change here, applies everywhere ── */

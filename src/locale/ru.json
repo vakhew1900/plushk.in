@@ -61,10 +61,13 @@
   "conditionGroup": {
     "singleLabel": "—",
     "andLabel": "И · AND",
+    "andShortLabel": "И",
     "andDesc": "выполнены все условия",
     "orLabel": "ИЛИ · OR",
+    "orShortLabel": "ИЛИ",
     "orDesc": "выполняется любое из условий",
     "notLabel": "НЕ · NOT",
+    "notShortLabel": "НЕ",
     "notDesc": "не выполняется ни одно из условий",
     "emptyError": "Добавьте хотя бы одно условие"
   },
@@ -87,7 +90,12 @@
     "addTerm": "Значение (=)",
     "addTerms": "Один из списка",
     "addRegex": "Regex",
-    "addWildcard": "Wildcard (* ?)"
+    "addWildcard": "Wildcard (* ?)",
+    "addMenuConditionGroup": "Условие",
+    "addMenuStructureGroup": "Группа",
+    "addAnd": "И (все условия)",
+    "addOr": "ИЛИ (любое условие)",
+    "addNot": "НЕ (ни одно условие)"
   },
   "jsonView": {
     "valid": "Валидный JSON · {{count}} условий",
@@ -99,7 +107,21 @@
     "allCount": "Все закладки: {{count}}",
     "foundCount": "Найдено: {{count}}",
     "noBookmarks": "Пока нет отсортированных закладок.",
-    "noResults": "Ничего не найдено — попробуйте другой запрос."
+    "noResults": "Ничего не найдено — попробуйте другой запрос.",
+    "filters": {
+      "toggleButton": "Фильтры",
+      "tagsLabel": "Теги",
+      "tagsLabelCount": "Теги · {{count}}",
+      "categoryLabel": "Категория",
+      "anyCategory": "Любая категория",
+      "statusLabel": "Статус",
+      "anyStatus": "Любой статус",
+      "folderLabel": "Папка",
+      "folderClear": "Сбросить фильтр по папке",
+      "folderSearchPlaceholder": "Поиск папки…",
+      "folderNoMatches": "Ничего не найдено",
+      "resetAll": "Сбросить всё"
+    }
   },
   "mappingsTab": {
     "lead": "Алиасы доменов и переменные извлечения."
@@ -131,10 +153,9 @@
     "noEntities": "Пока нет категорий"
   },
   "entityDetail": {
-    "colorLabel": "Цвет",
+    "styleLabel": "Цвет и иконка",
     "nameLabel": "Название",
-    "iconLabel": "Иконка",
-    "iconComingSoon": "скоро",
+    "noIcon": "Без иконки",
     "workflowLabel": "Статусы",
     "addStatus": "Статус",
     "statusNamePlaceholder": "имя статуса",
@@ -144,6 +165,33 @@
     "addEntity": "Категория",
     "noEntity": "Без категории",
     "editTooltip": "Редактировать"
+  },
+  "bookmarkSettings": {
+    "triggerTooltip": "Настройки закладки",
+    "tabSettings": "Настройки",
+    "tabNotes": "Заметки",
+    "editIcon": "Изменить",
+    "iconLabel": "Иконка",
+    "iconPlaceholder": "https://…/icon.png",
+    "categoryLabel": "Категория",
+    "statusLabel": "Статус",
+    "tagsLabel": "Теги",
+    "locationLabel": "Расположение",
+    "deleteButton": "Удалить",
+    "deleteDialogTitle": "Удалить закладку «{{title}}»?",
+    "deleteDialogBody": "Закладка и связанные с ней данные (теги, категория, иконка) будут удалены. Отменить это будет нельзя.",
+    "deleteDialogCancel": "Отмена",
+    "deleteDialogConfirm": "Удалить",
+    "editLocationButton": "Изменить",
+    "moveButton": "Переместить",
+    "moveCancelButton": "Отмена",
+    "notesCount": "Заметки: {{count}}",
+    "addNote": "Заметка",
+    "notesEmpty": "Пока нет заметок",
+    "noteTitlePlaceholder": "Без названия",
+    "noteTextPlaceholder": "Текст заметки…",
+    "allNotes": "Все заметки: {{count}}",
+    "noteUpdatedAt": "изменено {{date}}"
   },
   "variablesSection": {
     "title": "Переменные",
@@ -155,6 +203,17 @@
     "aliasPlaceholder": "алиас",
     "fieldKeyPlaceholder": "поле",
     "fieldValuePlaceholder": "селектор"
+  },
+  "iconRulesSection": {
+    "title": "Иконки",
+    "desc": "Источник иконки закладки по URL/алиасу/домену — статичная ссылка или css/xpath-селектор на живой странице. Если ничего не подошло — обычный favicon.",
+    "addRule": "Правило",
+    "namePlaceholder": "название",
+    "aliasPlaceholder": "алиас",
+    "bindingValueUrlPlaceholder": "https://example.com/path",
+    "bindingValueDomainPlaceholder": "example.com",
+    "sourceValueStaticPlaceholder": "https://…/icon.png",
+    "sourceValueSelectorPlaceholder": "селектор"
   },
   "exportSection": {
     "title": "Экспорт / Импорт",
@@ -209,7 +268,13 @@
         "title": "Дополнительно",
         "categoryLabel": "Категория",
         "tagsLabel": "Теги",
-        "matchedByRule": "Подобрано правилом «{{name}}»"
+        "matchedByRule": "Подобрано правилом «{{name}}»",
+        "iconLabel": "Иконка",
+        "iconMatchedByRule": "Подобрано правилом «{{name}}»",
+        "iconEditTooltip": "Своя ссылка на иконку",
+        "iconLinkPlaceholder": "https://…/icon.png",
+        "iconLinkCancel": "Отмена",
+        "iconLinkDone": "Готово"
       }
     }
   }

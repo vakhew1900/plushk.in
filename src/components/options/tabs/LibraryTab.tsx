@@ -6,11 +6,27 @@ import { useTranslation } from '@/hooks/useTranslation';
 import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
 import { SearchBar } from '@/components/bookmark/search/SearchBar';
 import { SearchResultsList } from '@/components/bookmark/search/SearchResultsList';
+import { BookmarkFiltersRow } from '@/components/bookmark/search/filters/BookmarkFiltersRow';
 import styles from './LibraryTab.module.css';
 
 export function LibraryTab() {
   const { translate: t } = useTranslation();
-  const { query, setQuery, results, totalCount, loading } = useBookmarkSearch();
+  const {
+    query,
+    setQuery,
+    tagIds,
+    toggleTagId,
+    entityTypeId,
+    setEntityTypeId,
+    statusId,
+    setStatusId,
+    folderPath,
+    setFolderPath,
+    resetFilters,
+    results,
+    totalCount,
+    refresh,
+  } = useBookmarkSearch();
 
   const countLabel = query.trim()
     ? t('searchTab.foundCount', { count: results.length })
@@ -28,22 +44,35 @@ export function LibraryTab() {
 
       <SearchBar value={query} onChange={setQuery} placeholder={t('searchTab.placeholder')} />
 
-      {!loading && (
-        <SearchResultsList
-          entries={results}
-          countLabel={countLabel}
-          emptyMessage={emptyMessage}
-          renderEntry={(entry) => (
-            <BookmarkCard
-              id={entry.id}
-              title={entry.title}
-              url={entry.url}
-              folderPath={entry.folderPath}
-              onClick={() => openBookmark(entry)}
-            />
-          )}
+      <div className={styles.filtersRow}>
+        <BookmarkFiltersRow
+          tagIds={tagIds}
+          toggleTagId={toggleTagId}
+          entityTypeId={entityTypeId}
+          setEntityTypeId={setEntityTypeId}
+          statusId={statusId}
+          setStatusId={setStatusId}
+          folderPath={folderPath}
+          setFolderPath={setFolderPath}
+          resetFilters={resetFilters}
         />
-      )}
+      </div>
+
+      <SearchResultsList
+        entries={results}
+        countLabel={countLabel}
+        emptyMessage={emptyMessage}
+        renderEntry={(entry) => (
+          <BookmarkCard
+            id={entry.id}
+            title={entry.title}
+            url={entry.url}
+            folderPath={entry.folderPath}
+            onClick={() => openBookmark(entry)}
+            onChanged={refresh}
+          />
+        )}
+      />
     </div>
   );
 }

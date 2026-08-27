@@ -34,7 +34,26 @@
   padding: 14px 16px 16px;
 }
 
+.searchRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.searchRow > *:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.filtersPanel {
+  margin-top: 10px;
+}
+
+/* Fixed, not max-height — with a `max-height` the box shrinks/grows with
+   the result count as the user types, and since this is a WebExtension
+   popup (which auto-fits its window to document content height), that
+   meant the whole popup visibly resized/flickered on every keystroke. */
 .resultsScroll {
-  max-height: 20rem;
+  height: 20rem;
   overflow-y: auto;
 }

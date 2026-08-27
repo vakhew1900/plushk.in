@@ -54,7 +54,7 @@ Rule matching and folder resolution happen **only** in the extension's own popup
 
 | Event | Action |
 |---|---|
-| `bookmarks.onRemoved` | Remove metadata from IndexedDB (not yet implemented) |
+| `bookmarks.onRemoved` | Cascade-removes the bookmark's Dexie links (tags, category/status, icon override) via `BookmarkService.removeAllLinksForBookmark()` — see `BG-1` |
 
 `bookmarks.onCreated`/`onImportBegan`/`onChanged` are intentionally not handled — see above. The extension only **creates** bookmarks directly in the resolved target folder — it never moves or duplicates bookmarks it didn't itself just create.
 
@@ -268,6 +268,14 @@ Same format as the commit, or a short summary if the PR spans multiple blocks:
 ```
 feat: [rule] Elasticsearch-inspired DSL with AND/OR/NOT support
 ```
+
+## Release process
+
+`.github/workflows/release.yml` builds a GitHub Release on every push to `main`, gated on `src/package.json`'s `version` actually having changed — it compares against existing `vX.Y.Z` git tags, so a merge that doesn't bump `version` builds nothing. Two zips are produced (Chrome MV3 and Firefox MV2 — they're not the same artifact: `wxt.config.ts` adds the `favicon` permission for Chrome only, since Firefox's manifest schema rejects it), plus Firefox's `-sources.zip` for AMO review.
+
+**`CHANGELOG.md`** (repo root) is the source of the Release's description — not `specs/changelog.md`, which is the internal task-completion log. `CHANGELOG.md` itself stays user-facing only (Keep a Changelog style); this process lives here, not there. Add entries under `## [Unreleased]` as you go, grouped under `### Добавлено`/`### Исправлено`/`### Изменено` — include only the subsections a given release actually needs, no empty headers. When prepping a release, bump `version` in `src/package.json` and rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD` in the same PR. The workflow's `scripts/extract-changelog.mjs` pulls that section as the release body and **fails the build if it's missing or empty** — a version bump without a matching changelog entry won't ship.
+
+The release job also runs `lint`/`compile`/`test` as a gate before building — a merge to `main` with a version bump only produces a release if all three pass.
 
 ## Testing
 

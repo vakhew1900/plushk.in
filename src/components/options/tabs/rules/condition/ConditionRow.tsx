@@ -1,12 +1,12 @@
 import { RemoveIconButton } from '@/components/ui/remove-icon-button';
 import { useTranslation } from '@/hooks/useTranslation';
-import { DraftRuleError, StructureType, validateLeafNode, withStructureType } from '@/lib/visitor/rule-draft';
-import type { DraftLeafNode, DraftRuleNode } from '@/lib/visitor/rule-draft';
+import { DraftRuleError, StructureType, validateLeafNode, withLeafType, withStructureType } from '@/lib/visitor/rule-draft';
+import type { DraftLeafNode, DraftRuleNode, LeafRuleType } from '@/lib/visitor/rule-draft';
 import type { TranslationKey } from '@/locale';
 import { FieldPicker } from './FieldPicker';
+import { LeafTypeSwitcher } from './LeafTypeSwitcher';
 import { LeafValueEditor } from './LeafValueEditor';
 import { StructureSwitcher } from './StructureSwitcher';
-import { LEAF_LABELS } from './leafLabels';
 import styles from './ConditionRow.module.css';
 
 const ERROR_LABEL_KEY: Record<DraftRuleError, TranslationKey> = {
@@ -30,15 +30,14 @@ export function ConditionRow({ node, onChange, onRemove }: Props) {
   const errors = validateLeafNode(node);
 
   const changeStructure = (type: StructureType) => onChange(withStructureType(node, type));
+  const changeLeafType = (type: LeafRuleType) => onChange(withLeafType(node, type));
 
   return (
     <div className={styles.row}>
-      <div className={styles.header}>
-        <StructureSwitcher value={StructureType.SINGLE} onChange={changeStructure} />
-      </div>
       <div className={styles.main}>
+        <StructureSwitcher value={StructureType.SINGLE} onChange={changeStructure} />
         <FieldPicker value={node.field} onChange={(field) => onChange({ ...node, field })} />
-        <span className={styles.op}>{t(LEAF_LABELS[node.type].opLabelKey)}</span>
+        <LeafTypeSwitcher value={node.type} onChange={changeLeafType} />
         <LeafValueEditor node={node} onChange={onChange} />
         {onRemove && (
           <RemoveIconButton onClick={onRemove} aria-label={t('conditionRow.removeCondition')} className={styles.removeBtn} />

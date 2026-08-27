@@ -10,6 +10,7 @@
   font-family: var(--font-mono);
   font-size: 12.5px;
   width: 120px;
+  height: 42px;
   flex-shrink: 0;
 }
 

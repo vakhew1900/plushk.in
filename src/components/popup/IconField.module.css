@@ -1,0 +1,56 @@
+.fieldLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.3rem;
+}
+
+.iconRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.iconSwatch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  color: var(--faint);
+}
+
+.iconSwatch img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.iconRuleCaption {
+  color: var(--faint);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iconEditTrigger {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.iconLinkPopover {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 15rem;
+}
+
+.iconLinkActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

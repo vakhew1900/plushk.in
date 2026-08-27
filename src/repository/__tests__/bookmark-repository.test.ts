@@ -5,6 +5,7 @@ import { BookmarkRepository } from '../BookmarkRepository';
 const bookmarksApi = vi.hoisted(() => ({
   create: vi.fn(),
   move: vi.fn(),
+  remove: vi.fn(),
   search: vi.fn(),
   getChildren: vi.fn(),
   getTree: vi.fn(),
@@ -277,6 +278,23 @@ describe('BookmarkRepository.getFolderTree', () => {
       },
       { id: '2', title: 'Other bookmarks', path: 'Other bookmarks', children: [] },
     ]);
+  });
+});
+
+describe('BookmarkRepository.removeWithCascade', () => {
+  it('removes the bookmark via browser.bookmarks.remove, without touching Dexie itself', async () => {
+    const repo = new BookmarkRepository();
+    await repo.removeWithCascade('bm-1');
+
+    expect(bookmarksApi.remove).toHaveBeenCalledWith('bm-1');
+    expect(bookmarksApi.remove).toHaveBeenCalledTimes(1);
+  });
+
+  it('propagates a browser.bookmarks.remove failure instead of swallowing it', async () => {
+    bookmarksApi.remove.mockRejectedValueOnce(new Error('No bookmark found'));
+    const repo = new BookmarkRepository();
+
+    await expect(repo.removeWithCascade('missing-id')).rejects.toThrow('No bookmark found');
   });
 });
 
