@@ -3,7 +3,7 @@ import { useBookmarkEntityEditor } from '@/hooks/useBookmarkEntityEditor';
 import { useBookmarkTagEditor } from '@/hooks/useBookmarkTagEditor';
 import { useBookmarkIcon } from '@/hooks/useBookmarkIcon';
 import { useBookmarkDelete } from '@/hooks/useBookmarkDelete';
-import { BookmarkFavicon, BookmarkFaviconSize } from './BookmarkFavicon';
+import { BookmarkArtwork } from './BookmarkArtwork';
 import { TagPicker } from './tags/TagPicker';
 import { EntitySegment } from './entity/EntitySegment';
 import { StatusSegment } from './entity/StatusSegment';
@@ -33,7 +33,7 @@ export function BookmarkCard({ id, title, url, folderPath, onClick, onChanged }:
   const { entityTypes, selectedEntity, statuses, selectedStatus, chooseEntity, chooseStatus } =
     useBookmarkEntityEditor(id);
   const { tags, tagIds, toggleTag } = useBookmarkTagEditor(id);
-  const { displayUrl, overrideUrl, setOverride } = useBookmarkIcon(id, url);
+  const { displayUrl, overrideUrl, iconType, setOverride } = useBookmarkIcon(id, url);
   const { remove } = useBookmarkDelete(id);
   const showStatus = Boolean(selectedEntity) && statuses.length > 0;
 
@@ -46,7 +46,7 @@ export function BookmarkCard({ id, title, url, folderPath, onClick, onChanged }:
 
   return (
     <div className={styles.card}>
-      <BookmarkFavicon seed={domain} iconUrl={displayUrl} size={BookmarkFaviconSize.WIDE} />
+      <BookmarkArtwork seed={domain} iconUrl={displayUrl} iconType={iconType} />
 
       <div className={styles.content}>
         <div className={styles.headRow}>
@@ -85,6 +85,7 @@ export function BookmarkCard({ id, title, url, folderPath, onClick, onChanged }:
         folderPath={folderPath}
         displayUrl={displayUrl}
         overrideUrl={overrideUrl}
+        iconType={iconType}
         onOverrideChange={setOverride}
         entityTypes={entityTypes}
         selectedEntity={selectedEntity}

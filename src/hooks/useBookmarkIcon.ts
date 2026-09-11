@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { resolveFaviconUrl } from '@/lib/browser-constants/faviconUrl';
 import { useServices } from '@/hooks/useServices';
+import { IconResultType } from '@/services/interfaces/IIconLinkService';
 
 interface Resolved {
   key: string;
   displayUrl: string | undefined;
   overrideUrl: string | undefined;
+  iconType: IconResultType;
 }
 
 /**
@@ -35,7 +37,7 @@ export function useBookmarkIcon(bookmarkId: string, url: string) {
       iconLinkService.resolveForBookmark(bookmarkId, url),
       iconBookmarkRepository.getById(bookmarkId),
     ]).then(([result, row]) => {
-      if (!cancelled) setResolved({ key, displayUrl: result.url, overrideUrl: row?.iconUrl });
+      if (!cancelled) setResolved({ key, displayUrl: result.url, overrideUrl: row?.iconUrl, iconType: result.type });
     });
     return () => {
       cancelled = true;
@@ -45,7 +47,12 @@ export function useBookmarkIcon(bookmarkId: string, url: string) {
 
   const setOverride = async (value: string | undefined) => {
     const trimmed = value?.trim() || undefined;
-    setResolved({ key, overrideUrl: trimmed, displayUrl: trimmed ?? resolveFaviconUrl(url) });
+    setResolved({
+      key,
+      overrideUrl: trimmed,
+      displayUrl: trimmed ?? resolveFaviconUrl(url),
+      iconType: trimmed ? IconResultType.RULE : IconResultType.DEFAULT,
+    });
     if (trimmed) {
       await iconBookmarkRepository.save({ bookmarkId, iconUrl: trimmed });
     } else {
@@ -54,5 +61,10 @@ export function useBookmarkIcon(bookmarkId: string, url: string) {
   };
 
   const current = resolved?.key === key ? resolved : undefined;
-  return { displayUrl: current?.displayUrl, overrideUrl: current?.overrideUrl, setOverride };
+  return {
+    displayUrl: current?.displayUrl,
+    overrideUrl: current?.overrideUrl,
+    iconType: current?.iconType,
+    setOverride,
+  };
 }

@@ -9,6 +9,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import type { EntityType } from '@/types/entity-type';
 import type { WorkflowStatus } from '@/types/workflow-status';
 import type { Tag } from '@/types/tag';
+import type { IconResultType } from '@/services/interfaces/IIconLinkService';
 import { SettingsTabRail, SettingsTab } from './SettingsTabRail';
 import { BookmarkIconPreview } from './BookmarkIconPreview';
 import { BookmarkLocationSection } from './location/BookmarkLocationSection';
@@ -21,6 +22,7 @@ interface Props {
   folderPath: string[];
   displayUrl: string | undefined;
   overrideUrl: string | undefined;
+  iconType: IconResultType | undefined;
   onOverrideChange: (value: string | undefined) => Promise<void>;
   entityTypes: EntityType[];
   selectedEntity: EntityType | undefined;
@@ -42,6 +44,7 @@ export function BookmarkSettingsPanel({
   folderPath,
   displayUrl,
   overrideUrl,
+  iconType,
   onOverrideChange,
   entityTypes,
   selectedEntity,
@@ -83,6 +86,7 @@ export function BookmarkSettingsPanel({
             <BookmarkIconPreview
               seed={seed}
               iconUrl={displayUrl}
+              iconType={iconType}
               onEditClick={() => iconInputRef.current?.focus()}
             />
 
