@@ -121,6 +121,11 @@
       "folderSearchPlaceholder": "Поиск папки…",
       "folderNoMatches": "Ничего не найдено",
       "resetAll": "Сбросить всё"
+    },
+    "pagination": {
+      "nav": "Навигация по страницам",
+      "prev": "Предыдущая страница",
+      "next": "Следующая страница"
     }
   },
   "mappingsTab": {

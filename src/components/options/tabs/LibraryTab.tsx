@@ -6,6 +6,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
 import { SearchBar } from '@/components/bookmark/search/SearchBar';
 import { SearchResultsList } from '@/components/bookmark/search/SearchResultsList';
+import { Pagination } from '@/components/bookmark/search/Pagination';
 import { BookmarkFiltersRow } from '@/components/bookmark/search/filters/BookmarkFiltersRow';
 import styles from './LibraryTab.module.css';
 
@@ -24,8 +25,12 @@ export function LibraryTab() {
     setFolderPath,
     resetFilters,
     results,
+    pagedResults,
     totalCount,
     refresh,
+    page,
+    setPage,
+    pageCount,
   } = useBookmarkSearch();
 
   const countLabel = query.trim()
@@ -59,7 +64,7 @@ export function LibraryTab() {
       </div>
 
       <SearchResultsList
-        entries={results}
+        entries={pagedResults}
         countLabel={countLabel}
         emptyMessage={emptyMessage}
         renderEntry={(entry) => (
@@ -73,6 +78,8 @@ export function LibraryTab() {
           />
         )}
       />
+
+      <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
     </div>
   );
 }
