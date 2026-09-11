@@ -4,6 +4,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import type { EntityType } from '@/types/entity-type';
 import type { WorkflowStatus } from '@/types/workflow-status';
 import type { Tag } from '@/types/tag';
+import type { IconResultType } from '@/services/interfaces/IIconLinkService';
 import { BookmarkSettingsPanel } from './BookmarkSettingsPanel';
 import styles from './BookmarkSettingsDialog.module.css';
 
@@ -14,6 +15,7 @@ interface Props {
   folderPath: string[];
   displayUrl: string | undefined;
   overrideUrl: string | undefined;
+  iconType: IconResultType | undefined;
   onOverrideChange: (value: string | undefined) => Promise<void>;
   entityTypes: EntityType[];
   selectedEntity: EntityType | undefined;

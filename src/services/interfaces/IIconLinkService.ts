@@ -1,8 +1,11 @@
 import type { PageMeta } from '../../types/page-meta';
 
+export const IconResultType = { DEFAULT: 'default', RULE: 'rule' } as const;
+export type IconResultType = (typeof IconResultType)[keyof typeof IconResultType];
+
 export type IconLinkResult =
-  | { type: 'default'; url: string | undefined }
-  | { type: 'rule'; url: string; ruleName?: string };
+  | { type: typeof IconResultType.DEFAULT; url: string | undefined }
+  | { type: typeof IconResultType.RULE; url: string; ruleName?: string };
 
 /**
  * Resolves the icon to show for a bookmark — see RULE-13. Two methods, not

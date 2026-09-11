@@ -6,6 +6,7 @@ import type { IIconBookmarkRepository } from '../../repository/interfaces/IIconB
 import { FakeIconRuleRepository } from '../../repository/__tests__/fakes/FakeIconRuleRepository';
 import type { IIconExtrasService } from '../interfaces/IIconExtrasService';
 import { IconLinkService } from '../IconLinkService';
+import { IconResultType } from '../interfaces/IIconLinkService';
 
 const resolveFaviconUrlMock = vi.hoisted(() => vi.fn());
 vi.mock('../../lib/browser-constants/faviconUrl', () => ({
@@ -44,7 +45,7 @@ describe('IconLinkService.resolveForSave', () => {
 
     const result = await service.resolveForSave(meta, undefined, 7);
 
-    expect(result).toEqual({ type: 'rule', url: 'https://x/icon.png', ruleName: 'YouTube' });
+    expect(result).toEqual({ type: IconResultType.RULE, url: 'https://x/icon.png', ruleName: 'YouTube' });
     expect(extras.extract).not.toHaveBeenCalled();
   });
 
@@ -58,7 +59,7 @@ describe('IconLinkService.resolveForSave', () => {
 
     const result = await service.resolveForSave(meta, undefined, 7);
 
-    expect(result).toEqual({ type: 'rule', url: 'https://cdn/logo.png', ruleName: 'YouTube' });
+    expect(result).toEqual({ type: IconResultType.RULE, url: 'https://cdn/logo.png', ruleName: 'YouTube' });
     expect(extras.extract).toHaveBeenCalledWith(7, rule.source);
   });
 
@@ -69,13 +70,13 @@ describe('IconLinkService.resolveForSave', () => {
     };
     const service = new IconLinkService(new FakeIconRuleRepository([rule]), new FakeIconBookmarkRepository(), fakeExtras(undefined).service);
 
-    expect(await service.resolveForSave(meta, undefined, 7)).toEqual({ type: 'default', url: 'https://fallback/favicon.png' });
+    expect(await service.resolveForSave(meta, undefined, 7)).toEqual({ type: IconResultType.DEFAULT, url: 'https://fallback/favicon.png' });
   });
 
   it('falls back to the default favicon when no rule matches', async () => {
     const service = new IconLinkService(new FakeIconRuleRepository([]), new FakeIconBookmarkRepository(), fakeExtras(undefined).service);
 
-    expect(await service.resolveForSave(meta, undefined, 7)).toEqual({ type: 'default', url: 'https://fallback/favicon.png' });
+    expect(await service.resolveForSave(meta, undefined, 7)).toEqual({ type: IconResultType.DEFAULT, url: 'https://fallback/favicon.png' });
     expect(resolveFaviconUrlMock).toHaveBeenCalledWith(meta.url);
   });
 });
@@ -85,12 +86,12 @@ describe('IconLinkService.resolveForBookmark', () => {
     const cache = new FakeIconBookmarkRepository([{ bookmarkId: 'b1', iconUrl: 'https://cached/icon.png' }]);
     const service = new IconLinkService(new FakeIconRuleRepository(), cache, fakeExtras(undefined).service);
 
-    expect(await service.resolveForBookmark('b1', meta.url)).toEqual({ type: 'rule', url: 'https://cached/icon.png' });
+    expect(await service.resolveForBookmark('b1', meta.url)).toEqual({ type: IconResultType.RULE, url: 'https://cached/icon.png' });
   });
 
   it('falls back to the default favicon when nothing is cached', async () => {
     const service = new IconLinkService(new FakeIconRuleRepository(), new FakeIconBookmarkRepository(), fakeExtras(undefined).service);
 
-    expect(await service.resolveForBookmark('missing', meta.url)).toEqual({ type: 'default', url: 'https://fallback/favicon.png' });
+    expect(await service.resolveForBookmark('missing', meta.url)).toEqual({ type: IconResultType.DEFAULT, url: 'https://fallback/favicon.png' });
   });
 });

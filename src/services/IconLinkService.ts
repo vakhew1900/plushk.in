@@ -5,7 +5,7 @@ import type { PageMeta } from '../types/page-meta';
 import type { IIconRuleRepository } from '../repository/interfaces/IIconRuleRepository';
 import type { IIconBookmarkRepository } from '../repository/interfaces/IIconBookmarkRepository';
 import type { IIconExtrasService } from './interfaces/IIconExtrasService';
-import type { IIconLinkService, IconLinkResult } from './interfaces/IIconLinkService';
+import { IconResultType, type IIconLinkService, type IconLinkResult } from './interfaces/IIconLinkService';
 
 export class IconLinkService implements IIconLinkService {
   constructor(
@@ -20,17 +20,17 @@ export class IconLinkService implements IIconLinkService {
 
     if (matched) {
       const url = await this.resolveSourceUrl(matched.source, tabId);
-      if (url) return { type: 'rule', url, ruleName: matched.name };
+      if (url) return { type: IconResultType.RULE, url, ruleName: matched.name };
     }
 
-    return { type: 'default', url: resolveFaviconUrl(meta.url) };
+    return { type: IconResultType.DEFAULT, url: resolveFaviconUrl(meta.url) };
   }
 
   async resolveForBookmark(bookmarkId: string, url: string): Promise<IconLinkResult> {
     const cached = await this.iconBookmarkRepository.getById(bookmarkId);
-    if (cached) return { type: 'rule', url: cached.iconUrl };
+    if (cached) return { type: IconResultType.RULE, url: cached.iconUrl };
 
-    return { type: 'default', url: resolveFaviconUrl(url) };
+    return { type: IconResultType.DEFAULT, url: resolveFaviconUrl(url) };
   }
 
   private async resolveSourceUrl(source: IconSource, tabId: number): Promise<string | undefined> {

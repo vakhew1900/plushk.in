@@ -1,3 +1,9 @@
+/* Shared by BookmarkFavicon (sm/md — small glyph) and BookmarkArtwork
+   (wide/xl — large cover): both render the same box/letter/image shape,
+   just at different sizes and with different rules for when to trust the
+   image over the letter. Kept as one module instead of two to avoid
+   duplicating the box/color rules. */
+
 .favicon {
   width: 2.125rem;
   height: 2.125rem;
@@ -45,9 +51,8 @@
 
 .favicon[data-size='sm'] .icon { width: 0.75rem; height: 0.75rem; }
 
-/* 'wide' (Library card) and 'xl' (settings dialog preview) are meant to show
-   real artwork (an IconRule-resolved cover, not just a small favicon glyph)
-   — the image fills the box instead of sitting inset at a fixed small size. */
+/* BookmarkArtwork's sizes only — the image fills the box instead of sitting
+   inset at a fixed small size, since it's meant to show real artwork. */
 .favicon[data-size='wide'] .icon,
 .favicon[data-size='xl'] .icon {
   width: 100%;
