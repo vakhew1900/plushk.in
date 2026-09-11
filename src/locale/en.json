@@ -121,6 +121,11 @@
       "folderSearchPlaceholder": "Search folder…",
       "folderNoMatches": "No matches",
       "resetAll": "Reset all"
+    },
+    "pagination": {
+      "nav": "Page navigation",
+      "prev": "Previous page",
+      "next": "Next page"
     }
   },
   "mappingsTab": {
