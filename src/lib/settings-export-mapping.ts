@@ -34,6 +34,8 @@ export function isSettingsExport(value: unknown): value is SettingsExport {
     Array.isArray(value.pageMatchGroups) &&
     (value.tags === undefined || Array.isArray(value.tags)) &&
     (value.entityTypes === undefined || Array.isArray(value.entityTypes)) &&
+    (value.workflows === undefined || Array.isArray(value.workflows)) &&
+    (value.workflowStatuses === undefined || Array.isArray(value.workflowStatuses)) &&
     (value.iconRules === undefined || Array.isArray(value.iconRules))
   );
 }

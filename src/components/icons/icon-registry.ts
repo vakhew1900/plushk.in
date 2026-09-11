@@ -21,6 +21,7 @@ import { IconMap } from './IconMap';
 import { IconShoppingCart } from './IconShoppingCart';
 import { IconGamepad } from './IconGamepad';
 import { IconLightbulb } from './IconLightbulb';
+import { IconBook } from './IconBook';
 
 interface IconComponentProps {
   size?: IconSize;
@@ -48,4 +49,5 @@ export const ICON_REGISTRY: Record<IconName, ComponentType<IconComponentProps>> 
   [IconName.SHOPPING]: IconShoppingCart,
   [IconName.GAME]: IconGamepad,
   [IconName.IDEA]: IconLightbulb,
+  [IconName.BOOK]: IconBook,
 };

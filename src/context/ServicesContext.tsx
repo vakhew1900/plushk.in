@@ -104,6 +104,8 @@ export function ServicesProvider({ children }: Props) {
     const defaultFolderSettingsRepository = new DefaultFolderSettingsRepository();
     const tagRepository = new TagRepository();
     const entityTypeRepository = new EntityTypeRepository();
+    const workflowRepository = new WorkflowRepository();
+    const workflowStatusRepository = new WorkflowStatusRepository();
     const bookmarkQuickSaveLinksRepository = new BookmarkQuickSaveLinksRepository();
     const bookmarkTagLinkRepository = new BookmarkTagLinkRepository();
     const bookmarkEntityLinkRepository = new BookmarkEntityLinkRepository();
@@ -132,6 +134,8 @@ export function ServicesProvider({ children }: Props) {
         pageMatchGroupRepository,
         tagRepository,
         entityTypeRepository,
+        workflowRepository,
+        workflowStatusRepository,
         iconRuleRepository,
         fileService,
       ),
@@ -144,8 +148,8 @@ export function ServicesProvider({ children }: Props) {
       tagRepository,
       bookmarkTagLinkRepository,
       entityTypeRepository,
-      workflowRepository: new WorkflowRepository(),
-      workflowStatusRepository: new WorkflowStatusRepository(),
+      workflowRepository,
+      workflowStatusRepository,
       bookmarkEntityLinkRepository,
       iconRuleRepository,
       iconBookmarkRepository,

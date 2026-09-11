@@ -3,6 +3,8 @@ import type { DomainAlias } from './domain-alias';
 import type { PageMatch } from './page-match';
 import type { Tag } from './tag';
 import type { EntityType } from './entity-type';
+import type { Workflow } from './workflow';
+import type { WorkflowStatus } from './workflow-status';
 import type { IconRule } from './icon-rule';
 
 // Bumped when the shape of SettingsExport changes in a way that breaks
@@ -30,11 +32,15 @@ export interface SettingsExport {
   // Optional — added alongside SEARCH-6's BookmarkRule.tagIds/entityTypeId so
   // example/test configs (configs/*/settings.json) can ship the tags/category
   // a rule references. Older export files without them are still valid;
-  // absent means "none". Workflow/WorkflowStatus aren't included — a rule's
-  // statusId always resolves to a category's first status at match time, and
-  // an EntityType with no workflow at all is already a valid state (SHELF-1).
+  // absent means "none".
   tags?: Tag[];
   entityTypes?: EntityType[];
+  // Optional — added alongside SETTINGS-2's first-launch default presets, so
+  // a preset entity (e.g. "Книги") can ship with its reading/watching-progress
+  // statuses instead of landing as a bare EntityType. An EntityType with no
+  // workflow at all is still a valid state (SHELF-1) — absent means "none".
+  workflows?: Workflow[];
+  workflowStatuses?: WorkflowStatus[];
   // Optional — added alongside RULE-13. IconBookmark (the per-bookmark resolved-
   // icon cache) is deliberately NOT exported: like BookmarkTagLink/BookmarkEntityLink,
   // it's per-bookmark instance data tied to specific browser bookmarks, not portable
