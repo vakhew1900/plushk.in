@@ -563,3 +563,20 @@ Finished tasks, moved here from `tasks.md` when completed. Kept for history — 
 - `CompactBookmarkCard` (попап «Поиск») не тронут — там нет ни рейла, ни панели настроек.
 - `npm run compile`/`npm run lint`/`npm test` и `npm run build` — чисто (34 test files, 303 tests). Чек-лист ручной проверки — `specs/verification.md` (`UI-16`, добавить при ручной проверке в браузере).
 
+### SETTINGS-2 — Пресеты значений по умолчанию при первом запуске (теги + сущности), с определением языка
+**Priority:** Low
+**Added:** 2026-08-13
+**Completed:** 2026-09-11
+
+Продолжение автоимпорта настроек (`SETTINGS-1`): при первом запуске (не при обновлении) расширение сам определяет язык браузера и один раз молча подставляет дефолтные теги и категории — без правил (`BookmarkRule`), они принципиально персональны. Полная спецификация интервью — `specs/tasks/SETTINGS-2-default-presets/`.
+
+**Реализовано:**
+- `SettingsExport`/`isSettingsExport()` — новые опциональные поля `workflows?: Workflow[]`/`workflowStatuses?: WorkflowStatus[]` (раньше отсутствовали вообще, см. `SEARCH-6`). `SettingsExportImportService` получил `IWorkflowRepository`/`IWorkflowStatusRepository` как новые конструкторные зависимости, прокинутые через `buildExportData()`/`importSettings()` — `ServicesContext.tsx` и тест сервиса обновлены под новую сигнатуру конструктора.
+- `src/lib/resolve-locale-from-ui-language.ts` — чистая функция `(uiLanguage) => Locale`: всё начинающееся с `ru` → `RU`, иначе → `EN` (никакого готового механизма детекции языка системы в коде не было вообще).
+- `LocaleContext`/`LocaleProvider` — синхронный дефолт `initialLocale` теперь берётся из `resolveLocaleFromUiLanguage(browser.i18n.getUILanguage())` вместо хардкода `Locale.RU`, без ожидания асинхронного чтения `localeSettingsRepository`.
+- `src/lib/default-presets/` — `data.ts` (единая таблица сущностей/тегов с `{ru, en}`-именами — источник правды для обеих локалей сразу, чтобы id/цвета/иконки не могли разойтись между языками) + `index.ts` (`getDefaultPresetForLocale(locale)`, строит `SettingsExport`). Пресет: 7 сущностей (Книги/Кино/Игры/Статьи — с workflow-статусами; Инструменты/Картинки/Сайты — без) и 12 тегов (жанры + «Инструменты» отдельно от одноимённой сущности).
+- Новая иконка `IconName.BOOK` → `IconBook.tsx` (lucide `Book`) для сущности «Книги» — вместо более общей `library`.
+- `background.ts` — слушатель `browser.runtime.onInstalled`: на `reason === 'install'` определяет локаль, персистит её через `LocaleSettingsRepository`, затем импортирует пресет через напрямую созданный `SettingsExportImportService` (тот же паттерн прямого `new X()`, что и у `bookmarkService` в этом файле; `reason` сам служит одноразовым флагом — отдельный флаг «онбординг пройден» не нужен).
+- Новые юнит-тесты: `resolve-locale-from-ui-language.test.ts`, `default-presets/__tests__/default-presets.test.ts` (валидность обоих пресетов, идентичность id/цветов/order между `ru`/`en`, workflow только у 4 из 7 сущностей).
+- `npm run compile`/`lint`/`test`/`build`/`build:firefox` — чисто. Проверено вживую через `dev:firefox` (свежий временный профиль → `reason: 'install'`): теги и категории появились в options автоматически, на ожидаемом языке.
+

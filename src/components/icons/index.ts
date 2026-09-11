@@ -37,4 +37,5 @@ export { IconLightbulb }   from './IconLightbulb';
 export { IconInfo }        from './IconInfo';
 export { IconSettings }    from './IconSettings';
 export { IconNotebook }    from './IconNotebook';
+export { IconBook }        from './IconBook';
 export { ICON_REGISTRY } from './icon-registry';

@@ -6,6 +6,8 @@ import type { IDomainAliasRepository } from '../repository/interfaces/IDomainAli
 import type { IPageMatchGroupRepository } from '../repository/interfaces/IPageMatchGroupRepository';
 import type { ITagRepository } from '../repository/interfaces/ITagRepository';
 import type { IEntityTypeRepository } from '../repository/interfaces/IEntityTypeRepository';
+import type { IWorkflowRepository } from '../repository/interfaces/IWorkflowRepository';
+import type { IWorkflowStatusRepository } from '../repository/interfaces/IWorkflowStatusRepository';
 import type { IIconRuleRepository } from '../repository/interfaces/IIconRuleRepository';
 import { MimeType } from './interfaces/IFileService';
 import type { IFileService } from './interfaces/IFileService';
@@ -18,6 +20,8 @@ export class SettingsExportImportService implements ISettingsExportImportService
     private readonly pageMatchGroupRepository: IPageMatchGroupRepository,
     private readonly tagRepository: ITagRepository,
     private readonly entityTypeRepository: IEntityTypeRepository,
+    private readonly workflowRepository: IWorkflowRepository,
+    private readonly workflowStatusRepository: IWorkflowStatusRepository,
     private readonly iconRuleRepository: IIconRuleRepository,
     private readonly fileService: IFileService,
   ) {}
@@ -28,12 +32,14 @@ export class SettingsExportImportService implements ISettingsExportImportService
   }
 
   private async buildExportData(): Promise<SettingsExport> {
-    const [rules, domainAliases, pageMatchGroups, tags, entityTypes, iconRules] = await Promise.all([
+    const [rules, domainAliases, pageMatchGroups, tags, entityTypes, workflows, workflowStatuses, iconRules] = await Promise.all([
       this.bookmarkRuleRepository.getAll(),
       this.domainAliasRepository.getAll(),
       this.pageMatchGroupRepository.getAll(),
       this.tagRepository.getAll(),
       this.entityTypeRepository.getAll(),
+      this.workflowRepository.getAll(),
+      this.workflowStatusRepository.getAll(),
       this.iconRuleRepository.getAll(),
     ]);
 
@@ -45,6 +51,8 @@ export class SettingsExportImportService implements ISettingsExportImportService
       pageMatchGroups: pageMatchGroups.map(toExportPageMatchGroup),
       tags,
       entityTypes,
+      workflows,
+      workflowStatuses,
       iconRules,
     };
   }
@@ -67,6 +75,8 @@ export class SettingsExportImportService implements ISettingsExportImportService
       ),
       ...(data.tags ?? []).map((tag) => this.tagRepository.save(tag)),
       ...(data.entityTypes ?? []).map((entityType) => this.entityTypeRepository.save(entityType)),
+      ...(data.workflows ?? []).map((workflow) => this.workflowRepository.save(workflow)),
+      ...(data.workflowStatuses ?? []).map((workflowStatus) => this.workflowStatusRepository.save(workflowStatus)),
       ...(data.iconRules ?? []).map((iconRule) => this.iconRuleRepository.save(iconRule)),
     ]);
   }
