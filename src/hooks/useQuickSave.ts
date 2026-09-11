@@ -56,6 +56,7 @@ export function useQuickSave(mode: Mode) {
       }
 
       const meta: PageMeta = { ...baseMeta, ...overlay };
+      debugLog('[quick-save-debug] popup: resolved meta', meta);
 
       const resolution = await quickSaveFolderResolver.resolve(meta);
       debugLog('[quick-save-debug] popup: resolved suggested folder', resolution.targetFolder);

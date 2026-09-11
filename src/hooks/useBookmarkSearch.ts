@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useServices } from '@/hooks/useServices';
+import { paginate } from '@/lib/pagination';
 import type { BookmarkSearchEntry } from '@/types/bookmark-search-entry';
 
 const QUERY_DEBOUNCE_MS = 200;
@@ -13,6 +14,7 @@ export function useBookmarkSearch() {
   const [folderPath, setFolderPath] = useState<string | undefined>(undefined);
   const [results, setResults] = useState<BookmarkSearchEntry[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(0);
 
   // Bumped after a mutation outside the filter/query inputs below (delete,
   // move via UI-16) to force the search effect to re-run — those don't
@@ -43,6 +45,23 @@ export function useBookmarkSearch() {
       cancelled = true;
     };
   }, [bookmarkSearchService, debouncedQuery, tagIds, entityTypeId, statusId, folderPath, refreshToken]);
+
+  // A genuinely new search (query/filters) always starts back at page 1 — a
+  // stale page number from the previous result set wouldn't line up with the
+  // new one. Adjusted during render (React's documented pattern for resetting
+  // state on a prop/input change) instead of an effect, so the reset lands in
+  // the same render pass as the input change rather than triggering an extra
+  // one. A plain refresh (delete/move via UI-16) does NOT reset the page —
+  // `pageCount` below clamps the one case that needs adjusting there (the
+  // page's last item was just removed).
+  const filterKey = `${debouncedQuery}${tagIds.join(',')}${entityTypeId ?? ''}${statusId ?? ''}${folderPath ?? ''}`;
+  const [pageResetKey, setPageResetKey] = useState(filterKey);
+  if (filterKey !== pageResetKey) {
+    setPageResetKey(filterKey);
+    setPage(0);
+  }
+
+  const { pageCount, currentPage, pageItems: pagedResults } = paginate(results, page);
 
   const toggleTagId = (tagId: string) => {
     setTagIds((prev) => (prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]));
@@ -76,7 +95,11 @@ export function useBookmarkSearch() {
     setFolderPath,
     resetFilters,
     results,
+    pagedResults,
     totalCount,
     refresh,
+    page: currentPage,
+    setPage,
+    pageCount,
   };
 }

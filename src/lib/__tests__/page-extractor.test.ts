@@ -5,13 +5,14 @@ import { PageMetaField } from '../../types/page-meta';
 import { applySelector, buildPartialMeta } from '../page-extractor';
 
 // `document.evaluate` (XPath) has no real browser behind it in the 'node' test
-// environment, so `XPathResult.STRING_TYPE` must be stubbed for that branch to run.
-vi.stubGlobal('XPathResult', { STRING_TYPE: 2 });
+// environment, so `XPathResult.ORDERED_NODE_SNAPSHOT_TYPE` must be stubbed for
+// that branch to run.
+vi.stubGlobal('XPathResult', { ORDERED_NODE_SNAPSHOT_TYPE: 7 });
 afterAll(() => vi.unstubAllGlobals());
 
 // ─── Fake DOM ────────────────────────────────────────────────────────────────
-// page-extractor.ts only ever touches querySelector/evaluate/URL, so a tiny
-// duck-typed Document is enough — no need for a real DOM implementation.
+// page-extractor.ts only ever touches querySelector(All)/evaluate/URL, so a
+// tiny duck-typed Document is enough — no need for a real DOM implementation.
 
 interface FakeElementInit {
   tagName: string;
@@ -30,18 +31,27 @@ function fakeElement({ tagName, attributes = {}, textContent = null }: FakeEleme
 interface FakeDocInit {
   url?: string;
   querySelectorMap?: Record<string, Element | null>;
-  xpathResults?: Record<string, string>;
+  querySelectorAllMap?: Record<string, Element[]>;
+  xpathSnapshotResults?: Record<string, string[]>;
 }
 
 function fakeDoc({
   url = 'https://example.com/article',
   querySelectorMap = {},
-  xpathResults = {},
+  querySelectorAllMap = {},
+  xpathSnapshotResults = {},
 }: FakeDocInit = {}): Document {
   return {
     URL: url,
     querySelector: (selector: string) => querySelectorMap[selector] ?? null,
-    evaluate: (expression: string) => ({ stringValue: xpathResults[expression] ?? '' }),
+    querySelectorAll: (selector: string) => querySelectorAllMap[selector] ?? [],
+    evaluate: (expression: string) => {
+      const items = xpathSnapshotResults[expression] ?? [];
+      return {
+        snapshotLength: items.length,
+        snapshotItem: (i: number) => ({ textContent: items[i] }) as unknown as Node,
+      };
+    },
   } as unknown as Document;
 }
 
@@ -57,35 +67,51 @@ function match(name: string, selector: PageSelector): PageMatch {
 
 describe('applySelector', () => {
   describe('css selector', () => {
-    it('returns trimmed textContent for a non-meta element', () => {
+    it('returns trimmed textContent for every matched element', () => {
       const doc = fakeDoc({
-        querySelectorMap: { 'h1.title': fakeElement({ tagName: 'h1', textContent: '  Hello World  ' }) },
+        querySelectorAllMap: { 'a.hub': [fakeElement({ tagName: 'a', textContent: '  Java  ' })] },
       });
-      const selector: PageSelector = { type: PageSelectorType.CSS, value: 'h1.title' };
-      expect(applySelector(selector, doc)).toBe('Hello World');
+      const selector: PageSelector = { type: PageSelectorType.CSS, value: 'a.hub' };
+      expect(applySelector(selector, doc)).toEqual(['Java']);
     });
 
-    it('reads the content attribute when the matched element is a <meta> tag', () => {
+    it('reads the content attribute for a matched <meta> tag', () => {
       const doc = fakeDoc({
-        querySelectorMap: {
-          'meta[name="description"]': fakeElement({ tagName: 'meta', attributes: { content: 'A great page' } }),
+        querySelectorAllMap: {
+          'meta[name="description"]': [fakeElement({ tagName: 'meta', attributes: { content: 'A great page' } })],
         },
       });
       const selector: PageSelector = { type: PageSelectorType.CSS, value: 'meta[name="description"]' };
-      expect(applySelector(selector, doc)).toBe('A great page');
+      expect(applySelector(selector, doc)).toEqual(['A great page']);
+    });
+
+    it('collects every matched element, in document order', () => {
+      const doc = fakeDoc({
+        querySelectorAllMap: {
+          'a.hub': [
+            fakeElement({ tagName: 'a', textContent: 'IT-компании' }),
+            fakeElement({ tagName: 'a', textContent: 'Java' }),
+            fakeElement({ tagName: 'a', textContent: 'Open source' }),
+          ],
+        },
+      });
+      const selector: PageSelector = { type: PageSelectorType.CSS, value: 'a.hub' };
+      expect(applySelector(selector, doc)).toEqual(['IT-компании', 'Java', 'Open source']);
+    });
+
+    it('drops elements with blank textContent', () => {
+      const doc = fakeDoc({
+        querySelectorAllMap: {
+          'a.hub': [fakeElement({ tagName: 'a', textContent: 'Java' }), fakeElement({ tagName: 'a', textContent: '   ' })],
+        },
+      });
+      const selector: PageSelector = { type: PageSelectorType.CSS, value: 'a.hub' };
+      expect(applySelector(selector, doc)).toEqual(['Java']);
     });
 
     it('returns undefined when nothing matches', () => {
       const selector: PageSelector = { type: PageSelectorType.CSS, value: '.missing' };
       expect(applySelector(selector, fakeDoc())).toBeUndefined();
-    });
-
-    it('returns undefined for blank textContent', () => {
-      const doc = fakeDoc({
-        querySelectorMap: { '.empty': fakeElement({ tagName: 'span', textContent: '   ' }) },
-      });
-      const selector: PageSelector = { type: PageSelectorType.CSS, value: '.empty' };
-      expect(applySelector(selector, doc)).toBeUndefined();
     });
   });
 
@@ -118,14 +144,14 @@ describe('applySelector', () => {
   });
 
   describe('xpath selector', () => {
-    it('returns the evaluated string value', () => {
-      const doc = fakeDoc({ xpathResults: { '//h1/text()': 'XPath Title' } });
-      const selector: PageSelector = { type: PageSelectorType.XPATH, value: '//h1/text()' };
-      expect(applySelector(selector, doc)).toBe('XPath Title');
+    it('returns every snapshot node as an array', () => {
+      const doc = fakeDoc({ xpathSnapshotResults: { '//a[@class="hub"]': ['IT-компании', 'Java'] } });
+      const selector: PageSelector = { type: PageSelectorType.XPATH, value: '//a[@class="hub"]' };
+      expect(applySelector(selector, doc)).toEqual(['IT-компании', 'Java']);
     });
 
-    it('returns undefined for an empty string value', () => {
-      const doc = fakeDoc({ xpathResults: { '//missing': '' } });
+    it('returns undefined when the snapshot is empty', () => {
+      const doc = fakeDoc({ xpathSnapshotResults: { '//missing': [] } });
       const selector: PageSelector = { type: PageSelectorType.XPATH, value: '//missing' };
       expect(applySelector(selector, doc)).toBeUndefined();
     });
@@ -142,9 +168,14 @@ describe('buildPartialMeta', () => {
     expect(result.domain).toBe('habr.com');
   });
 
-  it('maps an extractable field from a css selector', () => {
+  it('maps an extractable field from a css selector, taking the first match', () => {
     const doc = fakeDoc({
-      querySelectorMap: { 'h1.tm-title': fakeElement({ tagName: 'h1', textContent: 'Как я...' }) },
+      querySelectorAllMap: {
+        'h1.tm-title': [
+          fakeElement({ tagName: 'h1', textContent: 'Как я...' }),
+          fakeElement({ tagName: 'h1', textContent: 'Second match' }),
+        ],
+      },
     });
     const result = buildPartialMeta(
       group([['title', match('title', { type: PageSelectorType.CSS, value: 'h1.tm-title' })]]),
@@ -166,7 +197,7 @@ describe('buildPartialMeta', () => {
     expect(result.author).toBe('John Doe');
   });
 
-  it('splits, trims, and filters a comma-separated tags field', () => {
+  it('splits, trims, and filters a comma-separated tags field from a meta selector', () => {
     const doc = fakeDoc({
       querySelectorMap: {
         'meta[name="keywords"]': fakeElement({ tagName: 'meta', attributes: { content: 'react, , tutorial ,js' } }),
@@ -179,16 +210,30 @@ describe('buildPartialMeta', () => {
     expect(result.tags).toEqual(['react', 'tutorial', 'js']);
   });
 
-  it('routes an unrecognized field name into extras', () => {
+  it('uses each matched element as one tag directly (no comma-split) from a css selector', () => {
     const doc = fakeDoc({
-      querySelectorMap: { '.readtime': fakeElement({ tagName: 'span', textContent: '5 min' }) },
+      querySelectorAllMap: {
+        'a.hub': [fakeElement({ tagName: 'a', textContent: 'Java' }), fakeElement({ tagName: 'a', textContent: 'Spring Boot' })],
+      },
     });
     const result = buildPartialMeta(
-      group([['readTime', match('readTime', { type: PageSelectorType.CSS, value: '.readtime' })]]),
+      group([[PageMetaField.TAGS, match(PageMetaField.TAGS, { type: PageSelectorType.CSS, value: 'a.hub' })]]),
       doc,
     );
-    expect(result.extras).toEqual({ readTime: '5 min' });
-    expect(result).not.toHaveProperty('readTime');
+    expect(result.tags).toEqual(['Java', 'Spring Boot']);
+  });
+
+  it('routes every matched element into extras as a string[]', () => {
+    const doc = fakeDoc({
+      querySelectorAllMap: {
+        'a.hub': [fakeElement({ tagName: 'a', textContent: 'IT-компании' }), fakeElement({ tagName: 'a', textContent: 'Java' })],
+      },
+    });
+    const result = buildPartialMeta(
+      group([['hub', match('hub', { type: PageSelectorType.CSS, value: 'a.hub' })]]),
+      doc,
+    );
+    expect(result.extras).toEqual({ hub: ['IT-компании', 'Java'] });
   });
 
   it('omits the field entirely when its selector matches nothing', () => {
@@ -201,7 +246,7 @@ describe('buildPartialMeta', () => {
 
   it('leaves extras undefined when no custom fields were extracted', () => {
     const doc = fakeDoc({
-      querySelectorMap: { h1: fakeElement({ tagName: 'h1', textContent: 'Title' }) },
+      querySelectorAllMap: { h1: [fakeElement({ tagName: 'h1', textContent: 'Title' })] },
     });
     const result = buildPartialMeta(
       group([['title', match('title', { type: PageSelectorType.CSS, value: 'h1' })]]),
@@ -213,10 +258,10 @@ describe('buildPartialMeta', () => {
   it('combines extractable fields, tags, and extras in a single pass', () => {
     const doc = fakeDoc({
       url: 'https://reddit.com/r/webdev/comments/xyz',
-      querySelectorMap: {
-        'h1.post-title': fakeElement({ tagName: 'h1', textContent: 'Show your project' }),
-        'a.author-name': fakeElement({ tagName: 'a', textContent: 'u/dev123' }),
-        '.flair': fakeElement({ tagName: 'span', textContent: 'Showcase' }),
+      querySelectorAllMap: {
+        'h1.post-title': [fakeElement({ tagName: 'h1', textContent: 'Show your project' })],
+        'a.author-name': [fakeElement({ tagName: 'a', textContent: 'u/dev123' })],
+        '.flair': [fakeElement({ tagName: 'span', textContent: 'Showcase' })],
       },
     });
     const result = buildPartialMeta(
@@ -233,7 +278,7 @@ describe('buildPartialMeta', () => {
       domain: 'reddit.com',
       title: 'Show your project',
       author: 'u/dev123',
-      extras: { flair: 'Showcase' },
+      extras: { flair: ['Showcase'] },
     });
   });
 });
