@@ -7,6 +7,8 @@ import type { DomainAlias } from '../../types/domain-alias';
 import { PaletteColor } from '../../types/palette-color';
 import type { Tag } from '../../types/tag';
 import type { EntityType } from '../../types/entity-type';
+import type { Workflow } from '../../types/workflow';
+import type { WorkflowStatus } from '../../types/workflow-status';
 import { IconRuleBindingType, IconSourceType, type IconRule } from '../../types/icon-rule';
 import { SETTINGS_EXPORT_VERSION } from '../../types/settings-export';
 import type { SettingsExport } from '../../types/settings-export';
@@ -14,6 +16,8 @@ import type { IDomainAliasRepository } from '../../repository/interfaces/IDomain
 import type { IPageMatchGroupRepository } from '../../repository/interfaces/IPageMatchGroupRepository';
 import type { ITagRepository } from '../../repository/interfaces/ITagRepository';
 import type { IEntityTypeRepository } from '../../repository/interfaces/IEntityTypeRepository';
+import type { IWorkflowRepository } from '../../repository/interfaces/IWorkflowRepository';
+import type { IWorkflowStatusRepository } from '../../repository/interfaces/IWorkflowStatusRepository';
 import { MimeType } from '../interfaces/IFileService';
 import type { IFileService } from '../interfaces/IFileService';
 import { FakeBookmarkRuleRepository } from '../../repository/__tests__/fakes/FakeBookmarkRuleRepository';
@@ -68,6 +72,30 @@ class FakeEntityTypeRepository implements IEntityTypeRepository {
   }
 }
 
+class FakeWorkflowRepository implements IWorkflowRepository {
+  constructor(public workflows: Workflow[] = []) {}
+  async getAll(): Promise<Workflow[]> { return this.workflows; }
+  async getById(id: string): Promise<Workflow | undefined> { return this.workflows.find((w) => w.id === id); }
+  async save(workflow: Workflow): Promise<void> {
+    this.workflows = [...this.workflows.filter((w) => w.id !== workflow.id), workflow];
+  }
+  async remove(id: string): Promise<void> {
+    this.workflows = this.workflows.filter((w) => w.id !== id);
+  }
+}
+
+class FakeWorkflowStatusRepository implements IWorkflowStatusRepository {
+  constructor(public statuses: WorkflowStatus[] = []) {}
+  async getAll(): Promise<WorkflowStatus[]> { return this.statuses; }
+  async getById(id: string): Promise<WorkflowStatus | undefined> { return this.statuses.find((s) => s.id === id); }
+  async save(status: WorkflowStatus): Promise<void> {
+    this.statuses = [...this.statuses.filter((s) => s.id !== status.id), status];
+  }
+  async remove(id: string): Promise<void> {
+    this.statuses = this.statuses.filter((s) => s.id !== id);
+  }
+}
+
 class FakeFileService implements IFileService {
   public saved?: { filename: string; content: string; mimeType?: MimeType };
   async save(filename: string, content: string, mimeType?: MimeType): Promise<void> {
@@ -96,6 +124,16 @@ const tag: Tag = { id: 'tag-1', name: 'tutorial', color: PaletteColor.TEAL };
 
 const entityType: EntityType = { id: 'entity-1', name: 'Видео', color: PaletteColor.BLUE };
 
+const workflow: Workflow = { id: 'workflow-1', entityTypeId: 'entity-1' };
+
+const workflowStatus: WorkflowStatus = {
+  id: 'status-1',
+  workflowId: 'workflow-1',
+  name: 'В процессе',
+  color: PaletteColor.ORANGE,
+  order: 0,
+};
+
 const iconRule: IconRule = {
   id: 'icon-rule-1',
   name: 'youtube icon',
@@ -111,6 +149,8 @@ function makeService(seed?: {
   groups?: PageMatchGroup[];
   tags?: Tag[];
   entityTypes?: EntityType[];
+  workflows?: Workflow[];
+  workflowStatuses?: WorkflowStatus[];
   iconRules?: IconRule[];
 }) {
   const ruleRepository = new FakeBookmarkRuleRepository(seed?.rules);
@@ -118,6 +158,8 @@ function makeService(seed?: {
   const groupRepository = new FakePageMatchGroupRepository(seed?.groups);
   const tagRepository = new FakeTagRepository(seed?.tags);
   const entityTypeRepository = new FakeEntityTypeRepository(seed?.entityTypes);
+  const workflowRepository = new FakeWorkflowRepository(seed?.workflows);
+  const workflowStatusRepository = new FakeWorkflowStatusRepository(seed?.workflowStatuses);
   const iconRuleRepository = new FakeIconRuleRepository(seed?.iconRules);
   const fileService = new FakeFileService();
   const service = new SettingsExportImportService(
@@ -126,6 +168,8 @@ function makeService(seed?: {
     groupRepository,
     tagRepository,
     entityTypeRepository,
+    workflowRepository,
+    workflowStatusRepository,
     iconRuleRepository,
     fileService,
   );
@@ -136,19 +180,23 @@ function makeService(seed?: {
     groupRepository,
     tagRepository,
     entityTypeRepository,
+    workflowRepository,
+    workflowStatusRepository,
     iconRuleRepository,
     fileService,
   };
 }
 
 describe('SettingsExportImportService.exportSettings', () => {
-  it('gathers rules, aliases, page match groups, tags, entity types, and icon rules and downloads them as a versioned JSON file', async () => {
+  it('gathers rules, aliases, page match groups, tags, entity types, workflows/statuses, and icon rules and downloads them as a versioned JSON file', async () => {
     const { service, fileService } = makeService({
       rules: [rule],
       aliases: [alias],
       groups: [group],
       tags: [tag],
       entityTypes: [entityType],
+      workflows: [workflow],
+      workflowStatuses: [workflowStatus],
       iconRules: [iconRule],
     });
     await service.exportSettings();
@@ -165,6 +213,8 @@ describe('SettingsExportImportService.exportSettings', () => {
     ]);
     expect(data.tags).toEqual([tag]);
     expect(data.entityTypes).toEqual([entityType]);
+    expect(data.workflows).toEqual([workflow]);
+    expect(data.workflowStatuses).toEqual([workflowStatus]);
     expect(data.iconRules).toEqual([iconRule]);
     expect(typeof data.exportedAt).toBe('string');
   });
@@ -173,8 +223,17 @@ describe('SettingsExportImportService.exportSettings', () => {
 describe('SettingsExportImportService.importSettings', () => {
   it('upserts by id, leaving existing rows not present in the file untouched', async () => {
     const existingRule: BookmarkRule = { ...rule, id: 'rule-existing', name: 'existing' };
-    const { service, ruleRepository, aliasRepository, groupRepository, tagRepository, entityTypeRepository, iconRuleRepository } =
-      makeService({ rules: [existingRule] });
+    const {
+      service,
+      ruleRepository,
+      aliasRepository,
+      groupRepository,
+      tagRepository,
+      entityTypeRepository,
+      workflowRepository,
+      workflowStatusRepository,
+      iconRuleRepository,
+    } = makeService({ rules: [existingRule] });
 
     await service.importSettings({
       version: SETTINGS_EXPORT_VERSION,
@@ -186,6 +245,8 @@ describe('SettingsExportImportService.importSettings', () => {
       ],
       tags: [tag],
       entityTypes: [entityType],
+      workflows: [workflow],
+      workflowStatuses: [workflowStatus],
       iconRules: [iconRule],
     });
 
@@ -194,11 +255,14 @@ describe('SettingsExportImportService.importSettings', () => {
     expect(groupRepository.groups).toEqual([group]);
     expect(tagRepository.tags).toEqual([tag]);
     expect(entityTypeRepository.entityTypes).toEqual([entityType]);
+    expect(workflowRepository.workflows).toEqual([workflow]);
+    expect(workflowStatusRepository.statuses).toEqual([workflowStatus]);
     expect(iconRuleRepository.rules).toEqual([iconRule]);
   });
 
-  it('treats missing tags/entityTypes/iconRules fields as empty, for backward compatibility with older export files', async () => {
-    const { service, ruleRepository, tagRepository, entityTypeRepository, iconRuleRepository } = makeService();
+  it('treats missing tags/entityTypes/workflows/workflowStatuses/iconRules fields as empty, for backward compatibility with older export files', async () => {
+    const { service, ruleRepository, tagRepository, entityTypeRepository, workflowRepository, workflowStatusRepository, iconRuleRepository } =
+      makeService();
 
     await service.importSettings({
       version: SETTINGS_EXPORT_VERSION,
@@ -211,6 +275,8 @@ describe('SettingsExportImportService.importSettings', () => {
     expect(ruleRepository.rules).toEqual([rule]);
     expect(tagRepository.tags).toEqual([]);
     expect(entityTypeRepository.entityTypes).toEqual([]);
+    expect(workflowRepository.workflows).toEqual([]);
+    expect(workflowStatusRepository.statuses).toEqual([]);
     expect(iconRuleRepository.rules).toEqual([]);
   });
 
