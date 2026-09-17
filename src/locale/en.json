@@ -55,8 +55,10 @@
     "conditionTitle": "Condition",
     "visualViewTab": "Builder",
     "jsonViewTab": "JSON",
-    "testButton": "Test on current page",
-    "saveButton": "Save"
+    "saveButton": "Save",
+    "saveSuccessTitle": "Rule saved",
+    "saveErrorTitle": "Save failed",
+    "saveErrorDesc": "The rule could not be saved. Please try again."
   },
   "conditionGroup": {
     "singleLabel": "—",

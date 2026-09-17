@@ -3,11 +3,13 @@ import { Toast } from '@/components/ui/toast';
 import { useToast } from '@/hooks/useToast';
 import styles from './Toaster.module.css';
 
+const TOAST_DURATION_MS = 2500;
+
 export function Toaster() {
   const { toasts, dismiss } = useToast();
 
   return (
-    <RadixToast.Provider swipeDirection="right">
+    <RadixToast.Provider swipeDirection="right" duration={TOAST_DURATION_MS}>
       {toasts.map((toast) => (
         <Toast
           key={toast.id}

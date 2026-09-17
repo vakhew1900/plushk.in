@@ -1,16 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { IconCheck } from '@/components/icons';
 import { EntitySegment } from '@/components/bookmark/entity/EntitySegment';
 import { TagPicker } from '@/components/bookmark/tags/TagPicker';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntityWorkflows } from '@/hooks/useEntityWorkflows';
 import { useTags } from '@/hooks/useTags';
+import { useToast } from '@/hooks/useToast';
+import type { useRuleDrafts } from '@/hooks/useRuleDrafts';
 import { parseRuleNode } from '@/lib/visitor/rule-evaluator';
 import { hasRuleErrors } from '@/lib/visitor/rule-draft';
 import { hasValidName } from '@/lib/validation/named-entity';
+import { ToastVariant } from '@/types/toast';
 import type { BookmarkRule, RuleNode } from '@/types/rule';
 import { JsonView } from '../json/JsonView';
 import { ConsView } from '../cons/ConsView';
@@ -19,20 +21,32 @@ import styles from './RuleEditor.module.css';
 
 interface Props {
   rule: BookmarkRule;
-  onSave: (rule: BookmarkRule) => void;
+  onSave: (rule: BookmarkRule) => Promise<void>;
+  drafts: ReturnType<typeof useRuleDrafts>;
 }
 
-export function RuleEditor({ rule, onSave }: Props) {
+export function RuleEditor({ rule, onSave, drafts }: Props) {
   const { translate: t } = useTranslation();
-  const [name, setName] = useState(rule.name);
-  const [desc, setDesc] = useState(rule.desc ?? '');
-  const [targetFolder, setTargetFolder] = useState(rule.targetFolder);
-  const [priority, setPriority] = useState(rule.priority);
-  const [entityTypeId, setEntityTypeId] = useState(rule.entityTypeId);
-  const [statusId, setStatusId] = useState(rule.statusId);
-  const [tagIds, setTagIds] = useState(rule.tagIds ?? []);
-  const [conditionText, setConditionText] = useState(JSON.stringify(rule.condition, null, 2));
+  const { show } = useToast();
+
+  // Seeded once per mount (this component remounts per rule id, see
+  // `key={selected.id}` in `RulesTab`) from whatever was last edited for this
+  // rule, so switching away and back restores unsaved changes instead of the
+  // persisted rule.
+  const [draft] = useState(() => drafts.getDraft(rule));
+  const [name, setName] = useState(draft.name);
+  const [desc, setDesc] = useState(draft.desc);
+  const [targetFolder, setTargetFolder] = useState(draft.targetFolder);
+  const [priority, setPriority] = useState(draft.priority);
+  const [entityTypeId, setEntityTypeId] = useState(draft.entityTypeId);
+  const [statusId, setStatusId] = useState(draft.statusId);
+  const [tagIds, setTagIds] = useState(draft.tagIds);
+  const [conditionText, setConditionText] = useState(draft.conditionText);
   const [conditionView, setConditionView] = useState<ConditionView>(ConditionView.VISUAL);
+
+  useEffect(() => {
+    drafts.setDraft(rule.id, { name, desc, targetFolder, priority, entityTypeId, statusId, tagIds, conditionText });
+  }, [drafts, rule.id, name, desc, targetFolder, priority, entityTypeId, statusId, tagIds, conditionText]);
 
   const { entityTypes, statusesFor } = useEntityWorkflows();
   const { items: tags } = useTags();
@@ -65,19 +79,25 @@ export function RuleEditor({ rule, onSave }: Props) {
 
   const canSave = parsedCondition !== null && !hasRuleErrors(parsedCondition) && hasValidName(name);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!canSave || !parsedCondition) return;
-    onSave({
-      ...rule,
-      name,
-      desc,
-      targetFolder,
-      priority,
-      entityTypeId,
-      statusId,
-      tagIds: tagIds.length > 0 ? tagIds : undefined,
-      condition: parsedCondition,
-    });
+    try {
+      await onSave({
+        ...rule,
+        name,
+        desc,
+        targetFolder,
+        priority,
+        entityTypeId,
+        statusId,
+        tagIds: tagIds.length > 0 ? tagIds : undefined,
+        condition: parsedCondition,
+      });
+      drafts.clearDraft(rule.id);
+      show({ variant: ToastVariant.SUCCESS, title: t('ruleEditor.saveSuccessTitle') });
+    } catch {
+      show({ variant: ToastVariant.ERROR, title: t('ruleEditor.saveErrorTitle'), description: t('ruleEditor.saveErrorDesc') });
+    }
   };
 
   return (
@@ -140,10 +160,6 @@ export function RuleEditor({ rule, onSave }: Props) {
       </div>
 
       <div className={styles.editorFooter}>
-        <Button variant="outline" size="sm">
-          <IconCheck size="md" />
-          {t('ruleEditor.testButton')}
-        </Button>
         <div style={{ flex: 1 }} />
         <Button onClick={handleSave} disabled={!canSave}>{t('ruleEditor.saveButton')}</Button>
       </div>
