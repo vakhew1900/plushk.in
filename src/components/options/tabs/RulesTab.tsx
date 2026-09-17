@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useBookmarkRules } from "@/hooks/useBookmarkRules";
+import { useRuleDrafts } from "@/hooks/useRuleDrafts";
 import { TabHeader } from "@/components/options/TabHeader";
 import { RuleTree } from "./rules/tree/RuleTree";
 import { DefaultFolderPanel } from "./rules/tree/DefaultFolderPanel";
@@ -11,6 +12,7 @@ import styles from "./RulesTab.module.css";
 
 export function RulesTab() {
   const { items: rules, save: onSave, remove: onRemove, removeWithDescendants } = useBookmarkRules();
+  const drafts = useRuleDrafts();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { translate: t } = useTranslation();
 
@@ -38,6 +40,16 @@ export function RulesTab() {
     void onSave({ ...rule, enabled: !rule.enabled });
   };
 
+  const removeRule = async (id: string) => {
+    drafts.clearDraft(id);
+    await onRemove(id);
+  };
+
+  const removeRuleWithDescendants = async (id: string) => {
+    drafts.clearDraft(id);
+    await removeWithDescendants(id);
+  };
+
   const selected = rules.find((r) => r.id === effectiveSelectedId) ?? null;
 
   return (
@@ -52,12 +64,16 @@ export function RulesTab() {
             onSelect={setSelectedId}
             onToggleEnabled={toggleEnabled}
             onAddRule={addRule}
-            onRemove={onRemove}
-            onRemoveWithDescendants={removeWithDescendants}
+            onRemove={removeRule}
+            onRemoveWithDescendants={removeRuleWithDescendants}
           />
         </div>
 
-        {selected ? <RuleEditor key={selected.id} rule={selected} onSave={onSave} /> : <DefaultFolderPanel />}
+        {selected ? (
+          <RuleEditor key={selected.id} rule={selected} onSave={onSave} drafts={drafts} />
+        ) : (
+          <DefaultFolderPanel />
+        )}
       </div>
     </div>
   );

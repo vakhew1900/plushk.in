@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "exportedAt": "2026-09-11T00:00:00.000Z",
+  "rules": [
+    {
+      "id": "habr-root",
+      "name": "Habr",
+      "desc": "Родительское правило (RULE-10) на домене habr.com. targetFolder «IT/Статьи/Habr» — запасной вариант, если заголовок/хаб/теги статьи не подошли ни под одно из дочерних правил ниже (обычные, не связанные с ИИ/Java статьи).",
+      "condition": { "type": "term", "field": "domain", "value": "habr.com" },
+      "targetFolder": "IT/Статьи/Habr",
+      "priority": 10,
+      "enabled": true
+    },
+    {
+      "id": "habr-llm",
+      "parentId": "habr-root",
+      "name": "Habr — LLM/ИИ",
+      "desc": "Дочернее правило «Habr»: заголовок содержит ИИ/LLM/Anthropic/Qwen/ChatGpt (как отдельное слово, не часть другого — \\b не работает с кириллицей в JS-regex, поэтому у 'ИИ' вручную прописаны lookaround-границы вместо \\b) ИЛИ любой хаб статьи (extras.hub, из PageMatchGroup 'pmg-habr' ниже) равен «Искусственный интеллект» ИЛИ теги статьи (meta keywords → tags) содержат LLM/Anthropic/Qwen/ChatGpt. CSS/XPath-селекторы PageMatchGroup всегда собирают ВСЕ подходящие элементы (querySelectorAll/ORDERED_NODE_SNAPSHOT_TYPE, см. page-extractor.ts) — extras.hub здесь string[] со всеми хабами статьи, а не только первым в контейнере. 'term'/'terms'/'regex'/'wildcard' в rule-evaluator.ts уже матчат по массиву как «хотя бы один элемент подошёл», так что 'term hub == \"Искусственный интеллект\"' срабатывает независимо от того, каким по счёту этот хаб идёт (было реальной проблемой при старом querySelector-only поведении — см. историю разбора /ru/news/551512/ у 'habr-java'). Условия по tags — доп. защита на случай, если ИИ-related слово есть только в meta keywords, а не в заголовке/хабах. Проверено на трёх статьях: /ru/articles/1081060/ (хаб 'Искусственный интеллект' — сработает и через hub, и через title 'ИИ') и /ru/companies/severstal/articles/1081304/ (не про ИИ — корректно не матчится).",
+      "condition": {
+        "type": "or",
+        "nodes": [
+          { "type": "regex", "field": "title", "pattern": "(?<![A-Za-zА-Яа-яЁё0-9])ИИ(?![A-Za-zА-Яа-яЁё0-9])" },
+          { "type": "regex", "field": "title", "pattern": "\\bLLM\\b" },
+          { "type": "regex", "field": "title", "pattern": "\\b[Aa]nthropic\\b" },
+          { "type": "regex", "field": "title", "pattern": "\\b[Qq]wen\\b" },
+          { "type": "regex", "field": "title", "pattern": "\\b[Cc]hat[Gg][Pp][Tt]\\b" },
+          { "type": "term", "field": "hub", "value": "Искусственный интеллект" },
+          { "type": "wildcard", "field": "tags", "pattern": "*LLM*" },
+          { "type": "wildcard", "field": "tags", "pattern": "*Anthropic*" },
+          { "type": "wildcard", "field": "tags", "pattern": "*Qwen*" },
+          { "type": "wildcard", "field": "tags", "pattern": "*ChatGpt*" }
+        ]
+      },
+      "targetFolder": "IT/Статьи/Habr/llm",
+      "priority": 40,
+      "enabled": true
+    },
+    {
+      "id": "habr-java",
+      "parentId": "habr-root",
+      "name": "Habr — Java",
+      "desc": "Sibling у 'habr-llm' под тем же родителем: заголовок содержит слово Java (\\bJava\\b — граница слова исключает 'JavaScript'/'Javadoc') ИЛИ любой хаб статьи равен 'Java' или 'Spring' ИЛИ теги статьи (extras/meta 'tags', из <meta name=\"keywords\">, см. PageMatchGroup 'pmg-habr') содержат подстроку 'Java' или 'Spring'. История: изначально хаб-селектор брал только первый элемент контейнера (querySelector) — на /ru/news/551512/ ('Microsoft представила превью Microsoft Build of OpenJDK') первый хаб был 'IT-компании', а 'Java' шёл вторым, так что 'term hub == \"Java\"' не срабатывал, а заголовок 'Java' не содержит вовсе (только 'OpenJDK'); только <meta name=\"keywords\"> = 'Microsoft, Microsoft Build of OpenJDK, OpenJDK, Java' содержал 'Java' напрямую — статья матчилась в Java-папку только благодаря wildcard *Java* по tags. CSS-селекторы PageMatchGroup теперь ВСЕГДА собирают все подходящие элементы (querySelectorAll, см. desc у 'habr-llm', page-extractor.ts) — extras.hub стал string[] со всеми хабами, и 'term hub == \"Java\"' сам по себе теперь тоже находит /ru/news/551512/ независимо от позиции; wildcard-проверки по tags оставлены как независимый второй сигнал (напр. для /ru/companies/severstal/articles/1081304/, где хаб-контейнер вообще не содержит 'Spring' — есть только 'Spring Boot'/'Spring Security' в keywords).",
+      "condition": {
+        "type": "or",
+        "nodes": [
+          { "type": "regex", "field": "title", "pattern": "\\bJava\\b" },
+          { "type": "term", "field": "hub", "value": "Java" },
+          { "type": "term", "field": "hub", "value": "Spring" },
+          { "type": "wildcard", "field": "tags", "pattern": "*Java*" },
+          { "type": "wildcard", "field": "tags", "pattern": "*Spring*" }
+        ]
+      },
+      "targetFolder": "IT/Статьи/Habr/Java",
+      "priority": 35,
+      "enabled": true
+    }
+  ],
+  "domainAliases": [
+    { "id": "alias-habr", "name": "Habr", "domain_names": ["habr.com"] }
+  ],
+  "pageMatchGroups": [
+    {
+      "id": "pmg-habr",
+      "aliasId": "alias-habr",
+      "pageMatches": {
+        "hub":  { "name": "hub",  "selector": { "type": "css",  "value": "div.tm-publication-hubs__container > div > span > a > span" } },
+        "tags": { "name": "tags", "selector": { "type": "meta", "value": "keywords" } }
+      }
+    }
+  ],
+  "iconRules": [
+    {
+      "id": "icon-habr-cover",
+      "name": "Habr — обложка статьи",
+      "bindingType": "domain",
+      "bindingValue": "habr.com",
+      "source": { "type": "css", "value": "#post-content-body > div > div > div > figure:nth-child(1) > img" },
+      "enabled": true
+    }
+  ]
+}

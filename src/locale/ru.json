@@ -55,7 +55,6 @@
     "conditionTitle": "Условие",
     "visualViewTab": "Конструктор",
     "jsonViewTab": "JSON",
-    "testButton": "Тест на текущей странице",
     "saveButton": "Сохранить",
     "saveSuccessTitle": "Правило сохранено",
     "saveErrorTitle": "Не удалось сохранить",

@@ -55,7 +55,6 @@
     "conditionTitle": "Condition",
     "visualViewTab": "Builder",
     "jsonViewTab": "JSON",
-    "testButton": "Test on current page",
     "saveButton": "Save",
     "saveSuccessTitle": "Rule saved",
     "saveErrorTitle": "Save failed",
