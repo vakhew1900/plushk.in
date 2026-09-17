@@ -1,7 +1,7 @@
 import { browser } from 'wxt/browser';
 import { PageExtractorService } from '@/services/PageExtractorService';
 import { IconExtractorService } from '@/services/IconExtractorService';
-import { isPageExtractRequestMessage } from '@/types/messages/page-extract-message';
+import { fromPageExtractGroup, isPageExtractRequestMessage } from '@/types/messages/page-extract-message';
 import { isIconExtractRequestMessage } from '@/types/messages/icon-extract-message';
 import type { PageMeta } from '@/types/page-meta';
 
@@ -21,7 +21,7 @@ export default defineContentScript({
           const extractor = new PageExtractorService();
           const merged: Partial<PageMeta> = {};
           for (const group of message.groups) {
-            Object.assign(merged, extractor.extract(group));
+            Object.assign(merged, extractor.extract(fromPageExtractGroup(group)));
           }
           return merged;
         })();

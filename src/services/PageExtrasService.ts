@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
 import { debugLog } from '../lib/debug-log';
-import { PageExtractMessageType } from '../types/messages/page-extract-message';
+import { PageExtractMessageType, toPageExtractGroup } from '../types/messages/page-extract-message';
 import type { PageMatchGroup } from '../types/page-match';
 import type { PageMeta } from '../types/page-meta';
 import type { IPageExtrasService } from './interfaces/IPageExtrasService';
@@ -19,7 +19,7 @@ export class PageExtrasService implements IPageExtrasService {
     try {
       await browser.scripting.executeScript({ target: { tabId }, files: [CONTENT_SCRIPT_PATH] });
       const response = (await Promise.race([
-        browser.tabs.sendMessage(tabId, { type: PageExtractMessageType.REQUEST, groups }),
+        browser.tabs.sendMessage(tabId, { type: PageExtractMessageType.REQUEST, groups: groups.map(toPageExtractGroup) }),
         timeout(EXTRACTION_TIMEOUT_MS),
       ])) as Partial<PageMeta> | undefined;
       return response;
