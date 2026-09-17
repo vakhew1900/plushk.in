@@ -8,9 +8,11 @@ import { TagPicker } from '@/components/bookmark/tags/TagPicker';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntityWorkflows } from '@/hooks/useEntityWorkflows';
 import { useTags } from '@/hooks/useTags';
+import { useToast } from '@/hooks/useToast';
 import { parseRuleNode } from '@/lib/visitor/rule-evaluator';
 import { hasRuleErrors } from '@/lib/visitor/rule-draft';
 import { hasValidName } from '@/lib/validation/named-entity';
+import { ToastVariant } from '@/types/toast';
 import type { BookmarkRule, RuleNode } from '@/types/rule';
 import { JsonView } from '../json/JsonView';
 import { ConsView } from '../cons/ConsView';
@@ -19,11 +21,12 @@ import styles from './RuleEditor.module.css';
 
 interface Props {
   rule: BookmarkRule;
-  onSave: (rule: BookmarkRule) => void;
+  onSave: (rule: BookmarkRule) => Promise<void>;
 }
 
 export function RuleEditor({ rule, onSave }: Props) {
   const { translate: t } = useTranslation();
+  const { show } = useToast();
   const [name, setName] = useState(rule.name);
   const [desc, setDesc] = useState(rule.desc ?? '');
   const [targetFolder, setTargetFolder] = useState(rule.targetFolder);
@@ -65,19 +68,24 @@ export function RuleEditor({ rule, onSave }: Props) {
 
   const canSave = parsedCondition !== null && !hasRuleErrors(parsedCondition) && hasValidName(name);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!canSave || !parsedCondition) return;
-    onSave({
-      ...rule,
-      name,
-      desc,
-      targetFolder,
-      priority,
-      entityTypeId,
-      statusId,
-      tagIds: tagIds.length > 0 ? tagIds : undefined,
-      condition: parsedCondition,
-    });
+    try {
+      await onSave({
+        ...rule,
+        name,
+        desc,
+        targetFolder,
+        priority,
+        entityTypeId,
+        statusId,
+        tagIds: tagIds.length > 0 ? tagIds : undefined,
+        condition: parsedCondition,
+      });
+      show({ variant: ToastVariant.SUCCESS, title: t('ruleEditor.saveSuccessTitle') });
+    } catch {
+      show({ variant: ToastVariant.ERROR, title: t('ruleEditor.saveErrorTitle'), description: t('ruleEditor.saveErrorDesc') });
+    }
   };
 
   return (

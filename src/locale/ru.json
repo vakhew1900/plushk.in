@@ -56,7 +56,10 @@
     "visualViewTab": "Конструктор",
     "jsonViewTab": "JSON",
     "testButton": "Тест на текущей странице",
-    "saveButton": "Сохранить"
+    "saveButton": "Сохранить",
+    "saveSuccessTitle": "Правило сохранено",
+    "saveErrorTitle": "Не удалось сохранить",
+    "saveErrorDesc": "Не удалось сохранить правило. Попробуйте ещё раз."
   },
   "conditionGroup": {
     "singleLabel": "—",
