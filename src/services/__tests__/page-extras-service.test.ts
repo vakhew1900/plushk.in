@@ -45,7 +45,13 @@ describe('PageExtrasService.extract', () => {
       target: { tabId: 7 },
       files: ['/content-scripts/content.js'],
     });
-    expect(tabsApi.sendMessage).toHaveBeenCalledWith(7, { type: PageExtractMessageType.REQUEST, groups });
+    // `pageMatches` must cross as a JSON-serializable `[string, PageMatch][]`,
+    // never as a raw `Map` — Chrome's extension messaging JSON-serializes the
+    // payload (dropping a Map to `{}`), unlike Firefox's structured clone.
+    expect(tabsApi.sendMessage).toHaveBeenCalledWith(7, {
+      type: PageExtractMessageType.REQUEST,
+      groups: [{ id: 'g1', aliasId: 'reddit-alias-id', pageMatches: [] }],
+    });
     expect(result).toEqual({ extras: { subreddit: 'programming' } });
   });
 
