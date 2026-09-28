@@ -1,12 +1,10 @@
-import { Button } from '@/components/ui/button';
-import { Text } from '@/components/ui/text';
-import { IconPlus } from '@/components/icons';
+import { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { ListDetailSection } from '@/components/options/list-detail/ListDetailSection';
 import { IconRuleBindingType, IconSourceType, type IconRule } from '@/types/icon-rule';
 import type { DomainAlias } from '@/types/domain-alias';
-import { IconRuleRow } from './IconRuleRow';
-import type { AliasOption } from './IconRuleRow';
-import styles from './IconRulesSection.module.css';
+import { IconRuleDetailPanel } from './IconRuleDetailPanel';
+import type { AliasOption } from './IconRuleDetailPanel';
 
 interface Props {
   aliases: DomainAlias[];
@@ -17,6 +15,9 @@ interface Props {
 
 export function IconRulesSection({ aliases, rules, save, remove }: Props) {
   const { translate: t } = useTranslation();
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
+
+  const selected = rules.find((r) => r.id === selectedId) ?? rules[0];
 
   // At most one alias-bound rule per alias, same 1:1 constraint as
   // VariablesSection/PageMatchGroup (RULE-13) — an alias already claimed by
@@ -35,32 +36,40 @@ export function IconRulesSection({ aliases, rules, save, remove }: Props) {
       enabled: true,
     };
     void save(rule);
+    setSelectedId(rule.id);
+  };
+
+  const deleteRule = (id: string) => {
+    void remove(id);
+    if (selected?.id === id) setSelectedId(undefined);
   };
 
   const aliasOptionsFor = (rule: IconRule): AliasOption[] =>
     aliases.filter((a) => a.id === rule.aliasId || !usedAliasIds.has(a.id));
 
   return (
-    <section className={styles.section}>
-      <div className={styles.sectionHeader}>
-        <Text as="h2" size="subheading">{t('iconRulesSection.title')}</Text>
-        <Button variant="outline" size="sm" style={{ marginLeft: 'auto' }} onClick={addRule}>
-          <IconPlus size="sm" />
-          {t('iconRulesSection.addRule')}
-        </Button>
-      </div>
-      <Text size="body" tone="muted" className={styles.sectionDesc}>{t('iconRulesSection.desc')}</Text>
-      <div className={styles.ruleList}>
-        {rules.map((rule) => (
-          <IconRuleRow
-            key={rule.id}
-            rule={rule}
-            aliasOptions={aliasOptionsFor(rule)}
-            onChange={(next) => void save(next)}
-            onRemove={() => void remove(rule.id)}
-          />
-        ))}
-      </div>
-    </section>
+    <ListDetailSection
+      title={t('iconRulesSection.title')}
+      desc={t('iconRulesSection.desc')}
+      items={rules}
+      getId={(r) => r.id}
+      getName={(r) => r.name || t('iconRulesSection.namePlaceholder')}
+      selectedId={selected?.id}
+      onSelect={setSelectedId}
+      onAdd={addRule}
+      addLabel={t('common.add')}
+      searchPlaceholder={t('common.searchPlaceholder')}
+      noResultsLabel={t('common.noSearchResults')}
+      emptyLabel={t('iconRulesSection.noRules')}
+    >
+      {selected && (
+        <IconRuleDetailPanel
+          rule={selected}
+          aliasOptions={aliasOptionsFor(selected)}
+          onChange={(next) => void save(next)}
+          onRemove={() => deleteRule(selected.id)}
+        />
+      )}
+    </ListDetailSection>
   );
 }

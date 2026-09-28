@@ -4,7 +4,10 @@
     "condition": "Условие",
     "noMatchFallback": "нет совпадений →",
     "bookmarksBar": "Панель закладок",
-    "folderWillBeCreated": "будет создана"
+    "folderWillBeCreated": "будет создана",
+    "searchPlaceholder": "Поиск...",
+    "noSearchResults": "Ничего не найдено",
+    "add": "Добавить"
   },
   "nav": {
     "section": "Основное",
@@ -135,26 +138,27 @@
   },
   "aliasesSection": {
     "title": "Алиасы доменов",
-    "addAlias": "Алиас",
     "desc": "Один псевдоним для нескольких доменов — например, региональных зеркал.",
     "namePlaceholder": "имя",
-    "domainPlaceholder": "domain.com"
+    "domainPlaceholder": "domain.com",
+    "domainsLabel": "Домены",
+    "noAliases": "Пока нет алиасов"
   },
   "categoriesTab": {
     "lead": "Теги и категории для закладок."
   },
   "tagsSection": {
     "title": "Теги",
-    "addTag": "Тег",
     "desc": "Список тегов с цветом. Пока только определение — присвоить тег закладке можно будет позже.",
-    "namePlaceholder": "имя тега"
+    "namePlaceholder": "имя тега",
+    "colorLabel": "Цвет",
+    "noTags": "Пока нет тегов"
   },
   "bookmarkTagEditor": {
     "editButton": "Теги"
   },
   "entitiesSection": {
     "title": "Категории",
-    "addEntity": "Категория",
     "desc": "Тип контента (Книга, Видео, ...) с опциональным workflow-статусом закладки.",
     "namePlaceholder": "имя категории",
     "noEntities": "Пока нет категорий"
@@ -204,23 +208,27 @@
     "title": "Переменные",
     "desc": "Поля-псевдонимы для путей по HTML-дереву страницы. Используются в правилах и при экспорте.",
     "fieldsCount": "{{count}} поля",
-    "addGroup": "Группа",
     "addGroupDisabledHint": "Сначала добавьте алиас домена, ещё не занятый другой группой",
     "addField": "Поле",
     "aliasPlaceholder": "алиас",
+    "aliasLabel": "Алиас",
+    "fieldsLabel": "Поля",
     "fieldKeyPlaceholder": "поле",
-    "fieldValuePlaceholder": "селектор"
+    "fieldValuePlaceholder": "селектор",
+    "noGroups": "Пока нет групп переменных"
   },
   "iconRulesSection": {
     "title": "Иконки",
     "desc": "Источник иконки закладки по URL/алиасу/домену — статичная ссылка или css/xpath-селектор на живой странице. Если ничего не подошло — обычный favicon.",
-    "addRule": "Правило",
     "namePlaceholder": "название",
     "aliasPlaceholder": "алиас",
+    "bindingLabel": "Привязка",
+    "sourceLabel": "Источник",
     "bindingValueUrlPlaceholder": "https://example.com/path",
     "bindingValueDomainPlaceholder": "example.com",
     "sourceValueStaticPlaceholder": "https://…/icon.png",
-    "sourceValueSelectorPlaceholder": "селектор"
+    "sourceValueSelectorPlaceholder": "селектор",
+    "noRules": "Пока нет правил"
   },
   "exportSection": {
     "title": "Экспорт / Импорт",

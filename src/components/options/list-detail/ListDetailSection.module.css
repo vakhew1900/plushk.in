@@ -1,0 +1,64 @@
+.section { margin-bottom: 1.375rem; }
+
+.sectionHeader { display: flex; align-items: center; margin-bottom: 0.3rem; }
+.sectionDesc { margin-bottom: 0.75rem; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 12.5rem minmax(0, 1fr);
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  overflow: hidden;
+  height: 25rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+}
+
+.searchBar {
+  flex-shrink: 0;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.searchInput { width: 100%; }
+
+.rows {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.noResults { padding: 0.4rem 0.55rem; }
+
+.addBar {
+  flex-shrink: 0;
+  padding: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Grid items default to `min-width: auto` (content-based) regardless of the
+   track's own `minmax(0, 1fr)` — without this, wide unbreakable content deep
+   inside (e.g. a CodeMirror line with no wrapping) blows out the whole page's
+   width instead of scrolling within its own field. */
+.detail {
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}

@@ -4,7 +4,10 @@
     "condition": "Condition",
     "noMatchFallback": "no match →",
     "bookmarksBar": "Bookmarks Bar",
-    "folderWillBeCreated": "will be created"
+    "folderWillBeCreated": "will be created",
+    "searchPlaceholder": "Search...",
+    "noSearchResults": "Nothing found",
+    "add": "Add"
   },
   "nav": {
     "section": "General",
@@ -135,26 +138,27 @@
   },
   "aliasesSection": {
     "title": "Domain aliases",
-    "addAlias": "Alias",
     "desc": "One alias for multiple domains — e.g. regional mirrors.",
     "namePlaceholder": "name",
-    "domainPlaceholder": "domain.com"
+    "domainPlaceholder": "domain.com",
+    "domainsLabel": "Domains",
+    "noAliases": "No aliases yet"
   },
   "categoriesTab": {
     "lead": "Tags and categories for bookmarks."
   },
   "tagsSection": {
     "title": "Tags",
-    "addTag": "Tag",
     "desc": "The list of tags with a color. Definitions only for now — assigning a tag to a bookmark comes later.",
-    "namePlaceholder": "tag name"
+    "namePlaceholder": "tag name",
+    "colorLabel": "Color",
+    "noTags": "No tags yet"
   },
   "bookmarkTagEditor": {
     "editButton": "Tags"
   },
   "entitiesSection": {
     "title": "Categories",
-    "addEntity": "Category",
     "desc": "A content type (Book, Video, ...) with an optional workflow status for the bookmark.",
     "namePlaceholder": "category name",
     "noEntities": "No categories yet"
@@ -204,23 +208,27 @@
     "title": "Variables",
     "desc": "Alias fields for paths in the page's HTML tree. Used in rules and export.",
     "fieldsCount": "{{count}} fields",
-    "addGroup": "Group",
     "addGroupDisabledHint": "Add a domain alias not yet claimed by another group first",
     "addField": "Field",
     "aliasPlaceholder": "alias",
+    "aliasLabel": "Alias",
+    "fieldsLabel": "Fields",
     "fieldKeyPlaceholder": "field",
-    "fieldValuePlaceholder": "selector"
+    "fieldValuePlaceholder": "selector",
+    "noGroups": "No variable groups yet"
   },
   "iconRulesSection": {
     "title": "Icons",
     "desc": "Bookmark icon source by URL/alias/domain — a static link or a css/xpath selector against the live page. Falls back to the plain favicon when nothing matches.",
-    "addRule": "Rule",
     "namePlaceholder": "name",
     "aliasPlaceholder": "alias",
+    "bindingLabel": "Binding",
+    "sourceLabel": "Source",
     "bindingValueUrlPlaceholder": "https://example.com/path",
     "bindingValueDomainPlaceholder": "example.com",
     "sourceValueStaticPlaceholder": "https://…/icon.png",
-    "sourceValueSelectorPlaceholder": "selector"
+    "sourceValueSelectorPlaceholder": "selector",
+    "noRules": "No rules yet"
   },
   "exportSection": {
     "title": "Export / Import",

@@ -1,0 +1,17 @@
+.trigger {
+  width: 4.75rem;
+  flex-shrink: 0;
+  height: 2rem;
+  padding: 0 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.item {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
