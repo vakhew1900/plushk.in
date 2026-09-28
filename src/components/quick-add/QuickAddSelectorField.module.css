@@ -1,13 +1,14 @@
-.pill {
+.label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.selectorInput {
   font-family: var(--font-mono);
   font-size: var(--fs-code);
+  font-weight: var(--fw-regular);
   background: var(--bg2);
-  border-radius: 6px;
-  padding: 7px 10px;
-  color: var(--text);
-  overflow-wrap: anywhere;
   border-width: 1.5px;
-  border-style: solid;
 }
 
 /* Status not known yet (extraction still running). */
