@@ -164,13 +164,11 @@
     "noEntities": "Пока нет категорий"
   },
   "entityDetail": {
-    "styleLabel": "Цвет и иконка",
     "nameLabel": "Название",
     "noIcon": "Без иконки",
     "workflowLabel": "Статусы",
     "addStatus": "Статус",
-    "statusNamePlaceholder": "имя статуса",
-    "startStatusHint": "старт"
+    "statusNamePlaceholder": "имя статуса"
   },
   "bookmarkEntityControl": {
     "addEntity": "Категория",

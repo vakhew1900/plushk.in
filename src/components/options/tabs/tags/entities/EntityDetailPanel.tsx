@@ -27,15 +27,10 @@ export function EntityDetailPanel({ entity, onNameChange, onColorChange, onIconC
 
   return (
     <div className={styles.panel}>
-      <DetailField label={t('entityDetail.styleLabel')}>
-        <div className={styles.styleRow}>
-          <IconPicker value={entity.icon} color={entity.color} onChange={onIconChange} />
-          <ColorPicker value={entity.color} onChange={onColorChange} />
-        </div>
-      </DetailField>
-
       <DetailField label={t('entityDetail.nameLabel')}>
         <div className={styles.nameRow}>
+          <ColorPicker value={entity.color} onChange={onColorChange} />
+          <IconPicker value={entity.icon} color={entity.color} onChange={onIconChange} />
           <Input
             value={entity.name}
             onChange={(e) => onNameChange(e.target.value)}
@@ -54,7 +49,6 @@ export function EntityDetailPanel({ entity, onNameChange, onColorChange, onIconC
               key={status.id}
               name={status.name}
               color={status.color}
-              isStart={status.order === 0}
               onNameChange={(name) => void renameStatus(status.id, name)}
               onColorChange={(color) => void recolorStatus(status.id, color)}
               onRemove={() => void removeStatus(status.id)}

@@ -19,12 +19,9 @@ export function TagDetailPanel({ name, color, onNameChange, onColorChange, onRem
 
   return (
     <div className={styles.panel}>
-      <DetailField label={t('tagsSection.colorLabel')}>
-        <ColorPicker value={color} onChange={onColorChange} />
-      </DetailField>
-
       <DetailField label={t('entityDetail.nameLabel')}>
         <div className={styles.nameRow}>
+          <ColorPicker value={color} onChange={onColorChange} />
           <Input
             value={name}
             onChange={(e) => onNameChange(e.target.value)}

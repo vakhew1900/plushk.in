@@ -1,5 +1,7 @@
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { IconCheck } from '@/components/icons';
 import { PaletteColor } from '@/types/palette-color';
+import { useTranslation } from '@/hooks/useTranslation';
 import styles from './color-picker.module.css';
 
 const COLORS: PaletteColor[] = [
@@ -19,15 +21,34 @@ interface Props {
 }
 
 export function ColorPicker({ value, onChange }: Props) {
+  const { translate: t } = useTranslation();
+
   return (
-    <RadioGroup
-      value={value}
-      onValueChange={(v) => onChange(v as PaletteColor)}
-      className={styles.root}
-    >
-      {COLORS.map((color) => (
-        <RadioGroupItem key={color} value={color} className={styles.swatch} data-color={color} />
-      ))}
-    </RadioGroup>
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className={styles.trigger}
+          data-color={value}
+          aria-label={t('tagsSection.colorLabel')}
+        />
+      </PopoverTrigger>
+      <PopoverContent className={styles.content}>
+        <div className={styles.row}>
+          {COLORS.map((color) => (
+            <button
+              key={color}
+              type="button"
+              className={styles.swatch}
+              data-color={color}
+              data-selected={color === value || undefined}
+              onClick={() => onChange(color)}
+            >
+              {color === value && <IconCheck size="sm" />}
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }

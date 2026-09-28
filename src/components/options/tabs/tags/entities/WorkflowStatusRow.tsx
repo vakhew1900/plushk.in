@@ -8,13 +8,12 @@ import styles from './WorkflowStatusRow.module.css';
 interface Props {
   name: string;
   color: PaletteColor;
-  isStart: boolean;
   onNameChange: (name: string) => void;
   onColorChange: (color: PaletteColor) => void;
   onRemove: () => void;
 }
 
-export function WorkflowStatusRow({ name, color, isStart, onNameChange, onColorChange, onRemove }: Props) {
+export function WorkflowStatusRow({ name, color, onNameChange, onColorChange, onRemove }: Props) {
   const { translate: t } = useTranslation();
 
   return (
@@ -27,7 +26,6 @@ export function WorkflowStatusRow({ name, color, isStart, onNameChange, onColorC
         placeholder={t('entityDetail.statusNamePlaceholder')}
         className={styles.nameInput}
       />
-      {isStart && <span className={styles.startHint}>{t('entityDetail.startStatusHint')}</span>}
       <RemoveIconButton onClick={onRemove} />
     </div>
   );

@@ -164,13 +164,11 @@
     "noEntities": "No categories yet"
   },
   "entityDetail": {
-    "styleLabel": "Color & icon",
     "nameLabel": "Name",
     "noIcon": "No icon",
     "workflowLabel": "Statuses",
     "addStatus": "Status",
-    "statusNamePlaceholder": "status name",
-    "startStatusHint": "start"
+    "statusNamePlaceholder": "status name"
   },
   "bookmarkEntityControl": {
     "addEntity": "Category",
