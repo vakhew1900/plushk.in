@@ -1,10 +1,8 @@
-import { Button } from '@/components/ui/button';
-import { Text } from '@/components/ui/text';
-import { IconPlus } from '@/components/icons';
+import { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { ListDetailSection } from '@/components/options/list-detail/ListDetailSection';
 import type { DomainAlias } from '@/types/domain-alias';
-import { AliasRow } from './AliasRow';
-import styles from './AliasesSection.module.css';
+import { AliasDetailPanel } from './AliasDetailPanel';
 
 interface Props {
   aliases: DomainAlias[];
@@ -14,8 +12,15 @@ interface Props {
 
 export function AliasesSection({ aliases, save, remove }: Props) {
   const { translate: t } = useTranslation();
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
-  const addAlias = () => void save({ id: crypto.randomUUID(), name: '', domain_names: [] });
+  const selected = aliases.find((a) => a.id === selectedId) ?? aliases[0];
+
+  const addAlias = () => {
+    const alias: DomainAlias = { id: crypto.randomUUID(), name: '', domain_names: [] };
+    void save(alias);
+    setSelectedId(alias.id);
+  };
 
   const renameAlias = (id: string, name: string) => {
     const alias = aliases.find((a) => a.id === id);
@@ -39,30 +44,37 @@ export function AliasesSection({ aliases, save, remove }: Props) {
     if (alias) void save({ ...alias, domain_names: alias.domain_names.filter((_, i) => i !== index) });
   };
 
+  const deleteAlias = (id: string) => {
+    void remove(id);
+    if (selected?.id === id) setSelectedId(undefined);
+  };
+
   return (
-    <section className={styles.section}>
-      <div className={styles.sectionHeader}>
-        <Text as="h2" size="subheading">{t('aliasesSection.title')}</Text>
-        <Button variant="outline" size="sm" style={{ marginLeft: 'auto' }} onClick={addAlias}>
-          <IconPlus size="sm" />
-          {t('aliasesSection.addAlias')}
-        </Button>
-      </div>
-      <Text size="body" tone="muted" className={styles.sectionDesc}>{t('aliasesSection.desc')}</Text>
-      <div className={styles.table}>
-        {aliases.map((a) => (
-          <AliasRow
-            key={a.id}
-            name={a.name}
-            domains={a.domain_names}
-            onNameChange={(name) => renameAlias(a.id, name)}
-            onDomainChange={(index, domain) => updateDomain(a.id, index, domain)}
-            onAddDomain={() => addDomain(a.id)}
-            onRemoveDomain={(index) => removeDomain(a.id, index)}
-            onRemove={() => void remove(a.id)}
-          />
-        ))}
-      </div>
-    </section>
+    <ListDetailSection
+      title={t('aliasesSection.title')}
+      desc={t('aliasesSection.desc')}
+      items={aliases}
+      getId={(a) => a.id}
+      getName={(a) => a.name || t('aliasesSection.namePlaceholder')}
+      selectedId={selected?.id}
+      onSelect={setSelectedId}
+      onAdd={addAlias}
+      addLabel={t('common.add')}
+      searchPlaceholder={t('common.searchPlaceholder')}
+      noResultsLabel={t('common.noSearchResults')}
+      emptyLabel={t('aliasesSection.noAliases')}
+    >
+      {selected && (
+        <AliasDetailPanel
+          name={selected.name}
+          domains={selected.domain_names}
+          onNameChange={(name) => renameAlias(selected.id, name)}
+          onDomainChange={(index, domain) => updateDomain(selected.id, index, domain)}
+          onAddDomain={() => addDomain(selected.id)}
+          onRemoveDomain={(index) => removeDomain(selected.id, index)}
+          onRemove={() => deleteAlias(selected.id)}
+        />
+      )}
+    </ListDetailSection>
   );
 }

@@ -1,0 +1,8 @@
+.panel {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.nameRow { display: flex; align-items: center; gap: 0.5rem; }
+.nameInput { font-family: var(--font-mono); font-size: 0.8rem; flex: 1; }

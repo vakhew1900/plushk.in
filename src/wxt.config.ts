@@ -18,6 +18,9 @@ export default defineConfig({
       // since `content.ts` is registered with `registration: 'runtime'` and
       // an empty `matches`. See RULE-5 in specs/tasks.md.
       'scripting',
+      // Powers the two "plushk.in — добавить..." items in the native
+      // right-click menu (RULE-14) — see entrypoints/quick-add.content.ts.
+      'contextMenus',
       ...(env.browser === BrowserTarget.FIREFOX ? [] : ['favicon']),
     ],
   }),

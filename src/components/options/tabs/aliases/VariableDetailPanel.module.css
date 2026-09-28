@@ -1,0 +1,20 @@
+.panel {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.aliasRow { display: flex; align-items: center; gap: 8px; }
+.aliasSelectTrigger {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.78125rem;
+  color: var(--accent);
+  width: 8.75rem;
+  flex-shrink: 0;
+}
+.variableCount { font-size: 11px; color: var(--faint); }
+.removeBlock { margin-left: auto; }
+
+.fields { display: flex; flex-direction: column; gap: 7px; }
+.addField { align-self: flex-start; }

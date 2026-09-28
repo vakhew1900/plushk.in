@@ -21,7 +21,7 @@ function elementText(el: Element): string | undefined {
   return el.textContent?.trim() || undefined;
 }
 
-function applyCssSelector(selector: string, doc: Document): string[] | undefined {
+export function applyCssSelector(selector: string, doc: Document): string[] | undefined {
   const values = Array.from(doc.querySelectorAll(selector))
     .map((el) => elementText(el))
     .filter((v): v is string => v !== undefined);

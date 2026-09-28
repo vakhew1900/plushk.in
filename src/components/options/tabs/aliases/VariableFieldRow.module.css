@@ -1,0 +1,10 @@
+.row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.keyInput {
+  width: 90px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 12.5px;
+}
+.arrow { color: var(--faint); }
+.valueInput { flex: 1; min-width: 0; }
