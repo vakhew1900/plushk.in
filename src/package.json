@@ -2,7 +2,7 @@
   "name": "plushk.in-extension",
   "description": "Your shelf for forgotten things",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -22,6 +22,7 @@
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-json": "^6.0.2",
+    "@medv/finder": "^4.0.2",
     "@radix-ui/react-alert-dialog": "^1.1.23",
     "@radix-ui/react-collapsible": "^1.1.20",
     "@radix-ui/react-dialog": "^1.1.23",

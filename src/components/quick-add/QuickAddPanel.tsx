@@ -20,6 +20,7 @@ const PANEL_WIDTH = 340;
 const ESTIMATED_PANEL_HEIGHT = 420;
 const VIEWPORT_MARGIN = 12;
 const MAX_VISIBLE_TEXT_VALUES = 20; // guards against a runaway selector matching most of the page
+const MATCH_DEBOUNCE_MS = 250; // matches the ~200ms lag already used for library search (specs/verification.md, SEARCH-10)
 
 function clamp(value: number, max: number): number {
   return Math.max(VIEWPORT_MARGIN, Math.min(value, max - VIEWPORT_MARGIN));
@@ -45,27 +46,45 @@ interface QuickAddPanelProps {
   onClose: () => void;
 }
 
-export function QuickAddPanel({ kind, domain, selector, anchor, onClose }: QuickAddPanelProps) {
+export function QuickAddPanel({ kind, domain, selector: initialSelector, anchor, onClose }: QuickAddPanelProps) {
   const { translate: t } = useTranslation();
+  const [selector, setSelector] = useState(initialSelector);
   const [variableMatch, setVariableMatch] = useState<VariableMatch | undefined>(undefined);
   const [iconMatch, setIconMatch] = useState<IconMatch | undefined>(undefined);
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // Deferred by one tick (setTimeout, not queueMicrotask, so it lands after
-  // the browser actually paints the "searching" state) — real, not simulated:
-  // it's what covers the "Поиск" state (specs/tasks/RULE-14-context-menu-quick-add),
-  // even though the DOM read itself is synchronous and near-instant.
+  // Re-runs on every selector change, not just the initial auto-generated
+  // one — the field is editable (QuickAddSelectorField), so a hand-typed
+  // selector gets the same "Поиск" -> green/red preview cycle. Debounced
+  // (not the near-instant single tick this used before editing existed) so
+  // typing doesn't flash "searching" on every keystroke.
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Deferred (not called synchronously in the effect body) purely to
+    // satisfy react-hooks/set-state-in-effect — still fires effectively
+    // immediately, so the "searching" state shows up right away while the
+    // debounced timer below is still pending.
+    const resetTimer = setTimeout(() => {
+      if (kind === QuickAddKind.VARIABLE) {
+        setVariableMatch(undefined);
+      } else {
+        setIconMatch(undefined);
+      }
+    }, 0);
+
+    const resolveTimer = setTimeout(() => {
       if (kind === QuickAddKind.VARIABLE) {
         setVariableMatch(resolveVariableMatch(selector, document));
       } else {
         setIconMatch(resolveIconMatch(selector, document));
       }
-    }, 0);
-    return () => clearTimeout(timer);
+    }, MATCH_DEBOUNCE_MS);
+
+    return () => {
+      clearTimeout(resetTimer);
+      clearTimeout(resolveTimer);
+    };
   }, [kind, selector]);
 
   const status: QuickAddStatus = useMemo(() => {
@@ -136,7 +155,7 @@ export function QuickAddPanel({ kind, domain, selector, anchor, onClose }: Quick
       <Text as="div" size="caption" tone="muted" className={styles.section}>{t('quickAdd.domainLabel', { domain })}</Text>
 
       <div className={styles.section}>
-        <QuickAddSelectorField selector={selector} status={status} />
+        <QuickAddSelectorField value={selector} status={status} onChange={setSelector} />
       </div>
 
       <div className={styles.section}>

@@ -6,7 +6,6 @@ interface QuickAddSearchingRowProps {
   text: string;
 }
 
-/** Shared by QuickAddVariablePreview/QuickAddIconPreview's "still looking" state — identical markup, only the text differs. */
 export function QuickAddSearchingRow({ text }: QuickAddSearchingRowProps) {
   return (
     <div className={styles.row}>
