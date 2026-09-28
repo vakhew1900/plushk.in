@@ -1,0 +1,24 @@
+.pill {
+  font-family: var(--font-mono);
+  font-size: var(--fs-code);
+  background: var(--bg2);
+  border-radius: 6px;
+  padding: 7px 10px;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  border-width: 1.5px;
+  border-style: solid;
+}
+
+/* Status not known yet (extraction still running). */
+.toneSearching {
+  border-color: var(--border);
+}
+
+.toneOk {
+  border-color: var(--green);
+}
+
+.toneEmpty {
+  border-color: var(--red);
+}

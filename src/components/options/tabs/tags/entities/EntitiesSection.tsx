@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { Text } from '@/components/ui/text';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntityTypes } from '@/hooks/useEntityTypes';
 import { PaletteColor } from '@/types/palette-color';
+import { PaletteIconDot } from '@/components/ui/palette-icon-dot';
 import type { IconName } from '@/types/icon-name';
-import { EntityList } from './EntityList';
+import { ListDetailSection } from '@/components/options/list-detail/ListDetailSection';
 import { EntityDetailPanel } from './EntityDetailPanel';
-import styles from './EntitiesSection.module.css';
 
 export function EntitiesSection() {
   const { translate: t } = useTranslation();
@@ -42,33 +41,30 @@ export function EntitiesSection() {
   };
 
   return (
-    <section className={styles.section}>
-      <div className={styles.sectionHeader}>
-        <Text as="h2" size="subheading">{t('entitiesSection.title')}</Text>
-      </div>
-      <Text size="body" tone="muted" className={styles.sectionDesc}>{t('entitiesSection.desc')}</Text>
-
-      <div className={styles.layout}>
-        <EntityList
-          entityTypes={entityTypes}
-          selectedId={selected?.id}
-          onSelect={setSelectedId}
-          onAdd={addEntity}
+    <ListDetailSection
+      title={t('entitiesSection.title')}
+      desc={t('entitiesSection.desc')}
+      items={entityTypes}
+      getId={(e) => e.id}
+      getName={(e) => e.name || t('entitiesSection.namePlaceholder')}
+      renderLeading={(e) => <PaletteIconDot color={e.color} icon={e.icon} />}
+      selectedId={selected?.id}
+      onSelect={setSelectedId}
+      onAdd={addEntity}
+      addLabel={t('common.add')}
+      searchPlaceholder={t('common.searchPlaceholder')}
+      noResultsLabel={t('common.noSearchResults')}
+      emptyLabel={t('entitiesSection.noEntities')}
+    >
+      {selected && (
+        <EntityDetailPanel
+          entity={selected}
+          onNameChange={(name) => renameEntity(selected.id, name)}
+          onColorChange={(color) => recolorEntity(selected.id, color)}
+          onIconChange={(icon) => reiconEntity(selected.id, icon)}
+          onRemove={() => removeEntity(selected.id)}
         />
-        {selected ? (
-          <EntityDetailPanel
-            entity={selected}
-            onNameChange={(name) => renameEntity(selected.id, name)}
-            onColorChange={(color) => recolorEntity(selected.id, color)}
-            onIconChange={(icon) => reiconEntity(selected.id, icon)}
-            onRemove={() => removeEntity(selected.id)}
-          />
-        ) : (
-          <div className={styles.empty}>
-            <Text size="body" tone="muted">{t('entitiesSection.noEntities')}</Text>
-          </div>
-        )}
-      </div>
-    </section>
+      )}
+    </ListDetailSection>
   );
 }

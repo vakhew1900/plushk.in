@@ -1,23 +1,47 @@
-.root {
+.trigger {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 0.45rem;
+  border: none;
+  flex-shrink: 0;
+  transition: transform 0.12s ease;
+}
+.trigger:hover { transform: scale(1.06); }
+
+.trigger[data-color='red']    { background: var(--palette-red); }
+.trigger[data-color='orange'] { background: var(--palette-orange); }
+.trigger[data-color='yellow'] { background: var(--palette-yellow); }
+.trigger[data-color='green']  { background: var(--palette-green); }
+.trigger[data-color='teal']   { background: var(--palette-teal); }
+.trigger[data-color='blue']   { background: var(--palette-blue); }
+.trigger[data-color='purple'] { background: var(--palette-purple); }
+.trigger[data-color='pink']   { background: var(--palette-pink); }
+
+.content { width: auto; }
+
+.row {
   display: flex;
   gap: 0.4rem;
 }
 
 .swatch {
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 0.35rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 0.4rem;
   border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.12s ease, border-color 0.12s ease;
 }
 .swatch:hover { transform: scale(1.1); }
-.swatch[data-state='checked'] { border-color: var(--text); }
+.swatch[data-selected] { border-color: var(--text); }
 
-.swatch[data-color='red']    { background: var(--palette-red); }
-.swatch[data-color='orange'] { background: var(--palette-orange); }
-.swatch[data-color='yellow'] { background: var(--palette-yellow); }
-.swatch[data-color='green']  { background: var(--palette-green); }
-.swatch[data-color='teal']   { background: var(--palette-teal); }
-.swatch[data-color='blue']   { background: var(--palette-blue); }
-.swatch[data-color='purple'] { background: var(--palette-purple); }
-.swatch[data-color='pink']   { background: var(--palette-pink); }
+.swatch[data-color='red']    { background: var(--palette-red);    color: var(--palette-red-ink); }
+.swatch[data-color='orange'] { background: var(--palette-orange); color: var(--palette-orange-ink); }
+.swatch[data-color='yellow'] { background: var(--palette-yellow); color: var(--palette-yellow-ink); }
+.swatch[data-color='green']  { background: var(--palette-green);  color: var(--palette-green-ink); }
+.swatch[data-color='teal']   { background: var(--palette-teal);   color: var(--palette-teal-ink); }
+.swatch[data-color='blue']   { background: var(--palette-blue);   color: var(--palette-blue-ink); }
+.swatch[data-color='purple'] { background: var(--palette-purple); color: var(--palette-purple-ink); }
+.swatch[data-color='pink']   { background: var(--palette-pink);   color: var(--palette-pink-ink); }

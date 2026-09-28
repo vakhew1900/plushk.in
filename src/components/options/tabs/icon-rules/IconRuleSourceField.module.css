@@ -1,0 +1,2 @@
+.row { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.valueInput { flex: 1; min-width: 0; }

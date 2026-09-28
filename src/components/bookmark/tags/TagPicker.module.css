@@ -7,12 +7,6 @@
   min-width: 0;
 }
 
-.empty {
-  padding: 0.3rem 0.5rem;
-  font-size: 0.75rem;
-  color: var(--faint);
-}
-
 .item {
   display: flex;
   align-items: center;

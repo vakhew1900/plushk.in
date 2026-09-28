@@ -1,6 +1,7 @@
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { IconLogo, IconSearch, IconStar } from '@/components/icons';
+import { Text } from '@/components/ui/text';
+import { IconSearch, IconStar } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import { PopupScreen } from '@/lib/popup-screen';
 import { Mode } from '@/types/mode';
@@ -15,25 +16,22 @@ interface Props {
 
 export function PopupHeader({ mode, onModeChange, screen, onToggleScreen }: Props) {
   const { translate: t } = useTranslation();
+  const title = screen === PopupScreen.QUICK_SAVE ? t('popup.header.titleQuickSave') : t('popup.header.titleSearch');
 
   return (
     <div className={styles.header}>
-      <div className={styles.icon}>
-        <IconLogo size="lg" />
+      <img className={styles.logo} src="/icon/48.png" alt="" />
+
+      <div className={styles.titles}>
+        <Text size="caption" tone="muted">{t('popup.appName')}</Text>
+        <Text size="subheading">{title}</Text>
       </div>
 
-      <div className={styles.meta}>
-        <div className={styles.name}>{t('popup.appName')}</div>
-        <div className={styles.sub}>{t('popup.appSub')}</div>
-      </div>
-
-      <label className={styles.modeToggle}>
-        <span className={styles.modeLabel}>{t(`modes.${mode}.label`)}</span>
-        <Switch
-          checked={mode === Mode.ON}
-          onCheckedChange={(checked) => onModeChange(checked ? Mode.ON : Mode.OFF)}
-        />
-      </label>
+      <Switch
+        checked={mode === Mode.ON}
+        onCheckedChange={(checked) => onModeChange(checked ? Mode.ON : Mode.OFF)}
+        aria-label={t('common.modeSectionTitle')}
+      />
 
       <Button
         variant="ghost"

@@ -1,0 +1,43 @@
+.panel {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.nameRow { display: flex; align-items: center; gap: 0.5rem; }
+.nameInput { font-family: var(--font-mono); font-size: 0.8rem; flex: 1; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+.domainChip {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 6px 2px 8px;
+}
+
+.domainInput {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  width: 108px;
+  border: none;
+  background: transparent;
+  padding: 2px 0;
+}
+
+.addChip {
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+.addChip:hover { color: var(--accent); border-color: var(--accent); }

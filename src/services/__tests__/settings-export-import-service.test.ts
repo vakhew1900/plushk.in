@@ -12,8 +12,6 @@ import type { WorkflowStatus } from '../../types/workflow-status';
 import { IconRuleBindingType, IconSourceType, type IconRule } from '../../types/icon-rule';
 import { SETTINGS_EXPORT_VERSION } from '../../types/settings-export';
 import type { SettingsExport } from '../../types/settings-export';
-import type { IDomainAliasRepository } from '../../repository/interfaces/IDomainAliasRepository';
-import type { IPageMatchGroupRepository } from '../../repository/interfaces/IPageMatchGroupRepository';
 import type { ITagRepository } from '../../repository/interfaces/ITagRepository';
 import type { IEntityTypeRepository } from '../../repository/interfaces/IEntityTypeRepository';
 import type { IWorkflowRepository } from '../../repository/interfaces/IWorkflowRepository';
@@ -22,31 +20,9 @@ import { MimeType } from '../interfaces/IFileService';
 import type { IFileService } from '../interfaces/IFileService';
 import { FakeBookmarkRuleRepository } from '../../repository/__tests__/fakes/FakeBookmarkRuleRepository';
 import { FakeIconRuleRepository } from '../../repository/__tests__/fakes/FakeIconRuleRepository';
+import { FakeDomainAliasRepository } from '../../repository/__tests__/fakes/FakeDomainAliasRepository';
+import { FakePageMatchGroupRepository } from '../../repository/__tests__/fakes/FakePageMatchGroupRepository';
 import { SettingsExportImportService } from '../SettingsExportImportService';
-
-class FakeDomainAliasRepository implements IDomainAliasRepository {
-  constructor(public aliases: DomainAlias[] = []) {}
-  async getAll(): Promise<DomainAlias[]> { return this.aliases; }
-  async getById(id: string): Promise<DomainAlias | undefined> { return this.aliases.find((a) => a.id === id); }
-  async save(alias: DomainAlias): Promise<void> {
-    this.aliases = [...this.aliases.filter((a) => a.id !== alias.id), alias];
-  }
-  async remove(id: string): Promise<void> {
-    this.aliases = this.aliases.filter((a) => a.id !== id);
-  }
-}
-
-class FakePageMatchGroupRepository implements IPageMatchGroupRepository {
-  constructor(public groups: PageMatchGroup[] = []) {}
-  async getAll(): Promise<PageMatchGroup[]> { return this.groups; }
-  async getById(id: string): Promise<PageMatchGroup | undefined> { return this.groups.find((g) => g.id === id); }
-  async save(group: PageMatchGroup): Promise<void> {
-    this.groups = [...this.groups.filter((g) => g.id !== group.id), group];
-  }
-  async remove(id: string): Promise<void> {
-    this.groups = this.groups.filter((g) => g.id !== id);
-  }
-}
 
 class FakeTagRepository implements ITagRepository {
   constructor(public tags: Tag[] = []) {}

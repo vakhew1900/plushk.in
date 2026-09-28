@@ -1,8 +1,12 @@
 import type React from 'react';
+import { useState } from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import { PickerSearch } from '@/components/ui/picker-search';
+import { PickerEmptyState } from '@/components/ui/picker-empty-state';
 import { IconCheck, IconTag } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
+import { filterByName } from '@/lib/name-filter';
 import type { Tag } from '@/types/tag';
 import { BookmarkTagChip } from './BookmarkTagChip';
 import styles from './TagPicker.module.css';
@@ -15,7 +19,9 @@ interface Props {
 
 export function TagPicker({ tags, selectedTagIds, onToggle }: Props) {
   const { translate: t } = useTranslation();
+  const [query, setQuery] = useState('');
   const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
+  const filteredTags = filterByName(tags, query, (tag) => tag.name);
 
   const handleClick = (e: React.MouseEvent) => e.stopPropagation();
 
@@ -25,7 +31,7 @@ export function TagPicker({ tags, selectedTagIds, onToggle }: Props) {
         <BookmarkTagChip key={tag.id} tag={tag} />
       ))}
 
-      <Popover>
+      <Popover onOpenChange={(open) => { if (!open) setQuery(''); }}>
         <PopoverTrigger asChild>
           <Button type="button" variant="outline" size="sm">
             <IconTag size="sm" />
@@ -33,8 +39,14 @@ export function TagPicker({ tags, selectedTagIds, onToggle }: Props) {
           </Button>
         </PopoverTrigger>
         <PopoverContent onClick={handleClick}>
-          {tags.length === 0 && <div className={styles.empty}>—</div>}
-          {tags.map((tag) => {
+          {tags.length > 0 && (
+            <PickerSearch value={query} onChange={setQuery} placeholder={t('common.searchPlaceholder')} />
+          )}
+          {tags.length === 0 && <PickerEmptyState>—</PickerEmptyState>}
+          {tags.length > 0 && filteredTags.length === 0 && (
+            <PickerEmptyState>{t('common.noSearchResults')}</PickerEmptyState>
+          )}
+          {filteredTags.map((tag) => {
             const checked = selectedTagIds.includes(tag.id);
             return (
               <button

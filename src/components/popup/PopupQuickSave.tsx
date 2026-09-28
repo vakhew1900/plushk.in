@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { IconCheck, IconStar } from '@/components/icons';
+import { IconCheck } from '@/components/icons';
 import { FolderPicker } from '@/components/bookmark/folder-tree/FolderPicker';
 import { AdvancedSection } from './AdvancedSection';
 import { useQuickSave } from '@/hooks/useQuickSave';
@@ -15,11 +15,6 @@ interface Props {
   mode: Mode;
 }
 
-function OffView() {
-  const { translate: t } = useTranslation();
-  return <div className={styles.offNote}>{t('popup.quickSave.offNote')}</div>;
-}
-
 function SavedView() {
   const { translate: t } = useTranslation();
   return (
@@ -31,7 +26,6 @@ function SavedView() {
 }
 
 export function PopupQuickSave({ mode }: Props) {
-  const { translate: t } = useTranslation();
   const { suggestion, saved, save } = useQuickSave(mode);
   const { entityTypes, statusesFor } = useEntityWorkflows();
   const { items: tags } = useTags();
@@ -57,19 +51,12 @@ export function PopupQuickSave({ mode }: Props) {
   }, [saved]);
 
   const view = getQuickSaveView(saved, mode);
+  if (view === QuickSaveView.OFF) return null;
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.header}>
-        <div className={styles.icon}>
-          <IconStar size="md" />
-        </div>
-        <div className={styles.title}>{t('popup.quickSave.title')}</div>
-      </div>
-
       <div className={styles.body}>
         {view === QuickSaveView.SAVED && <SavedView />}
-        {view === QuickSaveView.OFF && <OffView />}
         {view === QuickSaveView.SAVE && (
           <FolderPicker
             path={targetFolder}

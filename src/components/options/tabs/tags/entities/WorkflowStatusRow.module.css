@@ -11,9 +11,3 @@
   font-size: 0.8rem;
   flex: 1;
 }
-
-.startHint {
-  font-size: 0.6875rem;
-  color: var(--faint);
-  white-space: nowrap;
-}
