@@ -1,0 +1,15 @@
+.label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.error {
+  display: block;
+  margin-top: 4px;
+  color: var(--red);
+}
+
+.inputError {
+  border-color: var(--red);
+}
+

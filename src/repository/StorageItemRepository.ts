@@ -1,4 +1,4 @@
-import type { WxtStorageItem } from 'wxt/utils/storage';
+import type { Unwatch, WatchCallback, WxtStorageItem } from 'wxt/utils/storage';
 
 export abstract class StorageItemRepository<T, TMeta extends Record<string, unknown> = Record<string, never>> {
   constructor(protected readonly item: WxtStorageItem<T, TMeta>) {}
@@ -9,5 +9,9 @@ export abstract class StorageItemRepository<T, TMeta extends Record<string, unkn
 
   async set(value: T): Promise<void> {
     await this.item.setValue(value);
+  }
+
+  watch(callback: WatchCallback<T>): Unwatch {
+    return this.item.watch(callback);
   }
 }

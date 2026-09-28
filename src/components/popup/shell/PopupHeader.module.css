@@ -17,4 +17,4 @@
   flex-shrink: 0;
 }
 
-.name { flex: 1; min-width: 0; font-weight: 700; font-size: 14.5px; color: var(--text); }
+.titles { flex: 1; min-width: 0; }

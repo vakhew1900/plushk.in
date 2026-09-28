@@ -1,0 +1,26 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.closeButton {
+  margin-left: auto;
+}

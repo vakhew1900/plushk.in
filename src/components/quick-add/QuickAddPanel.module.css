@@ -1,0 +1,79 @@
+/* This panel renders inside a Shadow DOM injected into an arbitrary host
+   page (see entrypoints/quick-add.content.ts) — none of assets/globals.css's
+   tokens/resets reach it for real: a plain `:root` selector can't match a
+   shadow tree's own root, `rem` would resolve against the HOST page's
+   <html> font-size (a real WXT/CSS gotcha, not hypothetical — see WXT's
+   Shadow Root UI docs), and importing assets/globals.css wholesale would
+   also pull in its Google Fonts @import on every single page this script
+   runs on (all pages — see matches: ['<all_urls>']), an unwanted network
+   fetch on a third-party page for a font we don't even use here. So this
+   class is fully self-contained: the same dark-palette values (this panel
+   ships dark-only, matching the approved design — see specs/tasks/
+   RULE-14-context-menu-quick-add/), px sizing, and a system font stack that
+   needs no external fetch. Keep in sync with assets/globals.css's
+   `[data-theme="dark"]`/sizing blocks by value, not by reference. */
+.panel {
+  --bg: #1a1a1d;
+  --bg2: #141416;
+  --hover: #26262b;
+  --border: #2c2c31;
+  --text: #d8d8dc;
+  --muted: #8b8b94;
+  --faint: #56565f;
+  --accent: #7d6cf0;
+  --accent-soft: rgba(125, 108, 240, 0.15);
+  --green: #5cba8f;
+  --red: #e0746e;
+
+  --font-mono: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --icon-size-sm: 14px;
+  --icon-size-md: 16px;
+  --icon-size-lg: 20px;
+  --fs-heading: 22px;
+  --fs-subheading: 16px;
+  --fs-body: 14px;
+  --fs-caption: 12px;
+  --fs-code: 13px;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+
+  position: fixed;
+  z-index: 2147483647;
+  width: 340px;
+  box-sizing: border-box;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  padding: 16px;
+  color: var(--text);
+}
+
+/* Same base reset as assets/globals.css's `*`/`button`/`input` rules, not
+   present here (see the file-level comment above) — deliberately UNSCOPED
+   (bare selectors, not `.panel button`/`.panel input`): the shadow root
+   already confines this stylesheet to this tree, so scoping isn't needed for
+   isolation, and a `.panel button` compound selector would outrank the
+   shared Button/IconButton components' own single-class variant selectors
+   (`.vDefault` etc.), silently overriding their `background`/`border` — a
+   real bug this exact mistake caused (Save rendered with no accent fill). */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+input {
+  font: inherit;
+}
+
+.section {
+  margin-bottom: 14px;
+}

@@ -266,7 +266,9 @@
     "settingsButton": "Settings",
     "header": {
       "openSearch": "Search",
-      "backToQuickSave": "Back to quick save"
+      "backToQuickSave": "Back to quick save",
+      "titleQuickSave": "Quick save",
+      "titleSearch": "Search"
     },
     "folderPicker": {
       "pathPlaceholder": "Folder/Subfolder",
@@ -287,5 +289,28 @@
         "iconLinkDone": "Done"
       }
     }
+  },
+  "quickAdd": {
+    "contextMenuVariable": "plushk.in — add variable",
+    "contextMenuIcon": "plushk.in — add domain icon",
+    "titleVariable": "Add variable",
+    "titleIcon": "Add domain icon",
+    "close": "Close",
+    "nameLabel": "Name",
+    "namePlaceholderVariable": "e.g. author",
+    "namePlaceholderIcon": "e.g. logo",
+    "domainLabel": "Domain: {{domain}}",
+    "selectorLabel": "CSS selector",
+    "valueLabel": "Value",
+    "iconLabel": "Icon",
+    "searchingVariable": "Looking for matches on the page…",
+    "searchingIcon": "Looking for an image on the page…",
+    "emptyVariable": "Nothing found for this selector",
+    "emptyIcon": "No <img> with src for this selector",
+    "hiddenCount": "and {{count}} more",
+    "save": "Save",
+    "saving": "Saving…",
+    "duplicateVariable": "Variable \"{{name}}\" already exists for {{domain}}",
+    "duplicateIcon": "Rule \"{{name}}\" already exists for {{domain}}"
   }
 }

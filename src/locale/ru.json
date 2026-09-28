@@ -266,7 +266,9 @@
     "settingsButton": "Настройки",
     "header": {
       "openSearch": "Поиск",
-      "backToQuickSave": "Назад к быстрому сохранению"
+      "backToQuickSave": "Назад к быстрому сохранению",
+      "titleQuickSave": "Быстрое сохранение",
+      "titleSearch": "Поиск"
     },
     "folderPicker": {
       "pathPlaceholder": "Папка/Подпапка",
@@ -287,5 +289,28 @@
         "iconLinkDone": "Готово"
       }
     }
+  },
+  "quickAdd": {
+    "contextMenuVariable": "plushk.in — добавить переменную",
+    "contextMenuIcon": "plushk.in — добавить иконку домена",
+    "titleVariable": "Добавить переменную",
+    "titleIcon": "Добавить иконку домена",
+    "close": "Закрыть",
+    "nameLabel": "Название",
+    "namePlaceholderVariable": "например, author",
+    "namePlaceholderIcon": "например, логотип",
+    "domainLabel": "Домен: {{domain}}",
+    "selectorLabel": "CSS-selector",
+    "valueLabel": "Значение",
+    "iconLabel": "Иконка",
+    "searchingVariable": "Ищем совпадения на странице…",
+    "searchingIcon": "Ищем изображение на странице…",
+    "emptyVariable": "Ничего не найдено по этому selector'у",
+    "emptyIcon": "По этому selector'у нет <img> с src",
+    "hiddenCount": "и ещё {{count}}",
+    "save": "Сохранить",
+    "saving": "Сохранение…",
+    "duplicateVariable": "Переменная «{{name}}» уже существует для {{domain}}",
+    "duplicateIcon": "Правило «{{name}}» уже существует для {{domain}}"
   }
 }
