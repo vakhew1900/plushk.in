@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { browser } from 'wxt/browser';
-import { IconSearch } from '@/components/icons';
 import { CompactBookmarkCard } from '@/components/bookmark/CompactBookmarkCard';
 import { SearchBar } from '@/components/bookmark/search/SearchBar';
 import { SearchResultsList } from '@/components/bookmark/search/SearchResultsList';
@@ -44,13 +43,6 @@ export function PopupSearch() {
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.header}>
-        <div className={styles.icon}>
-          <IconSearch size="md" />
-        </div>
-        <div className={styles.title}>{t('nav.search')}</div>
-      </div>
-
       <div className={styles.body}>
         <div className={styles.searchRow}>
           <SearchBar value={query} onChange={setQuery} placeholder={t('searchTab.placeholder')} />

@@ -257,7 +257,6 @@
   },
   "popup": {
     "appName": "plushk.in",
-    "appSub": "Bookmarks",
     "settingsButton": "Settings",
     "header": {
       "openSearch": "Search",
@@ -268,9 +267,7 @@
       "save": "Save"
     },
     "quickSave": {
-      "title": "Quick save",
       "saved": "Saved",
-      "offNote": "Quick save is off — \"Off\" mode doesn't touch bookmarks.",
       "advanced": {
         "title": "Advanced",
         "categoryLabel": "Category",

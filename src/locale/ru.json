@@ -257,7 +257,6 @@
   },
   "popup": {
     "appName": "plushk.in",
-    "appSub": "Закладки",
     "settingsButton": "Настройки",
     "header": {
       "openSearch": "Поиск",
@@ -268,9 +267,7 @@
       "save": "Сохранить"
     },
     "quickSave": {
-      "title": "Быстрое сохранение",
       "saved": "Сохранено",
-      "offNote": "Быстрое сохранение выключено — режим «Выключен» не вмешивается в закладки.",
       "advanced": {
         "title": "Дополнительно",
         "categoryLabel": "Категория",
