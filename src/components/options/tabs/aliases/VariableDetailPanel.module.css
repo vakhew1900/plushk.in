@@ -4,18 +4,6 @@
   flex-direction: column;
 }
 
-.field { margin-bottom: 1.1rem; }
-.field:last-child { margin-bottom: 0; }
-
-.label {
-  display: block;
-  font-size: 0.6875rem;
-  color: var(--faint);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.45rem;
-}
-
 .aliasRow { display: flex; align-items: center; gap: 8px; }
 .aliasSelectTrigger {
   font-family: var(--font-mono);
@@ -29,15 +17,4 @@
 .removeBlock { margin-left: auto; }
 
 .fields { display: flex; flex-direction: column; gap: 7px; }
-
-.fieldRow { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.fieldKeyInput {
-  width: 90px;
-  flex-shrink: 0;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 12.5px;
-}
-.fieldArrow { color: var(--faint); }
-.fieldValueInput { flex: 1; min-width: 0; }
 .addField { align-self: flex-start; }

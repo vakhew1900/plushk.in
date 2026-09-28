@@ -1,5 +1,6 @@
 import { ColorPicker } from '@/components/ui/color-picker';
 import { Input } from '@/components/ui/input';
+import { DetailField } from '@/components/ui/detail-field';
 import { RemoveIconButton } from '@/components/ui/remove-icon-button';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { PaletteColor } from '@/types/palette-color';
@@ -18,13 +19,11 @@ export function TagDetailPanel({ name, color, onNameChange, onColorChange, onRem
 
   return (
     <div className={styles.panel}>
-      <div className={styles.field}>
-        <span className={styles.label}>{t('tagsSection.colorLabel')}</span>
+      <DetailField label={t('tagsSection.colorLabel')}>
         <ColorPicker value={color} onChange={onColorChange} />
-      </div>
+      </DetailField>
 
-      <div className={styles.field}>
-        <span className={styles.label}>{t('entityDetail.nameLabel')}</span>
+      <DetailField label={t('entityDetail.nameLabel')}>
         <div className={styles.nameRow}>
           <Input
             value={name}
@@ -35,7 +34,7 @@ export function TagDetailPanel({ name, color, onNameChange, onColorChange, onRem
           />
           <RemoveIconButton onClick={onRemove} />
         </div>
-      </div>
+      </DetailField>
     </div>
   );
 }

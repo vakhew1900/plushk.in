@@ -2,6 +2,7 @@ import { ColorPicker } from '@/components/ui/color-picker';
 import { IconPicker } from '@/components/ui/icon-picker';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { DetailField } from '@/components/ui/detail-field';
 import { RemoveIconButton } from '@/components/ui/remove-icon-button';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -26,16 +27,14 @@ export function EntityDetailPanel({ entity, onNameChange, onColorChange, onIconC
 
   return (
     <div className={styles.panel}>
-      <div className={styles.field}>
-        <span className={styles.label}>{t('entityDetail.styleLabel')}</span>
+      <DetailField label={t('entityDetail.styleLabel')}>
         <div className={styles.styleRow}>
           <IconPicker value={entity.icon} color={entity.color} onChange={onIconChange} />
           <ColorPicker value={entity.color} onChange={onColorChange} />
         </div>
-      </div>
+      </DetailField>
 
-      <div className={styles.field}>
-        <span className={styles.label}>{t('entityDetail.nameLabel')}</span>
+      <DetailField label={t('entityDetail.nameLabel')}>
         <div className={styles.nameRow}>
           <Input
             value={entity.name}
@@ -46,10 +45,9 @@ export function EntityDetailPanel({ entity, onNameChange, onColorChange, onIconC
           />
           <RemoveIconButton onClick={onRemove} />
         </div>
-      </div>
+      </DetailField>
 
-      <div className={styles.field}>
-        <span className={styles.label}>{t('entityDetail.workflowLabel')}</span>
+      <DetailField label={t('entityDetail.workflowLabel')}>
         <div className={styles.statusTable}>
           {statuses.map((status) => (
             <WorkflowStatusRow
@@ -72,7 +70,7 @@ export function EntityDetailPanel({ entity, onNameChange, onColorChange, onIconC
           <IconPlus size="sm" />
           {t('entityDetail.addStatus')}
         </Button>
-      </div>
+      </DetailField>
     </div>
   );
 }

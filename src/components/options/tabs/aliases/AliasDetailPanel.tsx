@@ -1,5 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { IconPlus } from '@/components/icons';
+import { DetailField } from '@/components/ui/detail-field';
 import { RemoveIconButton } from '@/components/ui/remove-icon-button';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './AliasDetailPanel.module.css';
@@ -27,8 +28,7 @@ export function AliasDetailPanel({
 
   return (
     <div className={styles.panel}>
-      <div className={styles.field}>
-        <span className={styles.label}>{t('entityDetail.nameLabel')}</span>
+      <DetailField label={t('entityDetail.nameLabel')}>
         <div className={styles.nameRow}>
           <Input
             value={name}
@@ -39,10 +39,9 @@ export function AliasDetailPanel({
           />
           <RemoveIconButton onClick={onRemove} />
         </div>
-      </div>
+      </DetailField>
 
-      <div className={styles.field}>
-        <span className={styles.label}>{t('aliasesSection.domainsLabel')}</span>
+      <DetailField label={t('aliasesSection.domainsLabel')}>
         <div className={styles.tags}>
           {domains.map((d, i) => (
             <div key={i} className={styles.domainChip}>
@@ -57,7 +56,7 @@ export function AliasDetailPanel({
           ))}
           <button onClick={onAddDomain} className={styles.addChip}><IconPlus size="sm" /></button>
         </div>
-      </div>
+      </DetailField>
     </div>
   );
 }

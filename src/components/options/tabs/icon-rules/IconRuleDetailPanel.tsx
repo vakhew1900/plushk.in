@@ -1,36 +1,10 @@
-import { css } from '@codemirror/lang-css';
-import type { Extension } from '@codemirror/state';
-import { Input } from '@/components/ui/input';
-import { CodeInput } from '@/components/ui/code-input';
-import { TypeSelect } from '@/components/ui/type-select';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { RemoveIconButton } from '@/components/ui/remove-icon-button';
+import { DetailField } from '@/components/ui/detail-field';
 import { useTranslation } from '@/hooks/useTranslation';
-import { xpathLanguage } from '@/components/options/code/xpathLanguage';
-import { IconRuleBindingType, IconSourceType, type IconRule, type IconSource } from '@/types/icon-rule';
-import { IconBindingTypeToggle } from './IconBindingTypeToggle';
+import type { IconRule } from '@/types/icon-rule';
+import { IconRuleNameField } from './IconRuleNameField';
+import { IconRuleBindingField } from './IconRuleBindingField';
+import { IconRuleSourceField } from './IconRuleSourceField';
 import styles from './IconRuleDetailPanel.module.css';
-
-const SOURCE_TYPE_OPTIONS: IconSourceType[] = [IconSourceType.STATIC, IconSourceType.CSS, IconSourceType.XPATH];
-
-const SOURCE_EXTENSIONS: Record<IconSourceType, Extension[]> = {
-  [IconSourceType.STATIC]: [],
-  [IconSourceType.CSS]:    [css()],
-  [IconSourceType.XPATH]:  [xpathLanguage],
-};
-
-// Switching type only ever changes how `value` is interpreted, never the text
-// itself — a user toggling CSS↔XPath while comparing selectors shouldn't lose
-// what they typed (same reasoning as VariablesSection's field rows, which
-// already preserve `v` across `selectorType` changes).
-function withSourceType(source: IconSource, type: IconSourceType): IconSource {
-  switch (type) {
-    case IconSourceType.STATIC: return { type, value: source.value };
-    case IconSourceType.CSS:    return { type, value: source.value };
-    case IconSourceType.XPATH:  return { type, value: source.value };
-  }
-}
 
 export interface AliasOption {
   id: string;
@@ -47,86 +21,31 @@ interface Props {
 export function IconRuleDetailPanel({ rule, aliasOptions, onChange, onRemove }: Props) {
   const { translate: t } = useTranslation();
 
-  const changeBindingType = (bindingType: IconRuleBindingType) => {
-    if (bindingType === IconRuleBindingType.ALIAS) {
-      onChange({ ...rule, bindingType, bindingValue: undefined, aliasId: rule.aliasId ?? aliasOptions[0]?.id });
-    } else {
-      // URL/Domain both key off the same free-text `bindingValue` — switching
-      // between them keeps whatever was typed instead of wiping it.
-      onChange({ ...rule, bindingType, bindingValue: rule.bindingValue ?? '', aliasId: undefined });
-    }
-  };
-
-  const changeSourceType = (type: IconSourceType) => onChange({ ...rule, source: withSourceType(rule.source, type) });
-  const changeSourceValue = (value: string) => onChange({ ...rule, source: { ...rule.source, value } });
-
   return (
     <div className={styles.panel}>
-      <div className={styles.field}>
-        <span className={styles.label}>{t('entityDetail.nameLabel')}</span>
-        <div className={styles.nameRow}>
-          <Input
-            value={rule.name}
-            onChange={(e) => onChange({ ...rule, name: e.target.value })}
-            onBlur={() => { if (!rule.name.trim()) onRemove(); }}
-            placeholder={t('iconRulesSection.namePlaceholder')}
-            className={styles.nameInput}
-          />
-          <Switch checked={rule.enabled} onCheckedChange={(enabled) => onChange({ ...rule, enabled })} />
-          <RemoveIconButton onClick={onRemove} />
-        </div>
-      </div>
+      <DetailField label={t('entityDetail.nameLabel')}>
+        <IconRuleNameField
+          name={rule.name}
+          enabled={rule.enabled}
+          onNameChange={(name) => onChange({ ...rule, name })}
+          onEnabledChange={(enabled) => onChange({ ...rule, enabled })}
+          onRemove={onRemove}
+        />
+      </DetailField>
 
-      <div className={styles.field}>
-        <span className={styles.label}>{t('iconRulesSection.bindingLabel')}</span>
-        <div className={styles.bindingRow}>
-          <IconBindingTypeToggle value={rule.bindingType} onChange={changeBindingType} />
+      <DetailField label={t('iconRulesSection.bindingLabel')}>
+        <IconRuleBindingField
+          bindingType={rule.bindingType}
+          bindingValue={rule.bindingValue}
+          aliasId={rule.aliasId}
+          aliasOptions={aliasOptions}
+          onChange={(binding) => onChange({ ...rule, ...binding })}
+        />
+      </DetailField>
 
-          {rule.bindingType === IconRuleBindingType.ALIAS ? (
-            <Select value={rule.aliasId ?? ''} onValueChange={(aliasId) => onChange({ ...rule, aliasId })}>
-              <SelectTrigger className={styles.bindingValueInput}>
-                <SelectValue placeholder={t('iconRulesSection.aliasPlaceholder')} />
-              </SelectTrigger>
-              <SelectContent>
-                {aliasOptions.map((alias) => (
-                  <SelectItem key={alias.id} value={alias.id}>
-                    {alias.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          ) : (
-            <Input
-              value={rule.bindingValue ?? ''}
-              onChange={(e) => onChange({ ...rule, bindingValue: e.target.value })}
-              placeholder={
-                rule.bindingType === IconRuleBindingType.URL
-                  ? t('iconRulesSection.bindingValueUrlPlaceholder')
-                  : t('iconRulesSection.bindingValueDomainPlaceholder')
-              }
-              className={styles.bindingValueInput}
-            />
-          )}
-        </div>
-      </div>
-
-      <div className={styles.field}>
-        <span className={styles.label}>{t('iconRulesSection.sourceLabel')}</span>
-        <div className={styles.sourceRow}>
-          <TypeSelect value={rule.source.type} options={SOURCE_TYPE_OPTIONS} onChange={changeSourceType} />
-          <CodeInput
-            value={rule.source.value}
-            onChange={changeSourceValue}
-            extensions={SOURCE_EXTENSIONS[rule.source.type]}
-            placeholder={
-              rule.source.type === IconSourceType.STATIC
-                ? t('iconRulesSection.sourceValueStaticPlaceholder')
-                : t('iconRulesSection.sourceValueSelectorPlaceholder')
-            }
-            className={styles.sourceValueInput}
-          />
-        </div>
-      </div>
+      <DetailField label={t('iconRulesSection.sourceLabel')}>
+        <IconRuleSourceField source={rule.source} onChange={(source) => onChange({ ...rule, source })} />
+      </DetailField>
     </div>
   );
 }

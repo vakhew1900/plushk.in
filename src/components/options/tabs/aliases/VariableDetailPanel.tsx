@@ -1,25 +1,12 @@
-import { css } from '@codemirror/lang-css';
-import type { Extension } from '@codemirror/state';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { CodeInput } from '@/components/ui/code-input';
-import { TypeSelect } from '@/components/ui/type-select';
+import { DetailField } from '@/components/ui/detail-field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RemoveIconButton } from '@/components/ui/remove-icon-button';
 import { IconPlus } from '@/components/icons';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { VariableFieldDraft } from '@/lib/page-match-mapping';
-import { PageSelectorType } from '@/types/page-match';
-import { xpathLanguage } from '@/components/options/code/xpathLanguage';
+import { VariableFieldRow } from './VariableFieldRow';
 import styles from './VariableDetailPanel.module.css';
-
-const SELECTOR_TYPE_OPTIONS: PageSelectorType[] = [PageSelectorType.CSS, PageSelectorType.META, PageSelectorType.XPATH];
-
-const SELECTOR_EXTENSIONS: Record<PageSelectorType, Extension[]> = {
-  [PageSelectorType.CSS]:   [css()],
-  [PageSelectorType.XPATH]: [xpathLanguage],
-  [PageSelectorType.META]:  [],
-};
 
 export interface AliasOption {
   id: string;
@@ -55,8 +42,7 @@ export function VariableDetailPanel({
 
   return (
     <div className={styles.panel}>
-      <div className={styles.field}>
-        <span className={styles.label}>{t('variablesSection.aliasLabel')}</span>
+      <DetailField label={t('variablesSection.aliasLabel')}>
         <div className={styles.aliasRow}>
           <Select value={aliasId} onValueChange={onAliasChange}>
             <SelectTrigger className={styles.aliasSelectTrigger}>
@@ -73,41 +59,26 @@ export function VariableDetailPanel({
           <span className={styles.variableCount}>{t('variablesSection.fieldsCount', { count: fields.length })}</span>
           <RemoveIconButton onClick={onRemove} className={styles.removeBlock} />
         </div>
-      </div>
+      </DetailField>
 
-      <div className={styles.field}>
-        <span className={styles.label}>{t('variablesSection.fieldsLabel')}</span>
+      <DetailField label={t('variablesSection.fieldsLabel')}>
         <div className={styles.fields}>
           {fields.map((f, i) => (
-            <div key={i} className={styles.fieldRow}>
-              <TypeSelect
-                value={f.selectorType}
-                options={SELECTOR_TYPE_OPTIONS}
-                onChange={(selectorType) => onFieldSelectorTypeChange(i, selectorType)}
-              />
-              <Input
-                value={f.k}
-                onChange={(e) => onFieldKeyChange(i, e.target.value)}
-                placeholder={t('variablesSection.fieldKeyPlaceholder')}
-                className={styles.fieldKeyInput}
-              />
-              <span className={styles.fieldArrow}>→</span>
-              <CodeInput
-                value={f.v}
-                onChange={(v) => onFieldValueChange(i, v)}
-                extensions={SELECTOR_EXTENSIONS[f.selectorType]}
-                placeholder={t('variablesSection.fieldValuePlaceholder')}
-                className={styles.fieldValueInput}
-              />
-              <RemoveIconButton onClick={() => onRemoveField(i)} />
-            </div>
+            <VariableFieldRow
+              key={i}
+              field={f}
+              onKeyChange={(k) => onFieldKeyChange(i, k)}
+              onValueChange={(v) => onFieldValueChange(i, v)}
+              onSelectorTypeChange={(selectorType) => onFieldSelectorTypeChange(i, selectorType)}
+              onRemove={() => onRemoveField(i)}
+            />
           ))}
           <Button variant="dashed" size="sm" className={styles.addField} onClick={onAddField}>
             <IconPlus size="sm" />
             {t('variablesSection.addField')}
           </Button>
         </div>
-      </div>
+      </DetailField>
     </div>
   );
 }
