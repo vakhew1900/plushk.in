@@ -1,0 +1,9 @@
+.bar {
+  position: sticky;
+  top: -0.3rem;
+  margin: -0.3rem -0.3rem 0.3rem;
+  padding: 0.3rem 0.3rem 0.4rem;
+  background: var(--bg2);
+  z-index: 1;
+}
+.input { width: 100%; }
